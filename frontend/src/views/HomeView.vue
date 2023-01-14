@@ -1,10 +1,10 @@
 <template> 
       <div class="all"> 
         <preloader v-if="loader==false"></preloader>
-        <div class="sidebar_position" >
+        <div class="sidebar_position">
           <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat"></SideBar>
         </div>
-        <div class="content" :class=" etatsidbar==true ? 'close ' : ''">
+        <div class="content"  :class=" etatsidbar==true ? 'close ' : '' ">
           <div class="ma-5 pa-5" id="home">
             <v-container >
               <v-row>
@@ -19,13 +19,16 @@
                   align="center"
                   justify="space-around"
                   gap="4px"
-                >
-                  <v-btn class="login mx-2"  >
+                >  <router-link  to="login" class="text-decoration-none">
+                  <v-btn class="login mx-2"   >
                     Login
                   </v-btn>
+                </router-link> 
+                <router-link to="/signup" class="text-decoration-none">
                   <v-btn class="signup" >
-                    Sign Up
+                     Sign Up
                   </v-btn>
+                </router-link> 
                 </v-row>
                 </v-col>
               </v-row>
@@ -210,7 +213,7 @@
   }
 </script>
 
-<style scoped>
+<style >
 
 
 .login{
