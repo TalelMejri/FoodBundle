@@ -1,15 +1,59 @@
 <template>
     <div>
         <div class="sidebar_position">
-            <SideBar ></SideBar>
+            <SideBar></SideBar>
         </div>
         <div class="popup-below">
-            <div class="popup_form">
-                    
-            </div>
-        </div>
-    <div>
-       
+                <v-container fluid fill-height>
+                    <v-layout align-center justify-center>
+                       <v-flex xs12 sm8 md4>
+                          <v-card class="elevation-12">
+                             <v-toolbar dark color="#E84C03">
+                                <v-toolbar-title >Welcome Back</v-toolbar-title>
+                             </v-toolbar>
+                             <v-card-text>
+                             <form  @submit.prevent="login()">
+
+                                    <v-text-field
+                                      v-model="email"
+                                      name="email"
+                                      label="Email"
+                                      type="text"
+                                      placeholder="Enter Email"
+                                      @click="validate('email')"
+                                      @keyup="validate('email')"
+                                    ></v-text-field>
+                                    <small v-if="email_error!=''">
+                                        {{ email_error }}
+                                    </small>
+                                   
+                                    <v-text-field
+                                      v-model="password"
+                                      name="password"
+                                      label="Password"
+                                      type="password"
+                                      placeholder="password"
+                                      @click="validate('password')"
+                                      @keyup="validate('password')"
+                                   ></v-text-field>
+
+                                   <small v-if="password_error!=''">
+                                         {{ password_error }}
+                                    </small>
+                                    <div class="mt-3  ">
+                                     
+                                        <v-btn type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="log in">Login</v-btn>
+                                        <router-link to="/" class="text-decoration-none  mx-2"> <v-btn type="button" class="mt-4 " color="gray" value="log in">Close</v-btn></router-link>
+                                    </div>
+
+                              </form>
+                             </v-card-text>
+                          </v-card>
+                       </v-flex>
+                    </v-layout>
+                 </v-container>
+                </div>
+             <div>
         <div class="content" >
             <div class="ma-5 pa-5" id="home">
               <v-container >
@@ -73,6 +117,38 @@
 import SideBar from "../../components/SideBar.vue"
     export default{
         name:"login",
+        data(){
+            return{
+                password:'',
+                password_error:'',
+                email:'',
+                email_error:''
+            }
+        },
+        methods:{
+            validate(input){
+                if(input=='email'){
+                    if(this.email==""){
+                        this.email_error="Email required";
+                    }else if( !String(this.email)
+                             .toLowerCase()
+                             .match(
+                             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
+                        this.email_error = "Please enter a valid email";
+                     }else{
+                             this.email_error ="";
+                             return true;
+                     }
+                }else if(input=='password'){
+                    if(this.password==""){
+                        this.password_error="password required";
+                    }else {
+                        this.password_error ="";
+                        return true;
+                    }
+                }
+            }
+        },
         components:{
             SideBar
         }
@@ -80,12 +156,15 @@ import SideBar from "../../components/SideBar.vue"
 </script>
 
 
-<style>
+<style scoped>
+
+small{
+    color: #000;
+    font-size: 15px;
+  }
 .popup-below {
     position: fixed; /* Stay in place */
     z-index: 999999999;
-    left: 0;
-    top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
@@ -94,18 +173,16 @@ import SideBar from "../../components/SideBar.vue"
 }
 .popup_form{
     position: fixed;
-    top: 50%;
-    left:50%;
     flex-direction: column;
-    transform: translate(-50%,-50%)scale(0.9);
     background: #fff;
-    width:70%;
+    width:35% ; 
     border-radius: 10px;
     height:60%;
     z-index: 999999999;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding:88px;
 }
+
+
 </style>

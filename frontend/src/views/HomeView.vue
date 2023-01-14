@@ -213,16 +213,16 @@
   }
 </script>
 
-<style >
+<style  >
 
 
 .login{
-  color: #fff;
+  color: #fff !important;
   background: #E84C03 !important;
 }
 
 .login:hover{
-  color: #E84C03;
+  color: #E84C03 !important;
   background: #fff !important;
 }
 
@@ -273,11 +273,11 @@ small{
   z-index: 9999 !important;
 }
 .btn{
-  color: #fff;
+  color: #fff !important;
   background: #E84C03 !important; 
 }
 .btn:hover{
-  color: #E84C03;
+  color: #E84C03 !important;
   background: #fff !important; 
 }
 .content.close{
