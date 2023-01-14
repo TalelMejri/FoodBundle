@@ -1,25 +1,25 @@
 <template>
       <nav class="fixed" :class="etatsidbar==false ? 'close' : '' ">
         <ul>
-          <li>
-               <a href="#"  :class="etatsidbar==true ? 'close' : '' " class="logo">
+          <li >
+               <div href="#"  :class="etatsidbar==true ? 'close' : '' " class="logo">
                  <img src="../assets/logo.png" alt="">
-               </a>
+               </div>
           </li>
           <li>
-            <a href="">
-              <v-icon  class="icon">mdi-home</v-icon>
+            <a  href="#home">
+              <v-icon   class="icon">mdi-home</v-icon>
                <span  class="nav-item"> Home</span>
             </a>
           </li>
           <li>
-            <a href="">
-              <v-icon class="icon">mdi-menu</v-icon>
+            <a  href="#menu">
+              <v-icon  class="icon">mdi-menu</v-icon>
               <span class="nav-item">Menu</span>
             </a>
           </li>
           <li>
-            <a href="">
+            <a  href="#contact">
               <v-icon class="icon">mdi-message-bulleted</v-icon>
               <span class="nav-item">Contact</span>
             </a>
@@ -46,12 +46,13 @@ export default{
 
         }
     },
-
     methods:{
         changer(){
             this.etatsidbar=this.etatsidbar==true ? false : true;
             this.$emit("changreetat", this.etatsidbar);
-        }
+        },
+     
+
     },
 
     created(){
@@ -98,6 +99,7 @@ export default{
         transition: width 0.2s linear ;
         border-radius: 1px 50px 30px 1px;
         box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+        scroll-behavior: smooth;
     }
 
     .logo{
@@ -106,7 +108,6 @@ export default{
         transition: all  0.5s ease;
         margin:20px 0 0 15px;
     }
-
 
     .logo img{
         width: 100px;
@@ -179,4 +180,5 @@ export default{
         margin-bottom: 20px;
     }
 
+   
 </style>
