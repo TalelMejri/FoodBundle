@@ -13,7 +13,22 @@
                              </v-toolbar>
                              <v-card-text>
                              <form  @submit.prevent="login()">
-
+                              <v-snackbar
+                              color="red"
+                              v-model="snackbar_error"
+                            >
+                              {{ message_error }}
+                              <template v-slot:action="{ attrs }">
+                                <v-btn
+                                  color="#fff"
+                                  text
+                                  v-bind="attrs"
+                                  @click="snackbar_error = false"
+                                >
+                                  Close
+                                </v-btn>
+                              </template>
+                            </v-snackbar>
                                     <v-text-field
                                       v-model="email"
                                       name="email"
@@ -45,8 +60,23 @@
                                         <v-btn type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="log in">Login</v-btn>
                                         <router-link to="/" class="text-decoration-none  mx-2"> <v-btn type="button" class="mt-4 " color="gray" value="log in">Close</v-btn></router-link>
                                     </div>
-
                               </form>
+                              <v-snackbar
+                              color="green"
+                              v-model="snackbar"
+                            >
+                              {{ message }}
+                              <template v-slot:action="{ attrs }">
+                                <v-btn
+                                  color="#E84C03"
+                                  text
+                                  v-bind="attrs"
+                                  @click="snackbar = false"
+                                >
+                                  Close
+                                </v-btn>
+                              </template>
+                            </v-snackbar>
                              </v-card-text>
                           </v-card>
                        </v-flex>
@@ -114,7 +144,9 @@
 </template>
 
 <script>
+import authService from "../../services/auth"
 import SideBar from "../../components/SideBar.vue"
+import {AuthStore} from "../../store/StoreAuth"
     export default{
         name:"login",
         data(){
@@ -122,10 +154,35 @@ import SideBar from "../../components/SideBar.vue"
                 password:'',
                 password_error:'',
                 email:'',
-                email_error:''
+                email_error:'',
+                message:'',
+                snackbar: false,
+                snackbar_error:false,
+                message_error:''
             }
         },
+        created(){
+          if(typeof(this.$route.query.content)!='undefined'){
+             this.message = this.$route.query.content;
+             this.snackbar=true;
+          }
+        },
         methods:{
+           login(){
+                if(this.validate('email') && this.validate('password')){
+                    authService.LoginUser(this.email,this.password).then(()=>{
+                        const auth=AuthStore();
+                        if(auth.getisadmin==1){
+                            this.$router.push('dashboard');
+                        }else{
+                            this.$router.push('/');
+                        }
+                    }).catch((error)=>{
+                          this.snackbar_error=true;
+                          this.message_error="User Not Found";
+                    })
+                }
+          },
             validate(input){
                 if(input=='email'){
                     if(this.email==""){
