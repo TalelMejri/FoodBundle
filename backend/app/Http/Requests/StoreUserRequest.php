@@ -28,8 +28,8 @@ class StoreUserRequest extends FormRequest
             'email'=>'required|unique:users|email',
             'password'=>'required|min:6|max:25',
             'lastname'=>'required|min:4|max:25',
-            'numero_tlf'=>'integer|size:8',
-            'Photo'=>'required'
+            'numero_tlf'=>'required|digits:8|numeric',
+            'Photo'=>'required|mimes:jpg,jpeg,png,svg,gif'
         ];
     }
 }
