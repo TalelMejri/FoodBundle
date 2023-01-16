@@ -16,22 +16,31 @@
                             </v-toolbar-title>
                          </v-toolbar>
                          <v-card-text>
-                         <form>
+                         <form  @submit.prevent="Rgister()" enctype="multipart/form-data">
 
                               <div class="row">
                                  <div class="col-md-6">
                                   <v-text-field
+                                  :color="name.error!='' ? 'red': ''"
                                   name="Name"
                                   label="Name"
+                                  :messages="name.error!='' ? name.error : ''"
+                                  :class="name.error!='' ? 'move_input' : ''"
+                                  v-model="name.value"
                                   type="text"
+                                  
                                   placeholder="Enter Name"
                                 ></v-text-field>
-
+                             
                                  </div>
                                  <div class="col-md-6">
                                   <v-text-field
+                                  :color="lastname.error!='' ? 'red': ''"
                                   name="LastName"
+                                  :messages="lastname.error!='' ? lastname.error : ''"
+                                  :class="lastname.error!='' ? 'move_input' : ''"
                                   label="LastName"
+                                  v-model="lastname.value"
                                   type="text"
                                   placeholder="Enter LastName"
                                 ></v-text-field>
@@ -41,9 +50,13 @@
                               <div class="row">
                                 <div class="col-md-12">
                                  <v-text-field
+                                 :messages="email.error!='' ? email.error : ''"
+                                 :class="email.error!='' ? 'move_input' : ''"
+                                 :color="email.error!='' ? 'red': ''"
                                  name="Email"
                                  label="Email"
                                  type="text"
+                                 v-model="email.value"
                                  placeholder="Enter Email"
                                ></v-text-field>
                                 </div>
@@ -51,50 +64,67 @@
                              <div class="row">
                               <div class="col-md-12">
                                 <v-text-field
+                                :messages="password.error!='' ? password.error : ''"
+                                 :class="password.error!='' ? 'move_input' : ''"
+                                :color="password.error!='' ? 'red': ''"
                                   name="password"
                                   label="Password"
                                   type="password"
+                                  v-model="password.value"
                                   placeholder="password"
                                ></v-text-field>
                               </div>
                            </div>
-
                            <div class="row">
-                            <div class="col-md-6">
-                              <v-file-input
-                              label="File input"
-                              filled
-                              prepend-icon="mdi-camera"
-                            ></v-file-input>
-
+                            <div class="col-md-12">
+                              <input    
+                                                :class="photo.error!='' ? 'move_input ': ''"
+                                                class="form-control"
+                                                 type="file" ref="photo"
+                                                 @change="uploadFile">
+                                                 <small v-if="photo.error!=''">
+                                                  {{ photo.error }}
+                                              </small>
                             </div>
-                            <div class="col-md-6">
+                            
+                            <div class="col-md-12">
                              <v-text-field
                              name="N° Phone"
+                             :messages="numero_tlf.error!='' ? numero_tlf.error : ''"
+                             :class="numero_tlf.error!='' ? 'move_input' : ''"
+                             :color="numero_tlf.error!='' ? 'red': ''" 
                              label="N° Phone"
+                             v-model="numero_tlf.value"
                              type="text"
                              placeholder="+216"
                            ></v-text-field>
                             </div>
                          </div>
-                        <v-checkbox v-model="checkbox">
+                        <v-checkbox v-model="check.value" >
                           <template v-slot:label>
                             <div>
-                                I agree to the 
+                              I agree to the 
                               <span style="color:blue"> Terms and Conditions </span>  
                                 is awesome
                             </div>
+                            <div>
+                             
+                            </div>
                           </template>
+                      
                         </v-checkbox> 
+                        <div>
+                          <small  v-if="check.error!=''">
+                            {{ check.error }}
+                        </small>
+                        </div>
                                 <div class="mt-3 text-center ">
                                     <v-btn type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="Sign Up">Sign Up</v-btn>
                                     <router-link to="/" class="text-decoration-none  mx-2"> <v-btn type="button" class="mt-4 " color="gray" value="close">Close</v-btn></router-link>
                                 </div>
                                 <div class="text-center mt-3">
-                                    Already have an account ?     <router-link to="login" class="text-decoration-none  mx-2">  <span>Login</span></router-link>
+                                    Already have an account ?<router-link to="login" class="text-decoration-none  mx-2">  <span>Login</span></router-link>
                                 </div>
-                               
-
                           </form>
                          </v-card-text>
                       </v-card>
@@ -163,16 +193,78 @@
 </template>
 
 <script>
+import service from "../../services/auth";
 import SideBar from "../../components/SideBar.vue"
     export default{
         name:"signup",
         data(){
           return{
-
+            checkbox: false,
+              name:{
+                 value:'',
+                 error:''
+              },
+              check:{
+                 value:0,
+                 error:''
+             },
+              email:{
+                 value:'',
+                 error:''
+              },
+              password:{
+                 value:'',
+                 error:''
+              },
+              lastname:{
+                 value:'',
+                 error:''
+              },
+              numero_tlf:{
+                 value:'',
+                 error:''
+              },
+              photo:{
+                 value:'',
+                 error:''
+              },
           }
         },
         components:{
             SideBar
+        },
+        methods:{
+          uploadFile(){
+            //this.photo.value =e.target.files[0];
+            this.photo.value =this.$refs.photo.files[0];
+          },
+          Rgister(){
+            service.CreateUser({
+               name:this.name.value,
+               photo:this.photo.value,
+               email:this.email.value,
+               password:this.password.value,
+               lastname:this.lastname.value,
+               numero_tlf:this.numero_tlf.value
+            }).then((response)=>{
+              this.name.value="";
+              this.photo.value="";
+              this.email.value="";
+              this.password.value="";
+              this.lastname.value="";
+              this.numero_tlf.value="";
+              this.check.value="";
+              this.$router.push({name:"login", query: {content: 'Register Succesfully'}});
+            }).catch((error)=>{
+              this.name.error=error.response.data.errors.name ? error.response.data.errors.name[0] : '';
+              this.photo.error=error.response.data.errors.Photo ? error.response.data.errors.Photo[0] : '';
+              this.email.error=error.response.data.errors.email ? error.response.data.errors.email[0] : '';
+              this.password.error=error.response.data.errors.password ? error.response.data.errors.password[0] : '';
+              this.lastname.error=error.response.data.errors.lastname ? error.response.data.errors.lastname[0] : '';
+              this.numero_tlf.error=error.response.data.errors.numero_tlf ? error.response.data.errors.numero_tlf[0] : '';
+              this.check.error=this.check.value==false ? 'the agree is required' : '' ;
+            })
+          }
         }
     }
 </script>
@@ -190,6 +282,7 @@ import SideBar from "../../components/SideBar.vue"
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
+
 .popup_form{
     position: fixed;
     top: 50%;
@@ -205,5 +298,26 @@ import SideBar from "../../components/SideBar.vue"
     justify-content: center;
     align-items: center;
     padding:88px;
+}
+
+small{
+  color:gray !important;
+  font-size: 13px !important;
+}
+
+.move_input {
+  animation: animate 0.5s;
+}
+
+@keyframes animate {
+  0% {
+    transform: translateX(10px);
+  }
+  50% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 </style>
