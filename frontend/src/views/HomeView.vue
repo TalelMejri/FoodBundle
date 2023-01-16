@@ -14,7 +14,7 @@
                 >
                  <h2> <span style="color:#E84C03;">Food</span>Bundle</h2>
                 </v-col>
-                <v-col cols="auto">
+                <v-col v-if="store.getisadmin==null || store.getisadmin==1 " cols="auto">
                   <v-row
                   align="center"
                   justify="space-around"
@@ -30,6 +30,41 @@
                   </v-btn>
                 </router-link> 
                 </v-row>
+                </v-col>
+                <v-col v-else cols="auto">
+                  <template>
+                    <v-row justify="space-around">
+                      <v-menu
+                        transition="scale-transition"
+                        :rounded="rounded"
+                         offset-y
+                      >
+                        <template v-slot:activator="{ attrs, on }">
+                          <v-btn
+                            class="white--text ma-5"
+                            v-bind="attrs"
+                            v-on="on"
+                          >
+                             avatar
+                          </v-btn>
+                        </template>
+                        <v-list>
+                          <v-list-item
+                            v-for="item in items"
+                            :key="item"
+                            link
+                          >
+                            <v-list-item-title v-if="item.id!=2" >
+                             <router-link :to="item.link" style="color:#000 !important" class="text-decoration-none "><span>mdi-{{item.icon}} </span> {{ item.name }}</router-link>  
+                            </v-list-item-title>
+                            <v-list-item-title v-else @click="logout()" >
+                              <span>mdi-{{item.icon}} </span> {{ item.name }}
+                          </v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </v-row>
+                  </template>
                 </v-col>
               </v-row>
                <v-content class="home my-5 py-5 d-flex justify-content-center"  >
@@ -158,14 +193,22 @@
      </div>
 </template>
 <script>
+
+  import {AuthStore} from "../store/StoreAuth"
   import footerVue from "../components/home_page/FooterVue.vue"
   import ServiceVue from "../components/home_page/ServiceVue.vue"
   import SideBar from "../components/SideBar.vue"
   import preloader from "../components/preloader.vue"
+
   export default {
     name: 'Home', 
     data(){
         return{
+                items:[
+                   {id:0,name:'all Ordered Product',icon:'home',link:'allOrderedProduct'},
+                   {id:1,name:'all Favorite Product',icon:'favorite',link:'AllFavoriteProduct'},
+                   {id:2,name:'Logout',icon:'logout'}
+                ],
           etatsidbar:false,
           email:'',
           email_error:'',
@@ -185,10 +228,19 @@
     components:{
         SideBar,footerVue,ServiceVue,preloader
     },
+    setup() {
+    const store = AuthStore();
+    return {
+      store,
+    };
+  },
     mounted(){
       setTimeout(()=>this.loader=true,1);
     },
     methods:{
+      logout(){
+          this.store.logout();
+      },
       changreetat(a){
         this.etatsidbar=a;
       },
