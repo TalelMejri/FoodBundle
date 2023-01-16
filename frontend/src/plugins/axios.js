@@ -2,9 +2,9 @@
 
 import Vue from 'vue';
 import axios from "axios";
-
+import {AuthStore} from "../store/StoreAuth"
 // Full config:  https://github.com/axios/axios#request-config
-// axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
+ axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || 'http://localhost:8000/api/';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -18,9 +18,10 @@ const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
   function(config) {
+    const store=AuthStore();
+    config.headers.Authorization = `Bearer ${store.token}`;
     // Do something before request is sent
-    return config;
-    
+    return config;  
   },
   function(error) {
     // Do something with request error
