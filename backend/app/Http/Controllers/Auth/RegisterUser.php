@@ -19,11 +19,11 @@ class RegisterUser extends Controller
             'password'=>bcrypt($request->password),
             'lastname'=>$request->lastname,
             'numero_tlf'=>$request->numero_tlf,
-            'Photo'=> $image,
-            'Isadmin'=>1
+            'Photo'=>$image,
+            'Isadmin'=>false
             ]
         );
-        return response()->json($user, 200);
+        return response()->json(['data'=>$user], 200);
     }
 }
 
