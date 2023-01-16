@@ -3,6 +3,10 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import login from '../views/Auth/LoginView.vue'
 import signup from '../views/Auth/SignUpView.vue'
+import allOrderedProduct from '../views/ProfilClient/AllOrderedView.vue'
+import AllFavoriteProduct from '../views/ProfilClient/AllFavoriteView.vue'
+import dashboard from '../views/ProfilAdmin/DashboardView.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -28,6 +32,22 @@ const routes = [
     path: '/signup',
     name: 'signup',
     component: signup
+  },
+
+  {
+    path: '/allOrderedProduct',
+    name: 'allOrderedProduct',
+    component: allOrderedProduct
+  },
+  {
+    path: '/AllFavoriteProduct',
+    name: 'AllFavoriteProduct',
+    component: AllFavoriteProduct
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: dashboard
   },
 ]
 
