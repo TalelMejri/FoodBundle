@@ -1,5 +1,6 @@
 import { ref,computed } from "vue"
 import { defineStore } from "pinia";
+import router from "@/router";
 
 export const AuthStore=defineStore('auth',()=>{
 
@@ -33,6 +34,7 @@ export const AuthStore=defineStore('auth',()=>{
         localStorage.removeItem('isauth');
         localStorage.removeItem('isAdmin');
         localStorage.removeItem('user');
+        router.push('login');
     }
 
     return {login,logout,token,user,isauth,isAdmin,getToken,getisadmin,getisauth,getuser}

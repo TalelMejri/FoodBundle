@@ -1,10 +1,10 @@
 <template> 
       <div class="all"> 
-        <preloader v-if="loader==false"></preloader>
-        <div class="sidebar_position">
+        <!--<preloader  v-if="loader==false"></preloader>-->
+        <div class="sidebar_position">          
           <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat"></SideBar>
         </div>
-        <div class="content"  :class=" etatsidbar==true ? 'close ' : '' ">
+        <div class="content "  :class=" etatsidbar==true ? 'close ' : '' "> 
           <div class="ma-5 pa-5" id="home">
             <v-container >
               <v-row>
@@ -235,7 +235,7 @@
     };
   },
     mounted(){
-      setTimeout(()=>this.loader=true,1);
+      setTimeout(()=>this.loader=true,2000);
     },
     methods:{
       logout(){
@@ -265,8 +265,7 @@
   }
 </script>
 
-<style  >
-
+<style>
 
 .login{
   color: #fff !important;
@@ -282,10 +281,12 @@
   color: #E84C03;
   background: #fff;
 }
+
 .signup:hover{
   color: #fff;
   background: #E84C03 !important;
 }
+
 small{
   color: red;
   font-size: 18px;
@@ -318,20 +319,24 @@ small{
 }
 .all{
   scroll-behavior: smooth;
-
+  width: 100%;
 }
+
 .sidebar_position{
   position: fixed;
-  z-index: 9999 !important;
+  z-index: 9999999999999;
 }
+
 .btn{
   color: #fff !important;
   background: #E84C03 !important; 
 }
+
 .btn:hover{
   color: #E84C03 !important;
   background: #fff !important; 
 }
+
 .content.close{
   width: calc(100%-90px) !important;
   margin-left: 90px;
@@ -369,11 +374,13 @@ small{
       transform: translateY(20px);
     }  
 }
+
 .paragh{
   color: #000;
   font-family: 'Times New Roman', Times, serif;
   font-size: 60px;
 }
+
 @media screen and (max-width:750px) {
   .content{
       position:relative;

@@ -27,7 +27,7 @@ export default{
     data(){
         return{
             services:[
-                {id:1,icon:'truck',name:'LIVRAISON GRATUITE',desc:'Dés 7000 TND'},
+                {id:1,icon:'truck-delivery',name:'LIVRAISON GRATUITE',desc:'Dés 7000 TND'},
                 {id:2,icon:'cash',name:'CASH À LA LIVRAISON',desc:'d'},
                 {id:3,icon:'phone',name:'29 036 027',desc:'8h-20h'}
             ]

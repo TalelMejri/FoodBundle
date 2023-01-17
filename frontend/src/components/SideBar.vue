@@ -1,6 +1,6 @@
 <template>
-      <nav class="fixed" :class="etatsidbar==false ? 'close' : '' ">
-        <ul>
+      <nav  :class="etatsidbar==false ? 'close' : '' ">
+        <ul v-if="!admin_dashboard">
           <li >
                <div href="#"  :class="etatsidbar==true ? 'close' : '' " class="logo">
                  <img src="../assets/logo.png" alt="">
@@ -31,26 +31,79 @@
                </v-btn>
           </li>
         </ul>
-    </nav>
 
+        <ul v-else >
+            <li class="mb-5">
+                 <div href="#"  :class="etatsidbar==true ? 'close' : '' " class="logo">
+                     <img src="../assets/logo.png" alt="">
+                 </div>
+            </li>
+            <li class="mt-5">
+              <a    @click="changerView('state')" href="#">
+                <v-icon :color="ViewCurrent=='state' ? '#000' : ''" class="icon">mdi-view-dashboard</v-icon>
+                 <span :style="ViewCurrent=='state' ? 'color:#000;font-size:20px;font-wieght:700' : ''"  class="nav-item">View</span>
+              </a>
+            </li>
+            <li >
+              <a @click="changerView('produit')" href="#">
+                <v-icon :color="ViewCurrent=='produit' ? '#000' : ''" class="icon">mdi-food</v-icon>
+                <span :style="ViewCurrent=='produit' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Produit</span>
+              </a>
+            </li>
+            <li>
+                <a  @click="changerView('client')"  href="#">
+                  <v-icon :color="ViewCurrent=='client' ? '#000' : ''"  class="icon">mdi-account-group</v-icon>
+                  <span :style="ViewCurrent=='client' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Client</span>
+                </a>
+              </li>
+              <li>
+
+                <a  @click="changerView('commande')" href="#">
+                  <v-icon :color="ViewCurrent=='commande' ? '#000' : ''"  class="icon">mdi-truck-delivery</v-icon>
+                  <span :style="ViewCurrent=='commande' ? 'color:#000 !important;font-size:20px;font-wieght:700' : ''" class="nav-item">Commande</span>
+                </a>
+              </li>
+            <li>
+              <a @click="logout()"  href="#">
+                <v-icon class="icon">mdi-logout-variant</v-icon>
+                <span class="nav-item">logout</span>
+              </a>
+            </li>
+            <li class="logout"  :class="etatsidbar==true ? 'close' : '' ">
+                  <v-btn  fab  @click="changer()">
+                       <v-icon style="color:#E84C03" v-if="etatsidbar" class="px-1">mdi-arrow-right-bold</v-icon>
+                       <v-icon   style="color:#E84C03" v-else class="px-1">mdi-arrow-left-bold</v-icon>
+                 </v-btn>
+            </li>
+          </ul>
+    </nav>
 
 </template>
 
 <script>
-
+import { AuthStore } from '@/store/StoreAuth';
 export default{
     name:"sidebar",
-
+    setup(){
+        const store=AuthStore();
+        return {store}
+    },
     data(){
         return{
 
         }
     },
     methods:{
+      changerView(a){
+        this.$emit("changerView",a)
+      },
         changer(){
             this.etatsidbar=this.etatsidbar==true ? false : true;
             this.$emit("changreetat", this.etatsidbar);
         },
+        logout(){
+            this.store.logout();
+        }
      
 
     },
@@ -60,7 +113,9 @@ export default{
     },
 
     props:{
-        etatsidbar:Boolean
+        etatsidbar:Boolean,
+        admin_dashboard:Boolean,
+        ViewCurrent:String
     }
     
 }
@@ -86,13 +141,12 @@ export default{
     }*/
 
    nav{
-
         background: #E84C03;
         position: absolute;
         left: 0;
         top: 0;
         height: 100vh;
-        z-index: 9999999;
+        z-index: 999999999;
         width: 90px;
         bottom: 0;
         overflow: hidden;
