@@ -1,6 +1,8 @@
 import "@/plugins/axios";
 import Axios from "axios";
 
+
+
 export default{
     addCategory(product){
 
@@ -15,7 +17,7 @@ export default{
             }
         };
 
-       // console.log(data.append);
         return Axios.post('product/addCategory',data,config);
+
     }
 }

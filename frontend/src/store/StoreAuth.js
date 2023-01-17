@@ -5,7 +5,7 @@ import router from "@/router";
 export const AuthStore=defineStore('auth',()=>{
 
     const token=ref(localStorage.getItem('token')??null);
-    const isauth=ref(localStorage.getItem('token')&&localStorage.getItem('user'));
+    const isauth=ref(false);
     const user=ref(JSON.parse(localStorage.getItem('user'))??null);
     const isAdmin=ref(localStorage.getItem('isAdmin')??null);
 
