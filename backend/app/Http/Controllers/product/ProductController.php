@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Option;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class ProductController extends Controller
 {
@@ -37,21 +38,19 @@ class ProductController extends Controller
         $categoery->name=$request->name;
         $categoery->PhtotoCatg='/storage/'.$image;
         $categoery->save();
-        //$option=new Option();
-        /*for($i=0;$i<count((array)$request->option);$i++){
-            $option->nameOption=$request->option->name[$i];
-            $option->prixOption=$request->option[$i]->prix;
-            $option->id_category=$categoery->id;
+        $Options=json_decode($request->option);
+
+        $option=new Option();
+        if(count($Options)){
+            for($i=0;$i<count($Options);$i++){
+                 $option->nameOption=$Options[$i]->name;
+                 $option->prixOption=$Options[$i]->prix;
+                 $option->id_category=$categoery->id;
+                 $option->save();
+            }
         }
-        $option->save();*/
-        return response()->json([$request->option],200);
-       /* if(!$request->option){
-            //foreach($value as $request->option):
-                $option->nameOption=$request->option->name;
-                $option->prixOption=$request->option->prix;
-                $option->id_category=$categoery->id;
-           // endforeach;
-        }
-      */
+
+       return response()->json(['data'=>count($Options)],200);
     }
+
 }
