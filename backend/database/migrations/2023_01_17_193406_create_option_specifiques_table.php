@@ -11,15 +11,14 @@ return new class extends Migration
      *
      * @return void
      */
-    public $timestamps=false;
     public function up()
     {
-        Schema::create('options', function (Blueprint $table) {
+        Schema::create('option_specifiques', function (Blueprint $table) {
             $table->id();
-            $table->string("nameOption");
-            $table->double("prixOption");
-            $table->foreignId('id_category');
-            $table->foreign('id_category')->references('id')->on('categories')->onDelete('cascade');
+            $table->string("nameOptionSpecifique");
+            $table->double("prixOptionSpecifique");
+            $table->foreignId('Id_Product');
+            $table->foreign('Id_Product')->references('id')->on('products')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('options');
+        Schema::dropIfExists('option_specifiques');
     }
 };
