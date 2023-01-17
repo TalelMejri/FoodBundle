@@ -10,8 +10,8 @@ class Product extends Model
     use HasFactory;
     protected $guarded=[];
 
-    public function options(){
-        return $this->hasMany(Option::class);
+    public function optionspecifiques(){
+        return $this->hasMany(OptionSpecifique::class);
     }
 
     public function categorie(){
