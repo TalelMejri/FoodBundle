@@ -78,7 +78,7 @@
                </v-dialog>
            </div>
            </div>
-           
+           {{ items }}
            <div class="col-lg-6">
             <input    
               class="form-control"
@@ -118,10 +118,10 @@ export default{
             this.current_item=this.select.length-1;
         },
         addprix(){
-            this.items.push({name:this.select[this.current_item],prix:this.prix});
+            this.items.push({"name":`${this.select[this.current_item]}`,"prix":parseFloat(this.prix)});
+            console.log(this.items);
             this.dialog=false;
             this.prix=0;
-            console.log(this.items);
         },
         upplaodFile(){
             this.file =this.$refs.file.files[0];
