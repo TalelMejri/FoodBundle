@@ -6,18 +6,23 @@ import Axios from "axios";
 export default{
     addCategory(product){
 
-        let data=new FormData();
+        /*var data=new FormData();
         data.append('name',product.name);
         data.append('option',product.option);
-        data.append('file',product.file);
-
+        data.append('file',product.file);*/
+        
         const config={
             headers:{
-                "Content-Type":"multipart/form-data",
+                "Content-Type":"Undefined",
             }
         };
 
-        return Axios.post('product/addCategory',data,config);
+        //console.log(product.option);
 
+        return Axios.post('product/addCategory',product);
+
+    },
+    getAllTypeCategory(){
+        return Axios.get('product/AllTypeCategorie');
     }
 }
