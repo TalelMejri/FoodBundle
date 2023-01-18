@@ -7,8 +7,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Models\Category;
 use App\Models\Option;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use PhpParser\Node\Expr\Cast\Object_;
+
 
 class ProductController extends Controller
 {
@@ -39,16 +38,17 @@ class ProductController extends Controller
         $categoery->name=$request->name;
         $categoery->PhtotoCatg=$request->file;
         $categoery->save();
-        return response()->json(['data'=>$request->option],200);
-       $option=new Option();
-      if(count($request->option)!=0) {
+
+       if(count($request->option)!=0) {
             for($i=0;$i<count($request->option);$i++){
+                 $option=new Option();
                  $option->nameOption=$request->option[$i]['name'];
                  $option->prixOption=$request->option[$i]['prix'];
                  $option->category_id=$categoery->id;
                  $option->save();
             }
         }
+
         return response()->json(['data'=>$option],200);
     }
 

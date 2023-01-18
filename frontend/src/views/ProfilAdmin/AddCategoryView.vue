@@ -32,50 +32,55 @@
                     outlined
                     dense
                  ></v-combobox>
-                  {{ items }}
-               <v-dialog
-                     style="z-index:9999999999999999999 !important"
-                     v-model="dialog"
-                     max-width="290"
-               >
-                 <v-card>
-                   <v-card-title class="text-h5">
-                       Donner Prix de {{ select[current_item] }}
-                   </v-card-title>
-                    <form @submit.prevent="addprix()">
-                        <div>
-                            <v-text-field
-                            name="prix"
-                            label="prix "
-                            type="text"
-                            v-model="prix"
-                            placeholder="Enter Prix"
-                          ></v-text-field>
-                        </div>
-                   <v-card-actions>
-                     <v-spacer></v-spacer>
-                     <v-btn
-                       color="green darken-1"
-                       text
-                       @click="dialog = false"
-                     >
-                       Cancel
-                     </v-btn>
-           
-                     <v-btn
-                       color="green darken-1"
-                       text
-                       type="submit"
-                     >
-                       Add Prix
-                     </v-btn>
-                   </v-card-actions>
-                   <div class="row">
-                  
-               </div>
-             </form>
-                 </v-card>
-               </v-dialog>
+                <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+
+
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Prix
+        </v-card-title>
+
+        <v-card-text>
+          Enter Prix For {{ select[current_item] }}
+        </v-card-text> 
+
+        <form @submit.prevent="addprix()">
+
+          <div class="mx-5 px-5">
+            <v-text-field
+            name="prix"
+            label="prix "
+            type="text"
+            v-model="prix"
+            placeholder="Enter Prix"
+          ></v-text-field>
+          </div>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+          color="gray"
+          text
+          @click="dialog = false"
+        >
+          Close
+        </v-btn>
+          <v-btn
+            color="primary"
+            text
+            @click="addprix()"
+          >
+            Add Product
+          </v-btn>
+        </v-card-actions>
+      </form>
+      </v-card>
+    </v-dialog>
            </div>
            </div>
            <div class="col-lg-6">
@@ -87,6 +92,7 @@
             @change="createBase64Image"
              >
          </div>
+
         <div class="text-center mt-5 ">
             <v-btn type="submit" style="color:#fff !important" color="#E84C03">
                 Add Category
@@ -96,7 +102,21 @@
              </form>
             </v-card-text>
          </v-card>
-        
+         <v-snackbar
+         v-model="snackbar"
+       >
+          Category Added
+       <template v-slot:action="{ attrs }">
+        <v-btn
+          color="green"
+             text
+             v-bind="attrs"
+             @click="snackbar = false"
+        >
+          Close
+         </v-btn>
+        </template>
+       </v-snackbar>
     </div>
 </template>
 
@@ -111,8 +131,10 @@ export default{
             dialog:false,
             items:[],
             prix:0,
+            snackbar:false,
             file:'',
             categories:[],
+            final_items:[],
             name:'',
             selectedImage:''
         }
@@ -129,25 +151,46 @@ export default{
       reader.readAsDataURL(filee);
     },
         fixIndice(){
-            this.dialog=true;
             this.current_item=this.select.length-1;
+            this.dialog=true;
         },
         addprix(){
-            this.items.push({prix:parseFloat(this.prix),name:this.select[this.current_item]});
-            this.dialog=false;
-            this.prix=0;
-        },
+                this.items.push({name:this.select[this.current_item],prix:parseFloat(this.prix)});
+                this.dialog=false;
+                this.prix=0;
+          },
         upplaodFile(e){
             const selectedImage = e.target.files[0];
             this.createBase64Image(selectedImage);
         },
+
         AddCategory(){
+          let i=0;
+          let j=0;
+          while(j<this.select.length){
+
+            if(this.items[i]['name']!=this.select[j]){
+                i++;
+            }else{
+              this.final_items.push((this.items[i]));
+              j++;
+            }
+        
+          }
+
+          console.log( this.final_items);
             service.addCategory({
                 'name':this.name,
                 'file':this.file,
-                'option':this.items
+                'option':this.final_items
             }).then(()=>{
-                 console.log("fff");
+                 console.log("Success");
+                 this.snackbar=true;
+                 this.final_items=[];
+                 this.items=[];
+                 this.select=[];
+                 this.name="";
+                 this.file=null;
             }).catch(()=>{
                 console.log("error");
             })
