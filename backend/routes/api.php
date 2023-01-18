@@ -35,4 +35,6 @@ Route::group(['prefix'=>'/user'],function(){
 
 Route::group(['prefix'=>'/product'],function(){
     Route::post('/addCategory',[ProductController::class,'addCategory']);
+    Route::get('/AllTypeCategorie',[ProductController::class,'AllTypeCategorie']);
+    Route::get('/GetOptionForCategorie',[ProductController::class,'GetOptionForCategorie']);
 });
