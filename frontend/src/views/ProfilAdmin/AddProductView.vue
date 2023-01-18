@@ -40,6 +40,7 @@
            ></v-text-field>
       </div>
         <div class="col-md-6">
+          
             <v-combobox
                 v-model="select_option_food"
                  :items="Option_food"
@@ -72,17 +73,19 @@
 </template>
 
 <script>
+import service from "../../services/GererProduct/GererProduct";
 export default{
+    created(){
+        service.getAllTypeCategory().then((response)=>{
+            for(let i=0;i<(response.data).length;i++){
+                this.types.push(response.data[i].name);
+            }
+        })
+    },
     data(){
         return{ 
-         select_type_food:[],
-         types: [
-          'Pizza',
-          'Pasta',
-          'Dessert',
-          'Drinks',
-          'Sandwish',
-        ],
+         select_type_food:'',
+         types:[],
         }
     },
     methods:{
@@ -118,7 +121,7 @@ export default{
                       {name:'sssssssss',prix:25}
                 ];
          }
-        } 
+        }
     }
 }
 </script>
