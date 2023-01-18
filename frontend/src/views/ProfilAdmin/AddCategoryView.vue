@@ -32,7 +32,7 @@
                     outlined
                     dense
                  ></v-combobox>
-
+                  {{ items }}
                <v-dialog
                      style="z-index:9999999999999999999 !important"
                      v-model="dialog"
@@ -78,12 +78,13 @@
                </v-dialog>
            </div>
            </div>
-           {{ items }}
            <div class="col-lg-6">
             <input    
-              class="form-control"
-              type="file" ref="file"
-              @change="upplaodFile()"
+            ref="file_identity"
+            type="file"
+            id="identity"
+            class="form-control"
+            @change="createBase64Image"
              >
          </div>
         <div class="text-center mt-5 ">
@@ -95,12 +96,14 @@
              </form>
             </v-card-text>
          </v-card>
+        
     </div>
 </template>
 
 <script>
 import service from "../../services/GererProduct/GererProduct";
 export default{
+   
     data(){
         return{ 
             select: [],
@@ -109,23 +112,34 @@ export default{
             items:[],
             prix:0,
             file:'',
-            name:''
+            categories:[],
+            name:'',
+            selectedImage:''
         }
     },
     methods:{
+   createBase64Image(image) {
+      const filee = document.querySelector("#identity").files[0];
+      const reader = new FileReader();
+      let rawImg = this;
+      reader.onloadend = () => {
+        rawImg.file = reader.result;
+        console.log(rawImg.file);
+      };
+      reader.readAsDataURL(filee);
+    },
         fixIndice(){
             this.dialog=true;
             this.current_item=this.select.length-1;
         },
         addprix(){
-            this.items.push({"name":`${this.select[this.current_item]}`,"prix":parseFloat(this.prix)});
-            console.log(this.items);
+            this.items.push({prix:parseFloat(this.prix),name:this.select[this.current_item]});
             this.dialog=false;
             this.prix=0;
         },
-        upplaodFile(){
-            this.file =this.$refs.file.files[0];
-            console.log(this.file);
+        upplaodFile(e){
+            const selectedImage = e.target.files[0];
+            this.createBase64Image(selectedImage);
         },
         AddCategory(){
             service.addCategory({
