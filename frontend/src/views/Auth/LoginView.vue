@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="sidebar_position">
-            <SideBar></SideBar>
+        <div style="z-index:25; !impor  tant" class="sidebar_position">
+            <SideBar :etatsidbar="true"></SideBar>
         </div>
         <div class="popup-below">
                 <v-container fluid fill-height>
@@ -84,7 +84,7 @@
                  </v-container>
                 </div>
              <div>
-        <div class="content" >
+        <div style="z-index:2; !important" class="content" >
             <div class="ma-5 pa-5" id="home">
               <v-container >
                 <v-row>

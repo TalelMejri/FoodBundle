@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="sidebar_position">
-        <SideBar></SideBar>
+    <div style="z-index:25; !important" class="sidebar_position">
+        <SideBar :etatsidbar="true"></SideBar>
     </div>
     <div class="popup-below">
             <v-container fluid fill-height>
-                <v-layout align-center justify-center>
-                   <v-flex xs12 sm8 md4>
+                <v-layout class="mt-5 py-5" align-center justify-center>
+                   <v-flex  sm8 md4>
                       <v-card class="elevation-12">
                          <v-toolbar dark color="#E84C03">
                             <v-toolbar-title >
-                               <div class="d-flex justify-content-center">
+                               <div class="d-flex justify-content-center mt-5">
                                    <p>Sign Up</p>
                                </div>
                             </v-toolbar-title>
@@ -133,7 +133,7 @@
              </v-container>
             </div>
          <div>
-    <div class="content" >
+    <div style="z-index:2; !important" class="content" >
         <div class="ma-5 pa-5" id="home">
           <v-container >
             <v-row>

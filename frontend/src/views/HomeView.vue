@@ -1,10 +1,9 @@
 <template> 
       <div class="all"> 
-        <!--<preloader  v-if="loader==false"></preloader>-->
-        <div class="sidebar_position">          
+        <div  class="sidebar_position">       
           <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat"></SideBar>
         </div>
-        <div class="content "  :class=" etatsidbar==true ? 'close ' : '' "> 
+        <div  class="content "  :class=" etatsidbar==true ? 'close ' : '' "> 
           <div class="ma-5 pa-5" id="home">
             <v-container >
               <v-row>
@@ -235,7 +234,7 @@
     };
   },
     mounted(){
-      setTimeout(()=>this.loader=true,2000);
+      setTimeout(()=>this.loader=false,2000);
     },
     methods:{
       logout(){
@@ -266,7 +265,9 @@
 </script>
 
 <style>
-
+.all{
+  width: 100% !important;
+}
 .login{
   color: #fff !important;
   background: #E84C03 !important;
@@ -305,10 +306,12 @@ small{
     transform: translateX(0);
   }
 }
+
 .premier_partie_contact{
   background: #E84C03;
   border-radius: 1px 500px 100px 1px;
 }
+
 .v-card--reveal {
   align-items: center;
   bottom: 0;
@@ -317,14 +320,9 @@ small{
   position: absolute;
   width: 100%;
 }
-.all{
-  scroll-behavior: smooth;
-  width: 100%;
-}
 
 .sidebar_position{
   position: fixed;
-  z-index: 9999999999999;
 }
 
 .btn{

@@ -20,7 +20,7 @@ class RegisterUser extends Controller
             'lastname'=>$request->lastname,
             'numero_tlf'=>$request->numero_tlf,
             'Photo'=>'/storage/' . $image,
-            'Isadmin'=>true
+            'Isadmin'=>false
             ]
         );
         return response()->json(['data'=>$user], 200);
