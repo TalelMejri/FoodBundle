@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->string('nameProduct');
             $table->double('PrixProduct');
-            $table->string('PhotoProduct');
+            $table->longText('PhotoProduct');
             $table->foreignId('id_category');
             $table->foreign('id_category')->references('id')->on('categories');
             $table->timestamps();

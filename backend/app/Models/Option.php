@@ -9,9 +9,6 @@ class Option extends Model
 {
     use HasFactory;
 
-
-
-
     public function categories(){
         return $this->belongsTo(Category::class);
     }

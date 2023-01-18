@@ -18,8 +18,8 @@ return new class extends Migration
             $table->id();
             $table->string("nameOption");
             $table->double("prixOption");
-            $table->foreignId('id_category');
-            $table->foreign('id_category')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreignId('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
