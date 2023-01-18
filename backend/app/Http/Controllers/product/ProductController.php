@@ -32,25 +32,40 @@ class ProductController extends Controller
     }
 
     public function addCategory(Request $request){
-
-        $image=Storage::disk('public')->put('Category',$request->file('file'));
+      /*$file_name = time().'_'.$request->file->getClientOriginalName();
+        $file_path = $request->file('file')->storeAs('Category', $file_name, 'public');
+       */
         $categoery=new Category();
         $categoery->name=$request->name;
-        $categoery->PhtotoCatg='/storage/'.$image;
+        $categoery->PhtotoCatg=$request->file;
         $categoery->save();
-        $Options=json_decode($request->option);
-
-        $option=new Option();
-        if(count($Options)){
-            for($i=0;$i<count($Options);$i++){
-                 $option->nameOption=$Options[$i]->name;
-                 $option->prixOption=$Options[$i]->prix;
-                 $option->id_category=$categoery->id;
+        return response()->json(['data'=>$request->option],200);
+       $option=new Option();
+      if(count($request->option)!=0) {
+            for($i=0;$i<count($request->option);$i++){
+                 $option->nameOption=$request->option[$i]['name'];
+                 $option->prixOption=$request->option[$i]['prix'];
+                 $option->category_id=$categoery->id;
                  $option->save();
             }
         }
+        return response()->json(['data'=>$option],200);
+    }
 
-       return response()->json(['data'=>count($Options)],200);
+    public function AllTypeCategorie(){
+        $category=Category::all('name');
+        return response()->json($category,200);
+    }
+
+    public function getAllCategorie(){
+        $category=Category::All();
+        return response()->json([$category],200);
+    }
+
+    public function GetOptionForCategorie(){
+        $category=Category::with("options")->get();
+       // $options=Option::with("categories")->orderBy('id')->get();
+        return response()->json([$category],200);
     }
 
 }
