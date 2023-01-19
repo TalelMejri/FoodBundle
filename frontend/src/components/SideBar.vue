@@ -50,6 +50,12 @@
                 <span :style="ViewCurrent=='produit' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Produit</span>
               </a>
             </li>
+            <li >
+              <a @click="changerView('category')" href="#">
+                <v-icon :color="ViewCurrent=='category' ? '#000' : ''" class="icon">mdi-view-grid-plus</v-icon>
+                <span :style="ViewCurrent=='category' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Category</span>
+              </a>
+            </li>
             <li>
                 <a  @click="changerView('client')"  href="#">
                   <v-icon :color="ViewCurrent=='client' ? '#000' : ''"  class="icon">mdi-account-group</v-icon>
