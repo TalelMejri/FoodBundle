@@ -36,5 +36,8 @@ Route::group(['prefix'=>'/user'],function(){
 Route::group(['prefix'=>'/product'],function(){
     Route::post('/addCategory',[ProductController::class,'addCategory']);
     Route::get('/AllTypeCategorie',[ProductController::class,'AllTypeCategorie']);
+    Route::get('/getAllCategorie',[ProductController::class,'getAllCategorie']);
     Route::get('/GetOptionForCategorie',[ProductController::class,'GetOptionForCategorie']);
+    Route::delete('/deleteCategory/{id}',[ProductController::class,'deleteCategory']);
+    Route::delete('/deleteOption/{id}',[ProductController::class,'deleteOption']);
 });
