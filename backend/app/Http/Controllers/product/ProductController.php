@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCaregory;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Category;
 use App\Models\Option;
@@ -30,9 +31,10 @@ class ProductController extends Controller
         return response()->json(['dataProduct'=>$Product,'dataProduct'=>$option],200);*/
     }
 
-    public function addCategory(Request $request){
-      /*$file_name = time().'_'.$request->file->getClientOriginalName();
-        $file_path = $request->file('file')->storeAs('Category', $file_name, 'public');
+    public function addCategory(StoreCaregory $request){
+      /*
+            $file_name = time().'_'.$request->file->getClientOriginalName();
+            $file_path = $request->file('file')->storeAs('Category', $file_name, 'public');
        */
         $categoery=new Category();
         $categoery->name=$request->name;
@@ -62,10 +64,35 @@ class ProductController extends Controller
         return response()->json([$category],200);
     }
 
-    public function GetOptionForCategorie(){
-        $category=Category::with("options")->get();
+    public function GetOptionForCategorie(Request $request){
+        if(isset($request->search)){
+            $category=Category::with("options")->where('name','like','%'.$request->search.'%')->get();
+        }else{
+            $category=Category::with("options")->get();
+        }
        // $options=Option::with("categories")->orderBy('id')->get();
         return response()->json([$category],200);
+    }
+
+    public function deleteCategory($id){
+        $category=Category::find($id);
+        if($category){
+            $category->delete();
+            return response()->json(['message'=>"delete success"],200);
+        }else{
+            return response()->json(['message'=>"Not Found"],404);
+        }
+    }
+
+
+    public function deleteOption($id){
+        $option=Option::find($id);
+        if($option){
+            $option->delete();
+            return response()->json(['message'=>"delete success"],200);
+        }else{
+            return response()->json(['message'=>"Not Found"],404);
+        }
     }
 
 }
