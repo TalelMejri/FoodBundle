@@ -22,6 +22,9 @@
                   <div  v-else-if="ViewCurrent=='produit'">
                     <ConsulteProduitView></ConsulteProduitView>
                   </div>
+                  <div  v-else-if="ViewCurrent=='category'">
+                    <CategoryView></CategoryView>
+                  </div>
                   <div  v-else-if="ViewCurrent=='commande'">
                     <CommandeView></CommandeView>
                   </div>
@@ -41,9 +44,10 @@
 
     import SatistiqueView from "./SatistiqueView.vue"
     import SideBar from "../../components/SideBar.vue"
-    import clientView from "./ConsulteClientView.vue"
-    import CommandeView from "./CommandeView.vue";
-    import ConsulteProduitView from "./ConsulteProduitView.vue";
+    import CategoryView from "@/components/ProfilAdmin/ConsulteCategory.vue"
+    import clientView from "@/views/ProfilAdmin/Client/ConsulteClientView.vue"
+    import CommandeView from "../ProfilAdmin/Commande/CommandeView.vue";
+    import ConsulteProduitView from "../ProfilAdmin/Product/ConsulteProduitView.vue";
     import { AuthStore } from '@/store/StoreAuth';
 
     export default{
@@ -70,7 +74,7 @@
             }
         },
         components:{
-            SideBar,SatistiqueView,clientView,CommandeView,ConsulteProduitView
+            SideBar,SatistiqueView,clientView,CommandeView,ConsulteProduitView,CategoryView
         }
     }
 </script>
