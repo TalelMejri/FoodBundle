@@ -1,6 +1,6 @@
 <template> 
       <div class="all"> 
-        <div  class="sidebar_position">       
+        <div class="sidebar_position">       
           <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat"></SideBar>
         </div>
         <div  class="content "  :class=" etatsidbar==true ? 'close ' : '' "> 
@@ -323,6 +323,7 @@ small{
 
 .sidebar_position{
   position: fixed;
+  z-index: 999999999999999999999;
 }
 
 .btn{
