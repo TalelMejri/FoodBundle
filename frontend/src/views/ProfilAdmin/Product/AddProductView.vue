@@ -21,11 +21,14 @@
                       ></v-text-field>
                     </div>
               <div class="col-md-6">
-                    <select @change="chercherId"  v-model="select_id"> 
-                        <option v-for="i in types" :key="i.id" :value="i.id" >
-                            {{ i['name']}}
-                        </option>  
-                    </select>
+                   <v-select
+                      :items="types"
+                      @change="chercherId"
+                      item-text="name"
+                      item-value="id"
+                      v-model="select_id"
+                      label="Type"
+                  ></v-select>
               </div>
            </div>
            <div class="row">
@@ -68,7 +71,7 @@
             <v-text-field
             name="prix"
             label="prix "
-            type="text"
+            type="number"
             v-model="prix"
             placeholder="Enter Prix"
           ></v-text-field>
@@ -152,8 +155,11 @@ export default{
     },
     methods:{
         fixIndice(){
-            this.current_item=this.Option_food.length-1;
+          this.current_item=this.Option_food.length-1;
+          let index=this.Option_food.findIndex((v)=>v.name==this.Option_food[this.current_item]);
+          if(index==-1){
             this.dialog=true;
+          }
         },
         base64(){
             const filee = document.querySelector("#file").files[0];
@@ -200,6 +206,7 @@ export default{
                     total+=this.items[i].prix;
                 }
             }
+ 
             return total;
         }
     }

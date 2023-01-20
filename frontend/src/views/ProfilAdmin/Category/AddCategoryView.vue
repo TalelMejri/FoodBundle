@@ -173,7 +173,11 @@ export default{
       },
         fixIndice(){
             this.current_item=this.select.length-1;
-            this.dialog=true;
+            let index=this.items.findIndex((v)=>v.name==this.select[this.current_item]);
+            console.log(index);
+            if(index==-1){
+              this.dialog=true;
+            }
         },
         addprix(){
                 this.items.push({name:this.select[this.current_item],prix:parseFloat(this.prix)});
