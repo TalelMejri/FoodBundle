@@ -40,4 +40,12 @@ Route::group(['prefix'=>'/product'],function(){
     Route::get('/GetOptionForCategorie',[ProductController::class,'GetOptionForCategorie']);
     Route::delete('/deleteCategory/{id}',[ProductController::class,'deleteCategory']);
     Route::delete('/deleteOption/{id}',[ProductController::class,'deleteOption']);
+    Route::POST('/UpdateCategory/{id}',[ProductController::class,'UpdateCategory']);
+    Route::POST('/UpdateOption/{id}',[ProductController::class,'UpdateOption']);
+    Route::get('/findCategoryByIid/{id}',[ProductController::class,'findCategoryByIid']);
+    Route::get('/findOptionByIid/{id}',[ProductController::class,'findOptionByIid']);
+    Route::POST('/addOption',[ProductController::class,'addOption']);
+    Route::get('/CountCategory',[ProductController::class,'CountCategory']);
+    Route::get('/getOptionByIdCategory/{id}',[ProductController::class,'getOptionByIdCategory']);
+    Route::post('/Add_Product',[ProductController::class,'Add_Product']);
 });
