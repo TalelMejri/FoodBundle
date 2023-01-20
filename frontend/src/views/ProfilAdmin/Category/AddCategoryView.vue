@@ -135,6 +135,7 @@
 <script>
 import service from "@/services/GererProduct/GererProduct";
 export default{
+  name:"addCategory",
     props:{
       addcat:Boolean
     },
@@ -184,7 +185,6 @@ export default{
               this.createBase64Image(selectedImage);
           },
         AddCategory(){
-          console.log(this.file);
           let i=0;
           let j=0;
           while(j<this.select.length){

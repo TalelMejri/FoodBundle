@@ -13,8 +13,8 @@
             :loading="load==true ? false : true"
             loading-text="Loading... Please wait"
          >
-
-          <template  v-slot:item.actions="{ item }">
+<!-- v-slot:item.actions="{ item }" -->
+          <template  >
             <v-dialog
                 transition="dialog-bottom-transition"
                 max-width="600"

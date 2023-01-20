@@ -10,7 +10,7 @@
                     <div class="col-lg-3 mx-2 text-center">
                         <form class="text-center" @submit.prevent="SearchData()">
                             <v-select
-                                :items="items"
+                                :items="types"
                                 label="Chose Type"
                                 outlined
                           ></v-select>
@@ -94,13 +94,21 @@
 </template>
 
 <script>
+import service  from "@/services/GererProduct/GererProduct"
 import AddProductView from './AddProductView.vue';
 export default{
-    name:'produit',
+    name:'Consultprodut',
+    created(){
+      service.getAllTypeCategory().then((response)=>{
+            for(let i=0;i<(response.data).length;i++){
+                this.types.push(response.data[i].name);
+            }
+        })
+    },
     data(){
         return{
             search:'',
-            items:[],
+            types:[],
             addproduct:false,
         }
     },
