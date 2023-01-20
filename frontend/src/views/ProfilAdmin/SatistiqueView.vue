@@ -19,8 +19,9 @@
                         <v-list-item-title class="text-h5 mb-1">
                           {{item.name}}
                         </v-list-item-title>
-                        <v-list-item-subtitle v-if="item.id!=1">{{item.number}}</v-list-item-subtitle>
-                        <v-list-item-subtitle v-else>{{countuser}}</v-list-item-subtitle>
+                        <v-list-item-subtitle v-if="item.id==0">{{nbrcategory}}</v-list-item-subtitle>
+                        <v-list-item-subtitle v-else-if="item.id==1">{{countuser}}</v-list-item-subtitle>
+                        <v-list-item-subtitle v-else>2</v-list-item-subtitle>
                     </v-list-item-content>
                     </v-list-item>
                   </v-card>
@@ -49,11 +50,15 @@ const gradients = [
     ['#E86325'],
   ]
 import service from "../../services/GererUser/GererUser.js"
+import service_product from "../../services/GererProduct/GererProduct"
  export default{
      name:'view',
      mounted(){
-        this.countuser=  service.CoutUser().then((response)=>{
+         service.CoutUser().then((response)=>{
              this.countuser=response.data.data;
+        });
+        service_product.CountCategory().then((response)=>{
+             this.nbrcategory=response.data;
         })
      },
      data(){
@@ -65,9 +70,10 @@ import service from "../../services/GererUser/GererUser.js"
             //value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
             width: 2,
             countuser:0,
+            nbrcategory:0,
             items:[
-                {id:0,name:'Total category',icon:'filter-variant',number:5},
-                {id:1,name:'Total Client',icon:'account-group'},
+                {id:0,name:'Total category',icon:'filter-variant',number:0},
+                {id:1,name:'Total Client',icon:'account-group',number:0},
                 {id:2,name:'Total Commande',icon:'truck-delivery',number:5}
             ]
         }
