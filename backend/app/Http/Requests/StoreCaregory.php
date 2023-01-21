@@ -24,7 +24,7 @@ class StoreCaregory extends FormRequest
     public function rules()
     {
         return [
-            "name"=>"required",
+            "name"=>"required|unique:categories",
             "option"=>"required",
         ];
     }
