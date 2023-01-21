@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\auth\LoginUser;
 use App\Http\Controllers\Auth\RegisterUser;
+use App\Http\Controllers\category\CategoryController;
+use App\Http\Controllers\Option\OptionController;
 use App\Http\Controllers\product\ProductController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
@@ -31,21 +33,42 @@ Route::group(['prefix'=>'/user'],function(){
     Route::get('/countUser',[UserController::class,'coutUser']);
     Route::get('/getuser',[UserController::class,'index']);
     Route::delete('/deleteUser/{id}',[UserController::class,'destroy']);
+    Route::Post('/Updateuser/{id}',[UserController::class,'update']);
+});
+
+Route::group(['prefix'=>"/category"],function(){
+    Route::post('/addCategory',[CategoryController::class,'addCategory']);
+    Route::get('/AllTypeCategorie',[CategoryController::class,'AllTypeCategorie']);
+    Route::get('/getAllCategorie',[CategoryController::class,'getAllCategorie']);
+    Route::delete('/deleteCategory/{id}',[CategoryController::class,'deleteCategory']);
+    Route::POST('/UpdateCategory/{id}',[CategoryController::class,'UpdateCategory']);
+    Route::get('/findCategoryByIid/{id}',[CategoryController::class,'findCategoryByIid']);
+    Route::get('/CountCategory',[CategoryController::class,'CountCategory']);
+    Route::get('/GetOptionForCategorie',[CategoryController::class,'GetOptionForCategorie']);
+});
+
+
+Route::group(['prefix'=>"/option"],function(){
+    Route::delete('/deleteOption/{id}',[OptionController::class,'deleteOption']);
+    Route::POST('/UpdateOption/{id}',[OptionController::class,'UpdateOption']);
+    Route::get('/findOptionByIid/{id}',[OptionController::class,'findOptionByIid']);
+    Route::POST('/addOption',[OptionController::class,'addOption']);
+    Route::get('/countOption',[OptionController::class,'CountOption']);
+    Route::post('/addOptionSpecifique',[OptionController::class,'addOptionSpecifique']);
+    Route::get('/CountOptionSpecifique',[OptionController::class,'CountOptionSpecifique']);
+    Route::get('/getOptionByIdCategory/{id}',[OptionController::class,'getOptionByIdCategory']);
+    Route::delete('/deleteOptionSpecifique/{id}',[OptionController::class,'deleteOptionSpecifique']);
+    Route::POST('/UpdateOptionSpecifique/{id}',[OptionController::class,'UpdateOptionSpecifique']);
+    Route::get('/getOptionGlobal',[OptionController::class,'getOptionGlobal']);
+    Route::get('/getOptionSpecifique',[OptionController::class,'getOptionSpecifique']);
 });
 
 Route::group(['prefix'=>'/product'],function(){
-    Route::post('/addCategory',[ProductController::class,'addCategory']);
-    Route::get('/AllTypeCategorie',[ProductController::class,'AllTypeCategorie']);
-    Route::get('/getAllCategorie',[ProductController::class,'getAllCategorie']);
-    Route::get('/GetOptionForCategorie',[ProductController::class,'GetOptionForCategorie']);
-    Route::delete('/deleteCategory/{id}',[ProductController::class,'deleteCategory']);
-    Route::delete('/deleteOption/{id}',[ProductController::class,'deleteOption']);
-    Route::POST('/UpdateCategory/{id}',[ProductController::class,'UpdateCategory']);
-    Route::POST('/UpdateOption/{id}',[ProductController::class,'UpdateOption']);
-    Route::get('/findCategoryByIid/{id}',[ProductController::class,'findCategoryByIid']);
-    Route::get('/findOptionByIid/{id}',[ProductController::class,'findOptionByIid']);
-    Route::POST('/addOption',[ProductController::class,'addOption']);
-    Route::get('/CountCategory',[ProductController::class,'CountCategory']);
-    Route::get('/getOptionByIdCategory/{id}',[ProductController::class,'getOptionByIdCategory']);
+    Route::delete('/deleteProduct/{id}',[ProductController::class,'deleteProduct']);
+    Route::POST('/UpdateProduct/{id}',[ProductController::class,'UpdateProduct']);
+    Route::get('/findProductByIid/{id}',[ProductController::class,'findProductByIid']);
     Route::post('/Add_Product',[ProductController::class,'Add_Product']);
+    Route::get('/countproduct',[ProductController::class,'countProduct']);
+    Route::get('/AllProduct',[ProductController::class,'AllProduct']);
+    Route::get('/GetProductCategoryOption',[ProductController::class,'GetProductCategoryOption']);
 });
