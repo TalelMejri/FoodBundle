@@ -5,7 +5,8 @@ import login from '../views/Auth/LoginView.vue'
 import signup from '../views/Auth/SignUpView.vue'
 import allOrderedProduct from '../views/ProfilClient/AllOrderedView.vue'
 import AllFavoriteProduct from '../views/ProfilClient/AllFavoriteView.vue'
-import dashboard from '../views/ProfilAdmin/DashboardView.vue'
+import dashboard from '../views/ProfilAdmin/dashboard/DashboardView.vue'
+import editProfil from "@/views/ProfilClient/EditProfilView.vue"
 
 Vue.use(VueRouter)
 
@@ -15,14 +16,7 @@ const routes = [
     name: 'home',
     component: HomeView
   },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
+
   {
     path: '/login',
     name: 'login',
@@ -43,6 +37,11 @@ const routes = [
     path: '/AllFavoriteProduct',
     name: 'AllFavoriteProduct',
     component: AllFavoriteProduct
+  },
+  {
+    path: '/editProfil',
+    name: 'editProfil',
+    component: editProfil
   },
   {
     path: '/dashboard',
