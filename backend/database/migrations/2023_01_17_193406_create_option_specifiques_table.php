@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string("nameOptionSpecifique");
             $table->double("prixOptionSpecifique");
-            $table->foreignId('Id_Product');
-            $table->foreign('Id_Product')->references('id')->on('products')->onDelete('cascade');
+            $table->foreignId('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->timestamps();
         });
     }
