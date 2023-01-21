@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -58,7 +59,33 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+            $user=User::find($id);
+            if($user){
+            if($request->avatarupload==1){
+                $image=Storage::disk('public')->put('users',$request->file('photo'));
+                $user->update(
+                    [
+                        'name'=>$request->name,
+                        'lastname'=>$request->lastname,
+                        'email'=>$request->email,
+                        'Photo'=>'/storage/'.$image
+                    ]
+                );
+            }else{
+
+                $user->update(
+                    [
+                        'name'=>$request->name,
+                        'lastname'=>$request->lastname,
+                        'email'=>$request->email,
+                    ]
+                );
+            }
+                return response()->json(['data'=>$user],200);
+            }else{
+                return response()->json(['data'=>"Not Found"],200);
+            }
     }
 
     /**
