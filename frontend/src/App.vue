@@ -21,12 +21,13 @@ export default {
 
 
 <style scoped>
+
 #app{
   background: #FFF9EB;
-  overflow: hidden;
-  width: 100vw;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 .fade-enter,.fade-leave-to{
   opacity: 0; 
   transform: translateX(2em);
@@ -34,4 +35,5 @@ export default {
 .fade-enter-active,.fade-leave-active{
   transition: all .3s ease;
 }
+
 </style>
