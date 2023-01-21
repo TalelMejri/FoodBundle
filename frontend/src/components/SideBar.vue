@@ -56,6 +56,12 @@
                 <span :style="ViewCurrent=='category' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Category</span>
               </a>
             </li>
+            <li >
+              <a @click="changerView('option')" href="#">
+                <v-icon :color="ViewCurrent=='option' ? '#000' : ''" class="icon">mdi-view-grid-plus</v-icon>
+                <span :style="ViewCurrent=='option' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Option</span>
+              </a>
+            </li>
             <li>
                 <a  @click="changerView('client')"  href="#">
                   <v-icon :color="ViewCurrent=='client' ? '#000' : ''"  class="icon">mdi-account-group</v-icon>
@@ -69,12 +75,7 @@
                   <span :style="ViewCurrent=='commande' ? 'color:#000 !important;font-size:20px;font-wieght:700' : ''" class="nav-item">Commande</span>
                 </a>
               </li>
-            <li>
-              <a @click="logout()"  href="#">
-                <v-icon class="icon">mdi-logout-variant</v-icon>
-                <span class="nav-item">logout</span>
-              </a>
-            </li>
+          
             <li class="logout"  :class="etatsidbar==true ? 'close' : '' ">
                   <v-btn  fab  @click="changer()">
                        <v-icon style="color:#E84C03" v-if="etatsidbar" class="px-1">mdi-arrow-right-bold</v-icon>
@@ -110,13 +111,8 @@ export default{
         logout(){
             this.store.logout();
         }
-     
-
     },
 
-    created(){
-       
-    },
 
     props:{
         etatsidbar:Boolean,
@@ -130,21 +126,6 @@ export default{
 
 <style scoped>
 
-
-    /*.sidebar{
-        color:#fff;
-        background-color: #2f855a;
-        float: left;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        transition: 0.3 ease;
-        left: 0;
-        bottom: 0;
-        padding: 0.5em;
-        display: flex;
-        flex-direction: column;
-    }*/
 
    nav{
         background: #E84C03;
