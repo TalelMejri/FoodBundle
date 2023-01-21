@@ -8,13 +8,12 @@
             v-model="selected"
             :single-select="singleSelect"
             item-key="name"
-            show-select
             class="elevation-1  mt-5 py-5"
             :loading="load==true ? false : true"
             loading-text="Loading... Please wait"
          >
-<!-- v-slot:item.actions="{ item }" -->
-          <template  >
+
+          <template v-slot:item.actions="{ item }"  >
             <v-dialog
                 transition="dialog-bottom-transition"
                 max-width="600"

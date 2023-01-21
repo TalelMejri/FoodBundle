@@ -1,31 +1,41 @@
 <template>
     <div class="mt-5 py-5">
-        <div v-if="addproduct">
-             <AddProductView></AddProductView>
+        <div v-if="addproduct && !UpdateProduct && !addOption">
+             <AddProductView @retourn_consulte="retourn_consulte"></AddProductView>
         </div>
+        <div v-else-if="UpdateProduct && !addproduct && !addOption" >
+              <UpdateProductView @retourn_consulte_from_update="retourn_consulte_from_update" :id="id_current"></UpdateProductView>
+        </div>
+        <div v-else-if="!UpdateProduct && !addproduct && addOption" >
+              <AddOptionProductView @closeAdd="closeAdd" :id="id_current"></AddOptionProductView>
+       </div>
         <div v-else>
-         <v-card elevation="6" class="p-5">
+         <v-card elevation="6" style="padding:25px">
                 <h4 class="text-center py-4">List Produit</h4>
                 <div class="row gap-4 p-5 mt-3">
                     <div class="col-lg-3 mx-2 text-center">
-                        <form class="text-center" @submit.prevent="SearchData()">
-                            <v-select
-                                :items="types"
-                                label="Chose Type"
-                                outlined
-                          ></v-select>
-                     </form>
+                         
+                             <v-select
+                                  :items="types"
+                                  item-text="name"
+                                  @change="FetchData()"
+                                  item-value="id"
+                                 v-model="select_id"
+                                 label="Type"
+                             ></v-select>
+                       
                     </div>
                     <div class="col-lg-5 mx-2 text-center">
-                        <form @submit.prevent="SearchData()">
-                            <v-text-field
-                             v-model="search"
-                             append-icon="mdi-magnify"
-                             label="Search By Name"
-                             single-line
-                             hide-details
-                          ></v-text-field>
-                     </form>
+                       
+                              <v-text-field
+                                  v-model="search"
+                                  append-icon="mdi-magnify"
+                                  label="Search By Name"
+                                  @keyup="FetchData()"
+                                  single-line
+                                  hide-details
+                            ></v-text-field>
+                        
                     </div>
                     <div class="col-lg-3 text-center">
                       <div class="row">
@@ -62,61 +72,425 @@
                             Photo
                           </th>
                           <th class="text-left">
-                            Prix
+                            Category
                           </th>
                           <th class="text-left">
-                            Option
+                            Prix
                           </th>
+                      
                           <th class="text-left">
                             Operation
                           </th>
                         </tr>
                       </thead>
-                      <tbody v-if="items==''">
+                      <tbody v-if="loader"> 
+                        <tr class="text-center">
+                           <td colspan="6">
+                                <v-progress-circular
+                                    indeterminate
+                                    color="red"
+                                 ></v-progress-circular>
+                           </td>
+                        </tr>
+                    </tbody>
+                      <tbody v-else-if="Products==''">
                         <tr >
                           <td colspan="6" class="text-center">No data available</td>
                         </tr>
                       </tbody>
                       <tbody v-else>
                         <tr
-                          v-for="item in items"
-                          :key="item"
+                          v-for="item in Products"
+                          :key="item.id"
                         >
-                          <td>{{ item }}</td>
-                          <td>{{ item }}</td>
-                        </tr>
+                          <td>{{item.id}}</td>
+                          <td>{{ item.nameProduct }}</td>
+                          <td><img width="80px" height="80px" :src="item.PhotoProduct" alt=""></td>
+                          <td v-if="types.find((v)=>v.id==item.id_category) ? index=types.find((v)=>v.id==item.id_category) :'' ">
+                              {{ index.name }} 
+                          </td>
+                          <td>{{ item.PrixProduct }}</td>
+                          <!-- <td v-if="item.optionspecifiques!=''">
+                            <v-list>
+                                 <v-list-group
+                                     v-for="(i) in item.optionspecifiques"
+                                     :key="i.id"
+                                 >
+                            <v-dialog
+                                     v-if="SelectedDeleteOption!=''"
+                                     transition="dialog-bottom-transition"
+                                     max-width="600"
+                                     v-model="dialogOptiondelete"
+                               >
+                                <template  >
+                                  <v-card>
+                                    <v-toolbar
+                                      color="danger"
+                                      dark
+                                    >Delete Option</v-toolbar>
+                                    <v-card-text>
+                                      <div class="text-h2 pa-12">{{SelectedDeleteOption.nameOptionSpecifique}}</div>
+                                    </v-card-text>
+                                    <v-card-actions class="justify-end">
+                                      <v-btn
+                                        text
+                                        @click="deleteOption(SelectedDeleteOption.id)"
+                                      >Delete</v-btn>
+                                      <v-btn
+                                      text
+                                      @click="SelectedDeleteOption=[]"
+                                    >close</v-btn>
+                                    </v-card-actions>
+                                  </v-card>
+                                </template>
+                              </v-dialog> 
+               
+                             <v-dialog v-if="option_selected!=''"
+                                 transition="dialog-bottom-transition"
+                                 max-width="600"
+                                 v-model="dialogOptionedit"
+                               >
+                                <template >
+                                  <v-card>
+                                    <v-toolbar
+                                      color="yellow"
+                                      dark
+                                    >Edit Option</v-toolbar>
+                                    <v-card-text>
+                                     <form @submit.prevent="updateOption()">
+                                       <div class="mx-5 px-5">
+                                         <v-text-field
+                                         name="name"
+                                         label="name"
+                                         type="text"
+                                         v-model="name_edit"
+                                         placeholder="Enter Name"
+                                       ></v-text-field>
+               
+                                         <v-text-field
+                                         name="prix"
+                                         label="prix "
+                                         type="text"
+                                         v-model="prix_edit"
+                                         placeholder="Enter Prix"
+                                       ></v-text-field>
+                                       </div>
+                                     <v-divider></v-divider>
+                                    <v-card-actions class="justify-end">
+                                      <v-btn type="submit"
+                                        text
+                                       >Update</v-btn>
+                                      <v-btn
+                                      text
+                                      @click="option_selected=[]"
+                                    >close</v-btn>
+                                    </v-card-actions>
+                                    </form>
+                                   </v-card-text>
+                                  </v-card>
+                                </template>
+                              </v-dialog> 
+               
+                                   <template  v-slot:activator>
+                                     <v-list-item-content>
+                                       <v-list-item-title>{{i.nameOptionSpecifique}}</v-list-item-title>
+                                     </v-list-item-content>
+
+                                     <v-tooltip bottom>
+                                      <template v-slot:activator="{ on, attrs }">
+                                          <v-btn
+                                          class="mx-2"
+                                          v-bind="attrs"
+                                          v-on="on"
+                                          color="red"
+                                          @click="initIndiceOption(i)"
+                                          fab
+                                          small
+                                        >
+                                          <v-icon color="#fff">   mdi-delete </v-icon>
+                                        </v-btn>
+                                      </template>
+                                      <span>Delete Option </span>
+                                    </v-tooltip>
+                                       <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn
+                                            class="mx-2"
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            color="yellow"
+                                            @click="editIndiceDialog(i)"
+                                            fab
+                                            small
+                                          >
+                                            <v-icon color="#fff">mdi-square-edit-outline </v-icon>
+                                          </v-btn>
+                                        </template>
+                                        <span>Edit Option </span>
+                                      </v-tooltip>
+                                   </template>
+                                   <v-list-item
+                                   >
+                                     <v-list-item-content>
+                                       <v-list-item-title >{{i.prixOptionSpecifique}} TND</v-list-item-title>
+                                     </v-list-item-content>
+                                   </v-list-item>
+                                 </v-list-group>
+                               </v-list>
+                             </td>
+                              <td class="text-center" v-else>
+                                 No Option Specifique
+                             </td> -->
+                             <td>
+                             <v-tooltip c bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                  <v-btn
+                                  class="mb-5 mx-2"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  @click="initIndice(item)"
+                                  fab
+                                >
+                                  <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                              </template>
+                              <span>Delete Product</span>
+                            </v-tooltip>
+                               
+                                <v-dialog  v-if="item_selected!=''"
+                                transition="dialog-bottom-transition"
+                                max-width="600"
+                                v-model="dialog"
+                              >
+                               <template >
+                                 <v-card>
+                                   <v-toolbar
+                                     color="danger"
+                                     dark
+                                   >Delete Product</v-toolbar>
+                                   <v-card-text>
+                                     <div class="text-h2 pa-12">{{item_selected.nameProduct}}</div>
+                                   </v-card-text>
+                                   <v-card-actions class="justify-end">
+                                     <v-btn 
+                                       text
+                                       @click="deleteProduct(item_selected.id)"
+                                     >Delete</v-btn>
+                                     <v-btn
+                                     text
+                                     @click="dialog=false"
+                                   >close</v-btn>
+                                   </v-card-actions>
+                                 </v-card>
+                               </template>
+                             </v-dialog> 
+
+                             <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                  <v-btn
+                                  class="mb-5 mx-2"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  @click="editProduct(item.id)"
+                                  fab
+                                >
+                                  <v-icon>mdi-square-edit-outline</v-icon>
+                                </v-btn>
+                              </template>
+                              <span>Edit Product </span>
+                            </v-tooltip>
+ 
+                            <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                class="mb-5"
+                                v-bind="attrs"
+                                v-on="on"
+                                @click="addOptionProduct(item.id)"
+                                fab
+                              >
+                                <v-icon> mdi-food</v-icon>
+                              </v-btn>
+                            </template>
+                            <span>Add Option </span>
+                          </v-tooltip>
+                             
+                             </td>
+                           </tr>
                       </tbody>
                     </template>
                   </v-simple-table>
+                  <div class="mt-5 row" style="text-align:center !important">
+                     <v-btn class="mb-1" :disabled="pagination.prev_page==null" @click="changerPage(pagination.current_page-1)" small>
+                      <v-icon>
+                        mdi-chevron-left
+                     </v-icon>
+                     </v-btn>
+                     <v-btn  v-for="num in (Math.ceil (pagination.per_page ? (pagination.total / pagination.per_page) : 1))" :key="num"
+                        class="mx-2 mb-1"
+                        color="primary"
+                        @click="changerPage(num)"
+                         small
+                         :disabled="pagination.current_page==num"
+                         x-small>
+                        {{num}}
+                     </v-btn>
+                        
+                     <v-btn :disabled="pagination.next_page==null" small  @click="changerPage(pagination.current_page+1)" >
+                      <v-icon>
+                        mdi-chevron-right
+                     </v-icon>
+                     </v-btn>
+                  </div>
+                  <v-snackbar
+                  v-model="snackbar"
+                >
+                     Delete with success
+                  <template v-slot:action="{ attrs }">
+                    <v-btn
+                      color="indigo"
+                      text
+                      v-bind="attrs"
+                      @click="snackbar = false"
+                    >
+                      Close
+                    </v-btn>
+                  </template>
+                </v-snackbar>
          </v-card>
         </div>
     </div>
 </template>
 
 <script>
+import service_category  from "@/services/GererCategory/category"
 import service  from "@/services/GererProduct/GererProduct"
-import AddProductView from './AddProductView.vue';
+import AddProductView from "@/components/ProfilAdmin/Product/AddProduct.vue";
+import UpdateProductView from "@/components/ProfilAdmin/Product/UpdateProduct.vue";
+import AddOptionProductView from "@/components/ProfilAdmin/option/AddOptionProduct.vue"
 export default{
     name:'Consultprodut',
+    mounted(){
+      this.FetchData();
+      this.changerPage(1);
+    },
+
     created(){
-      service.getAllTypeCategory().then((response)=>{
+      service_category.getAllTypeCategory().then((response)=>{
             for(let i=0;i<(response.data).length;i++){
-                this.types.push(response.data[i].name);
+                this.types.push({name:response.data[i].name,id:response.data[i].id});
             }
         })
     },
+
     data(){
         return{
             search:'',
+            namec:'',
             types:[],
             addproduct:false,
+            pagination:{
+              next_page:0,
+              prev_page:0,
+              per_page:0,
+              total:0,
+              current_page:1
+            },
+            dialogOptiondelete:false,
+            id_current:0,
+            SelectedDeleteOption:[],
+            Products:[],
+            option_selected:[],
+            dialogOptionedit:false,
+            name_edit:'',
+            UpdateProduct:false,
+            addOption:false,
+            prix_edit:'',
+            loader:true,
+            select_id:-1,
+            dialog:false,   
+            item_selected:0
         }
     },
     methods:{
+      initIndice(initIndice){
+        this.item_selected=initIndice;
+        this.dialog=true;
+      },
+      deleteProduct(id){
+        service.deleteProduct(id).then(()=>{
+            this.item_selected=[];
+            this.dialog=true;
+            this.snackbar=true;
+            this.FetchData();
+        })
+      },
+      editIndiceDialog(initIndice){
+        this.option_selected=initIndice;
+        this.dialogOptionedit=true;
+        this.name_edit=this.option_selected.nameOptionSpecifique;
+        this.prix_edit=this.option_selected.prixOptionSpecifique;
+      },
+      addOptionProduct(e){
+        this.id_current=e;
+        this.addOption=true;
+      },
+      editProduct(e){
+        this.id_current=e;
+        this.UpdateProduct=true;
+      },
+      initIndiceOption(a){
+        this.SelectedDeleteOption=a;
+        this.dialogOptiondelete=true;
+      },
+      deleteOption(id){
+        service.deleteOptionSpecifique(id).then(()=>{
+            this.SelectedDeleteOption=[];
+            this.dialogOptiondelete=true;
+            this.snackbar=true;
+            this.FetchData();
+        })
+      },
+      updateOption(){
+        service.UpdateOptionSpecifique(this.option_selected.id,{name:this.name_edit,prix:this.prix_edit}).then(()=>{
+          this.option_selected=[];
+          this.FetchData();
+        })
+      },
+      changerPage(a){
+        this.pagination.current_page=a;
+        this.FetchData();
+      },
 
+      retourn_consulte_from_update(){
+        this.UpdateProduct=false;
+        this.FetchData();
+      },
+      retourn_consulte(){
+        this.addproduct=false;
+        this.FetchData();
+      },
+      closeAdd(){
+          this.addOption=false;
+          this.FetchData();
+      },
+      FetchData(){
+        service.GetProductCategoryOption(this.select_id,this.search,this.pagination.current_page).then((response)=>{
+            this.Products=response.data.data.data;
+            this.pagination.current_page=response.data.data.current_page;
+            this.pagination.total=response.data.data.total;
+            this.pagination.next_page=response.data.data.next_page_url?.split("=")[1];
+            this.pagination.prev_page=response.data.data.prev_page_url?.split("=")[1];
+            this.pagination.per_page=response.data.data.per_page;
+            this.loader=false;
+        })
+      },
+    },
+    computed:{
+    
     },
     components:{
-        AddProductView
+        AddProductView,UpdateProductView,AddOptionProductView
     }
 }
 </script>

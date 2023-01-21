@@ -1,68 +1,35 @@
 import "@/plugins/axios";
-import Axios from "axios";
+import axios from "axios";
 
 export default{
 
-    addCategory(product){
-        /*var data=new FormData();
-        data.append('name',product.name);
-        data.append('option',product.option);
-        data.append('file',product.file);*/
-        const config={
-            headers:{
-                "Content-Type":"Undefined",
-            }
-        };
-        //console.log(product.option);
-        return Axios.post('product/addCategory',product);
+    deleteProduct(id){
+        return axios.delete('product/deleteProduct/'+id);
     },
 
-    getAllTypeCategory(){
-        return Axios.get('product/AllTypeCategorie');
-    },
-
-    getAllCategorieOptions(search,page){
-        return Axios.get(`product/GetOptionForCategorie?${search ? "search="+search : ""}&page=${page}`);
-    },
-
-    deleteCategory(id){
-        return Axios.delete('product/deleteCategory/'+id);
-    },
-
-    deleteOption(id){
-        return Axios.delete('product/deleteOption/'+id);
-    },
-
-    UpdateOption(id,option){
-        return Axios.post('product/UpdateOption/'+id,option);
-    },
-    
-    UpdateCategory(id,category){
-        return Axios.post('product/UpdateCategory/'+id,category);
-    },
-
-    findCategoryByIid(id){
-        return Axios.get('product/findCategoryByIid/'+id);
-    },
-
-    findOptionByIid(id){
-        return Axios.get('product/findOptionByIid/'+id);
-    },
-
-    addOption(option){
-        return Axios.post('product/addOption',option);
-    },
-
-    CountCategory(){
-        return Axios.get('product/CountCategory');
-    },
-
-    getOptionByIdCategory(user){
-        return Axios.get('product/getOptionByIdCategory/'+user.id);   
+    UpdateProduct(id,Product){
+        return axios.post('product/UpdateProduct/'+id,Product);
     },
 
     Add_Product(Product){
-        return Axios.post('product/Add_Product',Product);   
+        return axios.post('product/Add_Product',Product);   
+    },
+
+    GetProductCategoryOption(idcategory,search,page){
+        return axios.get(`product/GetProductCategoryOption?${search ? 'search='+search : ''}&idcategory=${idcategory!=-1 ? idcategory : -1}&page=${page}`);   
+    },
+
+    findProductByIid(idProduct){
+        return axios.get('product/findProductByIid/'+idProduct);   
+    },
+
+    countproduct(){
+        return axios.get('product/countproduct');   
+    },
+
+    getallProduct(){
+        return axios.get('product/AllProduct');
     }
+
 
 }

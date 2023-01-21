@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="z-index:25; !impor  tant" class="sidebar_position">
+        <div style="z-index:25; !important" class="sidebar_position">
             <SideBar :etatsidbar="true"></SideBar>
         </div>
         <div class="popup-below">

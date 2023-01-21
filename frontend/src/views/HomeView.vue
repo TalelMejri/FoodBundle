@@ -1,11 +1,12 @@
 <template> 
       <div class="all"> 
-        <div class="sidebar_position">       
-          <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat"></SideBar>
+        <preloader></preloader>   
+       <div class="sidebar_position">    
+            <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat"></SideBar>
         </div>
-        <div  class="content "  :class=" etatsidbar==true ? 'close ' : '' "> 
+        <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' "> 
           <div class="ma-5 pa-5" id="home">
-            <v-container >
+            <v-container>
               <v-row>
                 <v-col
                   cols="auto"
@@ -13,7 +14,7 @@
                 >
                  <h2> <span style="color:#E84C03;">Food</span>Bundle</h2>
                 </v-col>
-                <v-col v-if="store.getisadmin==null || store.getisadmin==1 " cols="auto">
+                <v-col v-if="store.isAdmin==null" cols="auto">
                   <v-row
                   align="center"
                   justify="space-around"
@@ -32,38 +33,108 @@
                 </v-col>
                 <v-col v-else cols="auto">
                   <template>
-                    <v-row justify="space-around">
-                      <v-menu
-                        transition="scale-transition"
-                        :rounded="rounded"
-                         offset-y
-                      >
-                        <template v-slot:activator="{ attrs, on }">
+                    <v-row >
+                      <v-badge class="mx-5 mt-3" color="red" content="6">
+                              <v-btn text @click="snackbar_notif = true">
+                                  ddd
+                              </v-btn>
+                            <!--<v-icon color="#000">mdi-bell</v-icon>-->
+                          </v-badge>
+                      <v-menu>
+                        <template v-slot:activator="{ on }">
                           <v-btn
-                            class="white--text ma-5"
-                            v-bind="attrs"
+                            icon
+                            x-large
                             v-on="on"
                           >
-                             avatar
+                            <v-avatar
+                              size="48"
+                            >
+                            <img :src="'http://127.0.0.1:8000'+store.user['Photo']" alt="">
+                            </v-avatar>
                           </v-btn>
                         </template>
-                        <v-list>
-                          <v-list-item
-                            v-for="item in items"
-                            :key="item"
-                            link
-                          >
-                            <v-list-item-title v-if="item.id!=2" >
-                             <router-link :to="item.link" style="color:#000 !important" class="text-decoration-none "><span>mdi-{{item.icon}} </span> {{ item.name }}</router-link>  
-                            </v-list-item-title>
-                            <v-list-item-title v-else @click="logout()" >
-                              <span>mdi-{{item.icon}} </span> {{ item.name }}
-                          </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
+                        <v-card>
+                          <v-list-item-content class="justify-center">
+                            <div class="mx-auto text-center">
+                              <v-avatar>
+                                 <img :src="'http://127.0.0.1:8000'+store.user['Photo']" alt="">
+                              </v-avatar>
+                              <h3>{{store.user['name']}}</h3>
+                              <p class="text-caption mt-1">
+                                {{store.user['lastname']}}
+                              </p>
+                              <v-divider class="my-2"></v-divider>
+                              <router-link to="editProfil" style="text-decoration:none !important;">
+                                 <v-btn 
+                                    depressed
+                                    rounded
+                                    text
+                                  >
+                                Edit Account
+                              </v-btn>
+                              </router-link>
+                              <v-divider class="my-2"></v-divider>
+                              <v-badge    color="red"
+                              content="6">
+                              <v-btn @click="snackbar_notif = true">
+                                ddd
+                              </v-btn>
+                            <!--<v-icon color="#000">mdi-bell</v-icon>-->
+                          </v-badge>
+                              <v-divider class="my-2"></v-divider>
+                              <router-link to="allOrderedProduct" style="text-decoration:none !important;">
+                                <v-btn 
+                                   depressed
+                                   rounded
+                                   text
+                                 >
+                                 all Ordered Product
+                             </v-btn>
+                             </router-link>
+                             <v-divider class="my-2"></v-divider>
+                             <router-link to="AllFavoriteProduct" style="text-decoration:none !important;">
+                               <v-btn 
+                                  depressed
+                                  rounded
+                                  text
+                                >
+                                All Favorite Product
+                            </v-btn>
+                            </router-link>
+
+                              <v-divider class="my-2"></v-divider>
+                              <v-btn @click="logout()"
+                                depressed
+                                rounded
+                                text
+                              >
+                                Logout
+                              </v-btn>
+                           
+                            
+                            </div>
+                          </v-list-item-content>
+                        </v-card>
                       </v-menu>
                     </v-row>
                   </template>
+                  <v-snackbar
+                  v-model="snackbar_notif"
+                    right
+                    scroll
+                >
+                  <template v-slot:action="{ attrs }">
+                    <v-btn
+                      color="indigo"
+                      text
+                      v-bind="attrs"
+                      @click="snackbar_notif = false"
+                    >
+                      Close
+                    </v-btn>
+                  </template>
+                </v-snackbar>
                 </v-col>
               </v-row>
                <v-content class="home my-5 py-5 d-flex justify-content-center"  >
@@ -102,7 +173,7 @@
           <div class="ma-5 pa-5" id="menu">
             <v-container >
                 <h2 class="text-center mb-5">Our Menu</h2>
-                 <div class="row">
+                 <!--<div class="row">
                 <v-hover v-for="menu in All_Menu" :key="menu.id"  v-slot="{ hover }">
                 <div class="col-lg-4">
                   <v-card
@@ -112,7 +183,7 @@
                   >
                     <v-img
                       :aspect-ratio="16/9"
-                      :src="menu.src_back"
+                      :src="menu.PhtotoCatg"
                     >
                       <v-expand-transition>
                         <div
@@ -120,8 +191,7 @@
                           class=" white justify-content-center"
                           style="height: 100%;"
                         >
-                           <div class="text-center  ">
-                              <div class="py-3 "><img width="80px" height="80px"  :src="menu.src_hover" alt=""></div>
+                           <div class="text-center">
                               <div class="mb-2 "><h2>{{menu.name}}</h2></div>
                               <div>
                               <v-btn class="mb-2" color="error">
@@ -135,7 +205,45 @@
                   </v-card>
                   </div>
                 </v-hover>
-              </div>
+              </div>-->
+              <v-window show-arrows>
+                <template v-slot:prev="{ on, attrs }">
+                  <v-btn
+                    color="success"
+                    v-bind="attrs"
+                    v-on="on"
+                  >Previous slide</v-btn>
+                </template>
+                <template v-slot:next="{ on, attrs }">
+                  <v-btn
+                    color="info"
+                    v-bind="attrs"
+                    v-on="on"
+                  >Next slide</v-btn>
+                </template>
+                <v-window-item
+                  v-for="n in All_Menu.length"
+                  :key="n.id"
+                >
+                  <v-card
+                    color="grey"
+                    height="200"
+                  >
+                    <v-row
+                      class="fill-height"
+                      align="center"
+                      justify="center"
+                    >
+                      <h1
+                        style="font-size: 5rem;"
+                        class="white--text"
+                      >
+                        Slide {{ n.id }}
+                      </h1>
+                    </v-row>
+                  </v-card>
+                </v-window-item>
+              </v-window>
             </v-container>
           </div>
           <div class="ma-5 pa-5" id="contact">
@@ -184,6 +292,22 @@
                       </div>
                   </div>
               </v-card>
+              <v-snackbar
+              v-model="snackbar_edit"
+                scroll
+            >
+            {{message}}
+              <template v-slot:action="{ attrs }">
+                <v-btn
+                  color="indigo"
+                  text
+                  v-bind="attrs"
+                  @click="snackbar_edit = false"
+                >
+                  Close
+                </v-btn>
+              </template>
+            </v-snackbar>
             </v-container>
           </div>
           <ServiceVue></ServiceVue>
@@ -197,12 +321,24 @@
   import footerVue from "../components/home_page/FooterVue.vue"
   import ServiceVue from "../components/home_page/ServiceVue.vue"
   import SideBar from "../components/SideBar.vue"
-  import preloader from "../components/preloader.vue"
-
+  import preloader from "@/components/preloader.vue"
+  import service_category from "@/services/GererCategory/category"
   export default {
     name: 'Home', 
+    created(){
+      if(typeof(this.$route.query.content)!='undefined'){
+             this.message = this.$route.query.content;
+             this.snackbar_edit=true;
+      };
+      service_category.getAllCategorie().then((res)=>{
+         this.All_Menu=res.data;
+      })
+    },
     data(){
         return{
+          snackbar_edit:false,
+          model:[],
+          All_Menu:[],
                 items:[
                    {id:0,name:'all Ordered Product',icon:'home',link:'allOrderedProduct'},
                    {id:1,name:'all Favorite Product',icon:'favorite',link:'AllFavoriteProduct'},
@@ -212,30 +348,29 @@
           email:'',
           email_error:'',
           snackbar: false,
-          loader:false,
+          snackbar_notif:false,
           text: `Thank you for sending us  your mail one of our agents
                           will get back to you soon`,
-          All_Menu:[
+          /*All_Menu:[
             {id:1,name:'Dessert',src_back:require('../assets/Menu/dessert.jpg'),src_hover:require('../assets/Menu/dessertt.png')},
             {id:2,name:'Drinks',src_back:require('../assets/Menu/drinks.jpg'),src_hover:require('../assets/Menu/d.png')},
             {id:3,name:'Pasta',src_back:require('../assets/Menu/pasta.jpg'),src_hover:require('../assets/Menu/pastaa.png')},
             {id:4,name:'Pizza',src_back:require('../assets/Menu/pizza.jpg'),src_hover:require('../assets/Menu/p.png')},
             {id:5,name:'Sandwish',src_back:require('../assets/Menu/sandwish.jpg'),src_hover:require('../assets/Menu/s-1.png')}
-          ]
+          ]*/
         }
     },
     components:{
         SideBar,footerVue,ServiceVue,preloader
     },
+    
     setup() {
     const store = AuthStore();
     return {
       store,
     };
   },
-    mounted(){
-      setTimeout(()=>this.loader=false,2000);
-    },
+  
     methods:{
       logout(){
           this.store.logout();
@@ -265,9 +400,7 @@
 </script>
 
 <style>
-.all{
-  width: 100% !important;
-}
+
 .login{
   color: #fff !important;
   background: #E84C03 !important;
@@ -312,7 +445,7 @@ small{
   border-radius: 1px 500px 100px 1px;
 }
 
-.v-card--reveal {
+/*.v-card--reveal {
   align-items: center;
   bottom: 0;
   justify-content: center;
@@ -320,10 +453,11 @@ small{
   position: absolute;
   width: 100%;
 }
+*/
 
 .sidebar_position{
   position: fixed;
-  z-index: 999999999999999999999;
+  z-index: 999999;
 }
 
 .btn{
@@ -388,7 +522,6 @@ small{
       scroll-behavior: smooth;
       margin-left: 69px;  
   }
-
 }
 
 @media screen and (max-width:624px) {
@@ -401,6 +534,6 @@ small{
   h2{
     font-size: 18px;
   }
-
 }
+
 </style>
