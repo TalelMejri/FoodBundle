@@ -17,16 +17,15 @@
                             v-model="name"
                             label="Name"
                             type="text"
-                            
-                  ></v-text-field>
+                         ></v-text-field>
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            name="prix"
+                             name="prix"
                              v-model="prix"
                              label="prix"
                              type="text"
-                        ></v-text-field>
+                            ></v-text-field>
                         </div>
                     </div>
                     <div class="row">
@@ -69,17 +68,20 @@ import service_category from "@/services/GererCategory/category"
 import service from "@/services/GererProduct/GererProduct"
  export default{
     created(){
+
         service_category.getAllTypeCategory().then((response)=>{
             for(let i=0;i<(response.data).length;i++){
                 this.types.push({name:response.data[i].name,id:response.data[i].id});
             }
         });
+
        service.findProductByIid(this.id).then((response)=>{
               this.name=response.data.data.nameProduct;
               this.file=response.data.data.PhotoProduct;
               this.prix=response.data.data.PrixProduct;
               this.id_category=response.data.data.id_category;
         })
+        
     },
      name:'update',
      data(){
