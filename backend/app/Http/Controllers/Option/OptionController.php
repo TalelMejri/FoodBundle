@@ -55,7 +55,6 @@ class OptionController extends Controller
             $option=Option::where('nameOption','like','%'.$request->search.'%')->
                       where('category_id','=',$request->id)->paginate(3);
         }
-
         return response()->json($option,200);
     }
 
@@ -67,11 +66,15 @@ class OptionController extends Controller
         return response()->json(['message'=>'option Not Found'],404);
       }
 
-
-    public function getOptionByIdCategory( $id){
+    public function getOptionByIdCategory($id){
         //$category=Category::with("options")->where('name','like','%'.$request->search.'%')->get();
-          $categoery=Category::with("options")->where('id',$id)->get();
-          return response()->json(["data"=>$categoery[0]['options']],200);
+          $category=Category::with("options")->where('id',$id)->get();
+          if($category){
+            return response()->json(["data"=>$category[0]['options']],200);
+          }else{
+            return response()->json(["data"=>"Not Found"],404);
+          }
+
       }
 
       public function deleteOption($id){
