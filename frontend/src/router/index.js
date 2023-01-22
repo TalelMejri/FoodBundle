@@ -7,7 +7,7 @@ import allOrderedProduct from '../views/ProfilClient/AllOrderedView.vue'
 import AllFavoriteProduct from '../views/ProfilClient/AllFavoriteView.vue'
 import dashboard from '../views/ProfilAdmin/dashboard/DashboardView.vue'
 import editProfil from "@/views/ProfilClient/EditProfilView.vue"
-
+import ConsulteMenuView from "@/views/Menu/ConsulteMenuView.vue"
 Vue.use(VueRouter)
 
 const routes = [
@@ -16,7 +16,11 @@ const routes = [
     name: 'home',
     component: HomeView
   },
-
+  {
+    path: '/ConsulteMenuView/:id',
+    name: 'ConsulteMenuView',
+    component: ConsulteMenuView
+  },
   {
     path: '/login',
     name: 'login',
