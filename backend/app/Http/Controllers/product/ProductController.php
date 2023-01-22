@@ -44,6 +44,11 @@ class ProductController extends Controller
         return response()->json(['data'=>$products],200);
     }
 
+    public function getProductByIdCategory(int $id){
+        $products=Product::where('id_category',$id)->get();
+        return response()->json($products,200);
+    }
+
 
     public function findProductByIid(int $id){
         $Product=Product::find($id);
@@ -89,6 +94,28 @@ class ProductController extends Controller
       public function AllProduct(){
         $product=Product::all('nameProduct','id');
         return response()->json($product,200);
+    }
+
+    public function GetProudctOptionSpecifiqueCategory(Request $request){
+         if(!isset($request->search) && !isset($request->typeordered)){
+            $product=Product::with('optionspecifiques')->Where('id_category','=',$request->id)
+                                                       ->where('PrixProduct','>=',$request->prix)->paginate(5);
+         }else if(isset($request->search) &&  !isset($request->typeordered)){
+            $product=Product::with('optionspecifiques')->Where('id_category','=',$request->id)
+                                                       ->where('PrixProduct','>=',$request->prix)
+                                                       ->where('nameProduct','like','%'.$request->search.'%')->paginate(5);
+            }else if(!isset($request->search) &&  isset($request->typeordered)){
+                $product=Product::with('optionspecifiques')->Where('id_category','=',$request->id)
+                                                           ->where('PrixProduct','>=',$request->prix)->orderby($request->typeordered)
+                                                          ->paginate(5);
+            }else if(isset($request->search) &&  isset($request->typeordered)){
+                $product=Product::with('optionspecifiques')->Where('id_category','=',$request->id)
+                                                           ->where('nameProduct','like','%'.$request->search.'%')
+                                                           ->where('PrixProduct','>=',$request->prix)
+                                                           ->orderby($request->typeordered)->paginate(5);
+            }
+
+            return response()->json(['data'=>$product],200);
     }
 
 }
