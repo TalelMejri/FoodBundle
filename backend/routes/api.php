@@ -70,5 +70,7 @@ Route::group(['prefix'=>'/product'],function(){
     Route::post('/Add_Product',[ProductController::class,'Add_Product']);
     Route::get('/countproduct',[ProductController::class,'countProduct']);
     Route::get('/AllProduct',[ProductController::class,'AllProduct']);
+    Route::get('/GetProudctOptionSpecifiqueCategory',[ProductController::class,'GetProudctOptionSpecifiqueCategory']);
+    Route::get('/getProductByIdCategory/{id}',[ProductController::class,'getProductByIdCategory']);
     Route::get('/GetProductCategoryOption',[ProductController::class,'GetProductCategoryOption']);
 });
