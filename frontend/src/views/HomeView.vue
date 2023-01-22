@@ -12,9 +12,9 @@
                   cols="auto"
                   class="mr-auto"
                 >
-                 <h2> <span style="color:#E84C03;">Food</span>Bundle</h2>
+                 <h2><span style="color:#E84C03;">Food</span>Bundle</h2>
                 </v-col>
-                <v-col v-if="store.isAdmin==null" cols="auto">
+                <v-col v-if="store.isauth==null" cols="auto">
                   <v-row
                   align="center"
                   justify="space-around"
@@ -32,109 +32,8 @@
                 </v-row>
                 </v-col>
                 <v-col v-else cols="auto">
-                  <template>
-                    <v-row >
-                      <v-badge class="mx-5 mt-3" color="red" content="6">
-                              <v-btn text @click="snackbar_notif = true">
-                                  ddd
-                              </v-btn>
-                            <!--<v-icon color="#000">mdi-bell</v-icon>-->
-                          </v-badge>
-                      <v-menu>
-                        <template v-slot:activator="{ on }">
-                          <v-btn
-                            icon
-                            x-large
-                            v-on="on"
-                          >
-                            <v-avatar
-                              size="48"
-                            >
-                            <img :src="'http://127.0.0.1:8000'+store.user['Photo']" alt="">
-                            </v-avatar>
-                          </v-btn>
-                        </template>
-                        <v-card>
-                          <v-list-item-content class="justify-center">
-                            <div class="mx-auto text-center">
-                              <v-avatar>
-                                 <img :src="'http://127.0.0.1:8000'+store.user['Photo']" alt="">
-                              </v-avatar>
-                              <h3>{{store.user['name']}}</h3>
-                              <p class="text-caption mt-1">
-                                {{store.user['lastname']}}
-                              </p>
-                              <v-divider class="my-2"></v-divider>
-                              <router-link to="editProfil" style="text-decoration:none !important;">
-                                 <v-btn 
-                                    depressed
-                                    rounded
-                                    text
-                                  >
-                                Edit Account
-                              </v-btn>
-                              </router-link>
-                              <v-divider class="my-2"></v-divider>
-                              <v-badge    color="red"
-                              content="6">
-                              <v-btn @click="snackbar_notif = true">
-                                ddd
-                              </v-btn>
-                            <!--<v-icon color="#000">mdi-bell</v-icon>-->
-                          </v-badge>
-                              <v-divider class="my-2"></v-divider>
-                              <router-link to="allOrderedProduct" style="text-decoration:none !important;">
-                                <v-btn 
-                                   depressed
-                                   rounded
-                                   text
-                                 >
-                                 all Ordered Product
-                             </v-btn>
-                             </router-link>
-                             <v-divider class="my-2"></v-divider>
-                             <router-link to="AllFavoriteProduct" style="text-decoration:none !important;">
-                               <v-btn 
-                                  depressed
-                                  rounded
-                                  text
-                                >
-                                All Favorite Product
-                            </v-btn>
-                            </router-link>
-
-                              <v-divider class="my-2"></v-divider>
-                              <v-btn @click="logout()"
-                                depressed
-                                rounded
-                                text
-                              >
-                                Logout
-                              </v-btn>
-                           
-                            
-                            </div>
-                          </v-list-item-content>
-                        </v-card>
-                      </v-menu>
-                    </v-row>
-                  </template>
-                  <v-snackbar
-                  v-model="snackbar_notif"
-                    right
-                    scroll
-                >
-                  <template v-slot:action="{ attrs }">
-                    <v-btn
-                      color="indigo"
-                      text
-                      v-bind="attrs"
-                      @click="snackbar_notif = false"
-                    >
-                      Close
-                    </v-btn>
-                  </template>
-                </v-snackbar>
+                  <!-- Client Better -->
+                    <InfoClient></InfoClient>
                 </v-col>
               </v-row>
                <v-content class="home my-5 py-5 d-flex justify-content-center"  >
@@ -173,7 +72,7 @@
           <div class="ma-5 pa-5" id="menu">
             <v-container >
                 <h2 class="text-center mb-5">Our Menu</h2>
-                 <!--<div class="row">
+               <div class="row">
                 <v-hover v-for="menu in All_Menu" :key="menu.id"  v-slot="{ hover }">
                 <div class="col-lg-4">
                   <v-card
@@ -191,12 +90,14 @@
                           class=" white justify-content-center"
                           style="height: 100%;"
                         >
-                           <div class="text-center">
-                              <div class="mb-2 "><h2>{{menu.name}}</h2></div>
+                           <div class="text-center py-5">
+                              <div class="mb-2 mt-5"><h2>{{(menu.name).toUpperCase()}}</h2></div>
                               <div>
-                              <v-btn class="mb-2" color="error">
+                              <router-link style="text-decoration:none !important" :to="'/ConsulteMenuView/'+menu.id">
+                                <v-btn class="mb-2" color="error">
                                    Check
-                              </v-btn>
+                                </v-btn>
+                              </router-link>
                             </div>
                            </div>
                         </div>
@@ -205,45 +106,7 @@
                   </v-card>
                   </div>
                 </v-hover>
-              </div>-->
-              <v-window show-arrows>
-                <template v-slot:prev="{ on, attrs }">
-                  <v-btn
-                    color="success"
-                    v-bind="attrs"
-                    v-on="on"
-                  >Previous slide</v-btn>
-                </template>
-                <template v-slot:next="{ on, attrs }">
-                  <v-btn
-                    color="info"
-                    v-bind="attrs"
-                    v-on="on"
-                  >Next slide</v-btn>
-                </template>
-                <v-window-item
-                  v-for="n in All_Menu.length"
-                  :key="n.id"
-                >
-                  <v-card
-                    color="grey"
-                    height="200"
-                  >
-                    <v-row
-                      class="fill-height"
-                      align="center"
-                      justify="center"
-                    >
-                      <h1
-                        style="font-size: 5rem;"
-                        class="white--text"
-                      >
-                        Slide {{ n.id }}
-                      </h1>
-                    </v-row>
-                  </v-card>
-                </v-window-item>
-              </v-window>
+              </div>
             </v-container>
           </div>
           <div class="ma-5 pa-5" id="contact">
@@ -272,7 +135,6 @@
                                   v-model="snackbar"
                                 >
                                  {{ text }}
-
                                   <template v-slot:action="{ attrs }">
                                    <v-btn
                                       color="#E84C03"
@@ -294,9 +156,8 @@
               </v-card>
               <v-snackbar
               v-model="snackbar_edit"
-                scroll
-            >
-            {{message}}
+                scroll>
+                  {{message}}
               <template v-slot:action="{ attrs }">
                 <v-btn
                   color="indigo"
@@ -323,6 +184,7 @@
   import SideBar from "../components/SideBar.vue"
   import preloader from "@/components/preloader.vue"
   import service_category from "@/services/GererCategory/category"
+  import InfoClient from "@/components/Client/InfoClient.vue"
   export default {
     name: 'Home', 
     created(){
@@ -331,7 +193,8 @@
              this.snackbar_edit=true;
       };
       service_category.getAllCategorie().then((res)=>{
-         this.All_Menu=res.data;
+         this.All_Menu=res.data[0];
+         console.log(this.All_Menu);
       })
     },
     data(){
@@ -361,7 +224,7 @@
         }
     },
     components:{
-        SideBar,footerVue,ServiceVue,preloader
+        SideBar,footerVue,ServiceVue,preloader,InfoClient
     },
     
     setup() {
@@ -374,6 +237,8 @@
     methods:{
       logout(){
           this.store.logout();
+          this.$router.push('/login');
+
       },
       changreetat(a){
         this.etatsidbar=a;

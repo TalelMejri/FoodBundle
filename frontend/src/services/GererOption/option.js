@@ -32,8 +32,8 @@ export default{
         return axios.post('option/addOptionSpecifique',option);
     },
 
-    getOptionByIdCategory(user){
-        return axios.get('option/getOptionByIdCategory/'+user.id);   
+    getOptionByIdCategory(category){
+        return axios.get('option/getOptionByIdCategory/'+category.id);   
     },
 
     countOption(){

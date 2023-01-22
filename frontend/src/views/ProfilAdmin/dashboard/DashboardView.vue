@@ -174,6 +174,7 @@
             },
             logout(){
                 this.store.logout();
+                this.$router.push('/login');
             }
         },
         components:{

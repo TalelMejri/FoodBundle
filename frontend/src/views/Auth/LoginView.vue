@@ -58,7 +58,7 @@
                                     <div class="mt-3  ">
                                      
                                         <v-btn type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="log in">Login</v-btn>
-                                        <router-link to="/" class="text-decoration-none  mx-2"> <v-btn type="button" class="mt-4 " color="gray" value="log in">Close</v-btn></router-link>
+                                        <v-btn @click="refresh()" type="button" class="mt-4 " color="gray" value="log in">Close</v-btn>
                                     </div>
                               </form>
                               <v-snackbar
@@ -182,6 +182,10 @@ import {AuthStore} from "../../store/StoreAuth"
                           this.message_error="User Not Found";
                     })
                 }
+          },
+          refresh(){
+              this.$router.push('/');
+              this.$router.go();
           },
             validate(input){
                 if(input=='email'){
