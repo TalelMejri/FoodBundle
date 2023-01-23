@@ -2,10 +2,12 @@
     <div>
         <template>
             <v-row>
-                  <v-badge class="mx-5 mt-3" color="red" content="6">
-                      <v-btn text @click="snackbar_notif = true">
-                          ddd
+                  <v-badge class="mx-5 mt-3" color="red" :content="nbr_panier">
+                    <router-link to="../PanierView"> 
+                      <v-btn text>
+                           ddd
                       </v-btn>
+                </router-link>
                     <!--<v-icon color="#000">mdi-bell</v-icon>-->
                   </v-badge>
               <v-menu>
@@ -135,7 +137,8 @@
 import {AuthStore} from "@/store/StoreAuth"
 export default{
   props:{
-    menu:String
+    menu:String,
+    nbr_panier:Number
   },
     setup() {
     const store = AuthStore();
