@@ -2,14 +2,11 @@
     <div>
         <template>
             <v-row>
-                  <v-badge class="mx-5 mt-3" color="red" :content="nbr_panier">
-                    <router-link to="../PanierView"> 
-                      <v-btn text>
-                           ddd
-                      </v-btn>
-                </router-link>
-                    <!--<v-icon color="#000">mdi-bell</v-icon>-->
-                  </v-badge>
+              <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier">
+                <router-link  to="../PanierView" style="text-decoration:none !important">
+                     <v-icon @click="snackbar_notif = true" style="font-size:25px">mdi-cart-outline</v-icon>
+               </router-link>
+             </v-badge>
               <v-menu>
                 <template v-slot:activator="{ on }">
                   <v-btn

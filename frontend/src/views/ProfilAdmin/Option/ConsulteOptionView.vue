@@ -2,7 +2,7 @@
     <div class="mt-5 py-5">
         <v-card  elavation="7" style="padding:25px">
             <div v-if="list=='global'">
-                <h4 class="text-center py-4" >List Options Global</h4>
+                <h4 class="text-center py-4" >List Option Global</h4>
                 <div class="text-center">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -15,7 +15,7 @@
                             fab
                             color="#E84C03"
                           >
-                            <v-icon>mdi-food-fork-drink</v-icon>
+                            <v-icon>mdi-shaker-outline</v-icon>
                           </v-btn>
                         </template>
                         <span>Specifique</span>
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div  v-else>
-                <h4 class="text-center py-4" >List Options Specifique</h4>
+                <h4 class="text-center py-4" >List Option Specifique</h4>
                 <div class="text-center">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -36,7 +36,7 @@
                             fab
                             color="#E84C03"
                           >
-                            <v-icon>mdi-food-fork-drink</v-icon>
+                            <v-icon>mdi-shaker</v-icon>
                           </v-btn>
                         </template>
                         <span>globale</span>
@@ -183,7 +183,7 @@
                         @click="EditIndice(option)"
                         fab
                       >
-                        <v-icon>mdi-delete</v-icon>
+                      <v-icon>mdi-square-edit-outline</v-icon>
                       </v-btn>
                     </template>
                     <span>Edit Option</span>
@@ -299,7 +299,7 @@
                         @click="EditIndice(option)"
                         fab
                       >
-                        <v-icon>mdi-delete</v-icon>
+                        <v-icon>mdi-square-edit-outline</v-icon>
                       </v-btn>
                     </template>
                     <span>Edit Option</span>
@@ -357,7 +357,9 @@
 
           <div v-if="Options!=''" class="text-center">
                 <v-btn :disabled="pagination.prev_page==null"  @click="changer_page(pagination.current_page-1)" small>
-                        prev
+                  <v-icon>
+                    mdi-chevron-left
+                 </v-icon>
                 </v-btn>
                 <v-btn
                     v-for="num in (Math.ceil(pagination.per_page ? (pagination.total/pagination.per_page) : 1))"
@@ -369,7 +371,9 @@
                      {{num}}
                 </v-btn>
                 <v-btn :disabled="pagination.next_page==null"  @click="changer_page(pagination.current_page+1)" small>
-                     next
+                  <v-icon>
+                    mdi-chevron-right
+                 </v-icon>
                 </v-btn>
           </div>
           <v-snackbar

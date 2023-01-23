@@ -55,10 +55,12 @@
                                    <small v-if="password_error!=''">
                                          {{ password_error }}
                                     </small>
-                                    <div class="mt-3  ">
-                                     
-                                        <v-btn type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="log in">Login</v-btn>
+                                    <div class="mt-3 text-center">
+                                        <v-btn type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" value="log in">Login</v-btn>
                                         <v-btn @click="refresh()" type="button" class="mt-4 " color="gray" value="log in">Close</v-btn>
+                                        <div class="text-center mt-3">
+                                          You are New Here ?<router-link to="signup" class="text-decoration-none  mx-2">  <span>Sign up</span></router-link>
+                                      </div>
                                     </div>
                               </form>
                               <v-snackbar

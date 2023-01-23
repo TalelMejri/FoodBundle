@@ -10,10 +10,9 @@
                         </InfoClient>
                     </div>
                     <div v-else>
-                        <v-badge class="mx-5 mt-3" color="red" :content="nbr_panier">
-                           <router-link to="../PanierView"> <v-btn text @click="snackbar_notif = true">
-                                ddd
-                            </v-btn>
+                        <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier">
+                           <router-link  to="../PanierView" style="text-decoration:none !important">
+                                <v-icon @click="snackbar_notif = true" style="font-size:25px">mdi-cart-outline</v-icon>
                           </router-link>
                         </v-badge>
                     </div>
@@ -25,9 +24,11 @@
                 <v-card
                     style="padding:25px"
                     max-width="200" elavation="5"> 
-              <div>
-                 <h4>Filter Par <v-icon>mdi-menu</v-icon></h4>
-              </div>
+              <v-row class="mb-3">
+                 <h4>Filter Par </h4>
+                 <v-spacer></v-spacer>
+                 <v-icon>mdi-menu</v-icon>
+              </v-row>
               <div class="mt-5 ">
                     <v-select
                         :items="types"
@@ -77,10 +78,10 @@
                      <v-spacer></v-spacer>
                      <div class="col-lg-2 text-center">
                         <v-btn @click="affichage='list'" class="mx-2" :color="affichage=='list' ? 'primary' : ''">
-                            list
+                           <v-icon>mdi-format-list-bulleted</v-icon>
                         </v-btn>
                       <v-btn  @click="affichage='card'" :color="affichage=='card' ? 'primary' : ''">
-                           card
+                           <v-icon>mdi-view-comfy</v-icon>
                     </v-btn>
                      </div>
                 </div>
@@ -122,11 +123,11 @@
                                         >
                                           Add Option
                                        </v-btn>
-                                       <v-spacer></v-spacer>
-                                       <v-btn class="mx-2" @click="AddFavorite(product.id)">
-                                            Favorite
-                                       </v-btn>
                                      </v-card-actions>
+                                     <v-spacer></v-spacer>
+                                     <div class="mb-4 mx-5 mt-2">
+                                      <v-icon @click="AddFavorite(product.id)">mdi-heart-outline</v-icon>
+                                  </div>
                                   </v-row>
                                 </v-card-text>
                               <v-divider class="mx-4"></v-divider>
@@ -140,10 +141,9 @@
                             <div v-else>
                               <v-list-item >
                                 <v-list-item-content>
-                                  <div class=" mb-4">
-                                    <v-btn class="mx-2" @click="AddFavorite(product.id)">
-                                      Favorite
-                                      </v-btn>
+                                  <v-spacer></v-spacer>
+                                  <div class="mb-4">
+                                        <v-icon @click="AddFavorite(product.id)">mdi-heart-outline</v-icon>
                                   </div>
                                   <v-list-item-title class="text-h5 mb-1">
                                     {{product.nameProduct}}
@@ -163,18 +163,14 @@
                                    <div class="grey--text ms-4">
                                      4.5 (413)
                                    </div>
-                                  
                                   </v-list-item-content>
-                          
                                 <v-list-item-avatar
                                   tile
                                   size="80"
                                 >
                                <img :src="product.PhotoProduct" alt=""> 
                               </v-list-item-avatar>
-                              
                               </v-list-item>
-                          
                               <v-card-actions>
                                 <v-btn
                                   outlined
@@ -185,7 +181,6 @@
                                 >
                                   Add Card
                                 </v-btn>
-
                                 <v-btn
                                 outlined
                                 rounded
@@ -195,8 +190,6 @@
                               >
                                 Add Option
                               </v-btn>
-
-
                               </v-card-actions>
                             </div>
                       <v-dialog v-model="dialog"
@@ -209,38 +202,49 @@
                               color="primary"
                               dark
                             >Options</v-toolbar>
-                                <h2 class="text-h6 mb-2">
+                                <h2 class="text-h6 mb-2 mx-2 mt-2">
                                    Option Globale
                                 </h2>
+                                <div  class="mx-3" v-if="All_Option_Global==''">
+                                      No Option
+                                </div>
+                                <div v-else>
                                 <v-chip-group 
                                   column
                                   multiple
+                                  class="mx-3"
                                 >
                                   <v-chip 
-                                     v-for="n in All_Option_Global" :key="n.id"
+                                  
+                                      v-for="n in All_Option_Global" :key="n.id"
                                         @change="addOption(n.nameOption,n.prixOption)"  
+                                        :style="OptionsAdded.find((v)=>{ if(v.name==n.nameOption && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'color:#fff;background-color:#E84C03' :  '' "
                                   >
-                                    <p :style="OptionsAdded.find((v)=>{ if(v.name==n.nameOption && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'color:red' :  '' ">
                                         {{ n.nameOption  }} 
-                                    </p>
                                   </v-chip>
                                 </v-chip-group>
-                                <h2 class="text-h6 mb-2">
-                                  Option Specifique
+                              </div>
+                                <h2 class="text-h6  mx-2 mt-2">
+                                   Option Specifique
                                 </h2>
+                                <div class="mx-2" v-if="product.optionspecifiques==''">
+                                    No Option
+                                </div>
+                                <div v-else>
                                 <v-chip-group 
                                   column
                                   multiple
+                                  class="mx-3"
                                 >
                                   <v-chip 
                                      v-for="i in product.optionspecifiques" :key="i.id"
                                         @change="addOption(i.nameOptionSpecifique,i.prixOptionSpecifique)"
+                                        :style="OptionsAdded.find((v)=>{ if(v.name==i.nameOptionSpecifique && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'color:#fff;background-color:#E84C03' :  '' "
                                   >
-                                  <p :style="OptionsAdded.find((v)=>{ if(v.name==i.nameOptionSpecifique && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'color:red' :  '' ">
                                         {{ i.nameOptionSpecifique }}
-                                 </p>
                                   </v-chip>
                                 </v-chip-group>
+                              </div>
                             <v-card-actions class="justify-end">
                               <v-btn
                                 text

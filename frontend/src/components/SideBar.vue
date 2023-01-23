@@ -58,7 +58,7 @@
             </li>
             <li >
               <a @click="changerView('option')" href="#">
-                <v-icon :color="ViewCurrent=='option' ? '#000' : ''" class="icon">mdi-view-grid-plus</v-icon>
+                <v-icon :color="ViewCurrent=='option' ? '#000' : ''" class="icon">mdi-clipboard-list-outline</v-icon>
                 <span :style="ViewCurrent=='option' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Option</span>
               </a>
             </li>
