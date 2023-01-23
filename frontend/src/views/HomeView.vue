@@ -43,10 +43,10 @@
                     <div class="mt-5 py-5 col-lg-6">
                          <p class="py-5 mt-5 paragh" >
                           Taste Our <br>
-                            Delicious Foods
+                            Delicious Food
                          </p>
                          <p  >
-                          lore"Lorem ipsum dolor sit amet, consectetur adipiscing 
+                           Lorem ipsum dolor sit amet, consectetur adipiscing 
                           elit, sed do eiusmod tempor incididunt ut labore et dolor
                            magna aliqua. 
                          </p>
@@ -310,7 +310,8 @@ small{
   border-radius: 1px 500px 100px 1px;
 }
 
-/*.v-card--reveal {
+/*
+.v-card--reveal {
   align-items: center;
   bottom: 0;
   justify-content: center;
