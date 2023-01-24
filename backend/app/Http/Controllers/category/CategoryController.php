@@ -24,7 +24,6 @@ class CategoryController extends Controller
               for($i=0;$i<count($request->option);$i++){
                    $option=new Option();
                    $option->nameOption=$request->option[$i]['name'];
-                   $option->prixOption=$request->option[$i]['prix'];
                    $option->category_id=$categoery->id;
                    $option->save();
               }
