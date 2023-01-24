@@ -15,7 +15,6 @@ class OptionController extends Controller
     public function addOption(StoreOption $request){
         $option=new Option();
         $option->nameOption=$request->nameOption;
-        $option->prixOption=$request->prixOption;
         $option->category_id=$request->id;
         $option->save();
         return response()->json($option,200);
@@ -103,8 +102,7 @@ class OptionController extends Controller
                  $option->update(
                          [
                            "nameOption"=>$request->name,
-                           "prixOption"=>$request->prix
-                         ],
+                        ],
                    );
                 return response()->json(["data"=>$option],200);
         }else{

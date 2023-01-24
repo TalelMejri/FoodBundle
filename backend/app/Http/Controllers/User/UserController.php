@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\favorite;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -107,6 +108,36 @@ class UserController extends Controller
 
     public function coutUser(){
         $count=User::where('Isadmin',0)->count();
+        return  response()->json(['data'=>$count],200);
+    }
+
+    public function checkLiked(Request $request){
+        $verified=favorite::where('product_id','=',$request->idproduct)
+        ->where('user_id','=',$request->iduser)->get();
+        return  response()->json(['data'=>$verified],200);
+    }
+
+    public function deleteFavorite(Request $request){
+        $verified=favorite::where('product_id','=',$request->idproduct)
+        ->where('user_id','=',$request->iduser)->delete();
+        return response()->json(['message'=>$verified],200);
+    }
+
+    public function AddLiked(Request $request){
+            $favoriete=favorite::create([
+                'product_id'=>$request->idproduct,
+                'user_id'=>$request->iduser,
+            ]);
+            return response()->json($favoriete,200);
+    }
+
+    public function GetAllLikedProduct($id){
+        $favoriete=favorite::where('user_id','=',$id)->get();
+        return response()->json($favoriete,200);
+    }
+
+    Public function countLiked($idproduct){
+        $count=favorite::where('product_id',$idproduct)->count();
         return  response()->json(['data'=>$count],200);
     }
 
