@@ -13,16 +13,8 @@
                   v-model="name_new"
                   :counter="8"
                   label="Name"
-               
                 ></v-text-field>
                 <small v-if="name_error!=''">{{name_error}}</small>
-                <v-text-field
-                v-model="prix_new"
-                :counter="5"
-                label="Prix"
-              
-              ></v-text-field>
-              <small v-if="prix_error!=''">{{prix_error}}</small>
                  </div>
                <v-divider></v-divider>
               <v-card-actions class="justify-end">
@@ -51,9 +43,7 @@ export default{
     data(){
         return{
             prix_new:'',
-            name_new:'',
             name_error:'',
-            prix_error:''
         }
     },
     methods:{
@@ -61,12 +51,10 @@ export default{
             this.$emit('closeAdd');
         },
         AddNewOption(){
-            service.addOption({id:this.id,nameOption:this.name_new,prixOption:this.prix_new}).then(()=>{
+            service.addOption({id:this.id,nameOption:this.name_new}).then(()=>{
                 this.$emit('closeAdd');
             }).catch((error)=>{
                  this.name_error=error.response.data.errors.nameOption ? error.response.data.errors.nameOption[0] : '';
-                 this.prix_error=error.response.data.errors.prixOption ? error.response.data.errors.prixOption[0] : '';
-                 console.log(this.name_error+" "+ this.prix_error);
             })
         }
     }
