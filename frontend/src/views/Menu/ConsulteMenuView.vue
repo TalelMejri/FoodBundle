@@ -1,29 +1,37 @@
 <template>
     <div>
-        <v-card class="header" elavation="3">
-            <div class="row">
-                    <img src="../../assets/logo.png" width="70px" height="70px" alt="FoodBundle logo">
-                    <h3 style="padding:15px"><span style="color:#E84C03;">Food</span>Bundle</h3>
-                    <v-spacer></v-spacer>
-                    <div v-if="store.isauth!=null">
-                        <InfoClient :nbr_panier="nbr_panier" style="padding:15px;padding-right:40px" :menu="'menu'">
-                        </InfoClient>
-                    </div>
-                    <div v-else>
-                        <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier">
-                           <router-link  to="../PanierView" style="text-decoration:none !important">
-                                <v-icon @click="snackbar_notif = true" style="font-size:25px">mdi-cart-outline</v-icon>
-                          </router-link>
-                        </v-badge>
-                    </div>
-            </div>
-        </v-card>
+      <v-card class="header" elavation="3">
+        <div class="row">
+                <img src="../../assets/logo.png" width="70px" height="70px" alt="FoodBundle logo">
+                <h3 style="padding:15px"><span style="color:#E84C03;">Food</span>Bundle</h3>
+                <v-spacer></v-spacer>
+                <div v-if="store.isauth!=null">
+                    <InfoClient :nbr_panier="nbr_panier" style="padding:15px;padding-right:40px" :menu="'menu'">
+                    </InfoClient>
+                </div>
+                <div v-else>
+                    <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier==0 ? '0' : nbr_panier">
+                       <v-btn text :disabled="nbr_panier==0">
+                         <router-link to="../PanierView">panier</router-link>
+                       </v-btn>
+                    </v-badge>
+                </div>
+        </div>
+    </v-card>
+      <div class="content_menu text-center" v-if="loader=false">
+          <v-progress-circular
+              indeterminate
+              color="red"
+         ></v-progress-circular>
+      </div>
+      <div v-else>
         <div class="content_menu">
             <div class="row">
                 <div  class="col-lg-2 text-center">
                 <v-card
                     style="padding:25px"
-                    max-width="200" elavation="5"> 
+                    class="justify-center"
+                    max-width="400" elavation="5"> 
               <v-row class="mb-3">
                  <h4>Filter Par </h4>
                  <v-spacer></v-spacer>
@@ -62,8 +70,8 @@
         <div class="col-lg-10 ">
                 <div class="row">
                   
-                     <div class="col-lg-3">
-                        <p style="color:#E84C03;font-weight:600" > {{ name_category.toUpperCase() }}</p>
+                     <div class="col-lg-3 text-center">
+                        <p style="color:#E84C03;font-weight:600" > {{ name_category?.toUpperCase() }}</p>
                      </div>
 
                      <div class="col-lg-4 text-center">
@@ -77,16 +85,19 @@
                      </div>
                      <v-spacer></v-spacer>
                      <div class="col-lg-2 text-center">
-                        <v-btn @click="affichage='list'" class="mx-2" :color="affichage=='list' ? 'primary' : ''">
+                        <v-btn @click="affichage='list'" class="mx-2" :color="affichage=='list' ? 'deep-purple lighten-2' : ''">
                            <v-icon>mdi-format-list-bulleted</v-icon>
                         </v-btn>
-                      <v-btn  @click="affichage='card'" :color="affichage=='card' ? 'primary' : ''">
+                      <v-btn  @click="affichage='card'" :color="affichage=='card' ? 'deep-purple lighten-2' : ''">
                            <v-icon>mdi-view-comfy</v-icon>
-                    </v-btn>
+                      </v-btn>
                      </div>
                 </div>
-                          <div class="row " >
-                            <v-card  v-for="product in Products" :key="product.id"
+                          <div class="row mt-4"   >
+                             <v-card style="padding:25px;" class="text-center" v-if="Products==''">
+                                  No Products for this category
+                             </v-card>
+                            <v-card v-else  v-for="product in Products" :key="product.id"
                                class=" mx-2 my-5 col-lg-5"
                                      max-width="300"
                                     >
@@ -97,8 +108,7 @@
                                      ></v-img>
                                      <v-card-title>{{product.nameProduct}}
                                         <v-spacer></v-spacer>
-                                         <p style="display:none">{{ index = All_Prix_With_Option_Array.findIndex((v)=>v.id==product.id) }}</p>   
-                                           <h3>{{ index !=-1 ? All_Prix_With_Option_Array[index].prix+ product.PrixProduct : product.PrixProduct}} TND</h3>
+                                           <h3>{{ product.PrixProduct}} TND</h3>
                                       </v-card-title>
                                          <v-card-text>
                                         <v-row
@@ -118,27 +128,26 @@
                                        </div>
                                        <v-spacer></v-spacer>
                                        <v-card-actions >
-                                        <v-btn @click="InitIndice(product)" class="text-center "
-                                          color="deep-purple lighten-2"
-                                        >
-                                          Add Option
-                                       </v-btn>
                                      </v-card-actions>
                                      <v-spacer></v-spacer>
-                                     <div class="mb-4 mx-5 mt-2">
-                                      <v-icon @click="AddFavorite(product.id)">mdi-heart-outline</v-icon>
-                                  </div>
+                                     <div class="mb-4 mx-5 mt-2" >
+                                        <v-btn  @click="AddFavorite(product.id)">
+                                          {{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'noo' : 'favorite' }} 
+                                        </v-btn>
+                                        {{ Nombre_liked_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_liked_for_products[Nombre_liked_for_products.findIndex((v)=>v.id==product.id)].nbr : 0 }} 
+                                       <!-- <v-icon @click="AddFavorite(product.id)">mdi</v-icon>-->
+                                    </div>
                                   </v-row>
                                 </v-card-text>
                               <v-divider class="mx-4"></v-divider>
                               <v-btn style="width:100%" class="text-center mt-2 mb-1"
                                color="deep-purple lighten-2"
-                               @click="AddPanier(product.id)"
+                               @click="InitIndice(product)" 
                               >
-                                Add To carte
+                                 Commander
                              </v-btn>
                             </div>
-                            <div v-else>
+                            <!--<div v-else>
                               <v-list-item >
                                 <v-list-item-content>
                                   <v-spacer></v-spacer>
@@ -191,63 +200,117 @@
                                 Add Option
                               </v-btn>
                               </v-card-actions>
-                            </div>
+                            </div>-->
                       <v-dialog v-model="dialog"
                         transition="dialog-top-transition"
-                        max-width="600"
+                        max-width="400"
+                        v-if="product_selected!=''"
                       >
                         <template >
                           <v-card class="p-5">
                             <v-toolbar
-                              color="primary"
+                             color="deep-purple lighten-2"
                               dark
-                            >Options</v-toolbar>
-                                <h2 class="text-h6 mb-2 mx-2 mt-2">
-                                   Option Globale
+                             >Info Pour {{ product_selected.nameProduct }}
+                        </v-toolbar>
+                        <div >
+                        <v-list-item class="text-center" >
+                          <v-list-item-avatar
+                            tile
+                            size="200"
+                          >
+                         <img :src="product_selected.PhotoProduct" alt=""> 
+                        </v-list-item-avatar>
+                          <v-list-item-content>
+                            <v-list-item-title  class="mb-1">
+                              <h2> {{product_selected.nameProduct}}</h2>
+                            </v-list-item-title>
+                              <div >
+                                <h3> <v-chip  
+                                  class="ma-2"
+                                  color="orange"
+                                  label
+                                  outlined
+                               >{{ product_selected.PrixProduct }} TND</v-chip></h3>
+                              </div>
+                            </v-list-item-content>
+                        </v-list-item>
+                      </div>
+                                <h2 class="text-center mb-2 mx-2 mt-2">
+                                      Choix
                                 </h2>
-                                <div  class="mx-3" v-if="All_Option_Global==''">
+                                <div class="mx-3 justify-center" v-if="All_Option_Global==''">
                                       No Option
                                 </div>
-                                <div v-else>
-                                <v-chip-group 
+                                <div v-else  class="mx-3  justify-center">
+                                  <v-combobox
+                                     v-model="OptionsAdded_Selected"
+                                     :items="All_Option_Global"
+                                     item-text="nameOption"
+                                     item-value="id"
+                                     label="Option"
+                                     
+                                     multiple
+                                     outlined
+                                     dense
+                                 ></v-combobox>
+                                <!--<v-chip-group 
                                   column
                                   multiple
                                   class="mx-3"
                                 >
                                   <v-chip 
-                                  
                                       v-for="n in All_Option_Global" :key="n.id"
                                         @change="addOption(n.nameOption,n.prixOption)"  
                                         :style="OptionsAdded.find((v)=>{ if(v.name==n.nameOption && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'color:#fff;background-color:#E84C03' :  '' "
                                   >
                                         {{ n.nameOption  }} 
                                   </v-chip>
-                                </v-chip-group>
+                                </v-chip-group>-->
                               </div>
-                                <h2 class="text-h6  mx-2 mt-2">
-                                   Option Specifique
+                                <h2 class="text-center  mx-2 mt-2">
+                                   Supplement
                                 </h2>
-                                <div class="mx-2" v-if="product.optionspecifiques==''">
+                                <div class="mx-2  justify-center" v-if="product_selected.optionspecifiques==''">
                                     No Option
                                 </div>
                                 <div v-else>
                                 <v-chip-group 
-                                  column
-                                  multiple
-                                  class="mx-3"
+                                  
+                                  class="mx-3  justify-center mb-3"
                                 >
                                   <v-chip 
-                                     v-for="i in product.optionspecifiques" :key="i.id"
+                                     v-for="i in product_selected.optionspecifiques" :key="i.id"
+                                     class="ma-2"
+                                        for="id"
+                                        label
+                                        outlined   
                                         @change="addOption(i.nameOptionSpecifique,i.prixOptionSpecifique)"
-                                        :style="OptionsAdded.find((v)=>{ if(v.name==i.nameOptionSpecifique && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'color:#fff;background-color:#E84C03' :  '' "
+                                        :color="OptionsAdded.find((v)=>{ if(v.name==i.nameOptionSpecifique && v.idproduct==product_selected.id){ return true} else { return false } }) ? '#E84C03' :  '' "
                                   >
-                                        {{ i.nameOptionSpecifique }}
+                                       {{ i.nameOptionSpecifique }} 
+                                       <input class="mx-2" type="checkbox" :checked="OptionsAdded.find((v)=>{ if(v.name==i.nameOptionSpecifique && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'checked' :  '' " id="id">
                                   </v-chip>
                                 </v-chip-group>
                               </div>
-                            <v-card-actions class="justify-end">
+                              <v-divider></v-divider>
+                              <div class="text-center py-4">
+                                    <h3> Prix Total : <v-chip  class="ma-2"
+                                     color="orange"
+                                     label
+                                     outlined>
+                                    <p style="display:none">{{ index = All_Prix_With_Option_Array.findIndex((v)=>v.id==product_selected.id) }} {{ total= index !=-1 ? All_Prix_With_Option_Array[index].prix + product_selected.PrixProduct : product_selected.PrixProduct }}</p><input type="hidden" v-model="total">{{ index !=-1 ? All_Prix_With_Option_Array[index].prix + product_selected.PrixProduct : product_selected.PrixProduct}} TND</v-chip></h3>
+                                  <h3>Quantity :<v-chip 
+                                      color="green"
+                                      label
+                                      outlined><v-chip @click="Qte> 1 ? Qte-=Qte : Qte=1">-</v-chip><input class="input_number text-center" type="text" min="1" v-model="Qte"/><v-chip @click="Qte+=1">+</v-chip></v-chip> </h3> 
+                              </div>
+                            <v-card-actions class="justify-center">
+                              <v-btn class="mx-2"
+                              color="deep-purple lighten-2"
+                              @click="AddPanier()"
+                            >Commander</v-btn>
                               <v-btn
-                                text
                                 @click="dialog = false"
                               >Close</v-btn>
                             </v-card-actions>
@@ -256,8 +319,24 @@
                       </v-dialog>
                     </v-card>
                 </div>
-
                 <v-snackbar
+                 color="green"
+                 top
+                 v-model="snackbar_added_panier"
+                >
+                 votre commande a été bien enregistrer <router-link to="../PanierView">check Panier</router-link>  
+                <template v-slot:action="{ attrs }">
+                  <v-btn
+                    color="#fff"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar_added_panier = false"
+                  >
+                    Close
+                  </v-btn>
+                </template>
+              </v-snackbar>
+              <v-snackbar
                 color="red"
                 v-model="snackbar_authentificate"
               >
@@ -273,29 +352,34 @@
                   </v-btn>
                 </template>
               </v-snackbar>
-             
             </div>
         </div>
         </div>
         <ServiceVue></ServiceVue>
         <FooterVueVue></FooterVueVue>
+      </div>
     </div>
 </template>
 
 <script>
+import service_user from "@/services/GererUser/GererUser";
 import { AuthStore } from "@/store/StoreAuth";
+import { ProductStore } from "@/store/StoreProducts";
+import preloaderVue from "@/components/preloader.vue";
 import service_category from "@/services/GererCategory/category";
 import InfoClient from "@/components/Client/InfoClient.vue";
 import ServiceVue from "@/components/home_page/ServiceVue.vue";
 import FooterVueVue from "@/components/home_page/FooterVue.vue";
 import service_product from "@/services/GererProduct/GererProduct"
 import service_option from "@/services/GererOption/option"
+import ServiceaddProducts from "@/services/AddProductsInPinia/AddProductsInPinia.js"
 export default{
     name:'menu',
     setup(){
         const store=AuthStore();
+        const store_products=ProductStore();
         return{
-            store
+            store,store_products
         }
     },
     created(){
@@ -305,23 +389,29 @@ export default{
                 this.types.push({name:response.data[i].name,id:response.data[i].id});
             }
         });
+        if(this.store.isauth!=null){
+          this.get_all_liked();
+        }
         this.FetchData();
         this.GetOptionGlobal();
         this.MaxPrix();
         this.length_panier();
     },
+   
     data(){
-     
         return{ 
+           Qte:1,
            OptionsAdded:[],
            prix: 0,
            dialog:false,
+           selected:[],
            search:'',
            Products_max:[],
+           All_Liked:[],
            affichage:'card',
            Ordered: ['nameProduct','PrixProduct'],
            types:[],
-           nbr_panier:'O',
+           nbr_panier:0,
            pagination:{
             current_page:1,
             next_page:0,
@@ -331,105 +421,103 @@ export default{
            },
            Products:[],
            All_Option_Global:[],
+           OptionsAdded_Selected:[],
            id_category:0,
+           total:0,
            type_Ordered_produdct:'',
            product_selected:0,
            All_Prix_With_Option_Array:[],
            panier_product:[],
-           snackbar_authentificate:false
+           snackbar_authentificate:false,
+           snackbar_added_panier:false,
+           loader:false,
+           Nombre_liked_for_products:[]
         }
     },
     components:{
-        InfoClient,FooterVueVue,ServiceVue
+        InfoClient,FooterVueVue,ServiceVue,preloaderVue
     },
     methods:{
-      AddPanier(id){
+      CoutProduct(){
+        for(let i=0;i<this.Products.length;i++){
+         service_user.countLiked(this.Products[i].id).then((res)=>{
+          this.Nombre_liked_for_products.push({id:this.Products[i].id,nbr:res.data.data});
+          })
+        }
+      },
+      get_all_liked(){
+        this.All_Liked=[];
+        service_user.GetAllLikedProduct(this.store.user['id']).then((response)=>{
+            for(let i=0;i<(response.data).length;i++){
+                this.All_Liked.push({id:response.data[i].product_id});
+            }
+        });
+        this.CoutProduct();
+      },
+      AddPanier(){
+          this.length_panier();
           let Option_for_product=[];
           this.OptionsAdded.forEach((v)=>{
-             if(v.idproduct==id){
+             if(v.idproduct==this.product_selected.id){
                 Option_for_product.push({name:v.name,prix:v.prix});
              }
           });
-           let tab=[];
-           tab=JSON.parse(localStorage.getItem('ProductPanier'));
-           if(tab==null){
-              this.panier_product.push({idProduct:id,option:Option_for_product,Quantity:1});
-              localStorage.setItem('ProductPanier',JSON.stringify(this.panier_product));
-           }else{
 
-               let indexfind=this.panier_product.find((v)=>{
-                  if(v.idProduct==id && v.option.length==0){
-                      return true;
-                  }
-               });
+          let Option_glob_selected=[];
+          this.OptionsAdded_Selected.forEach((v)=>{
+            Option_glob_selected.push({name:v.nameOption});
+          });
 
-            if(Option_for_product.length==0){
-               if(indexfind==undefined){
-                   this.panier_product.push({idProduct:id,option:Option_for_product,Quantity:1});
-                   localStorage.setItem('ProductPanier',JSON.stringify(this.panier_product));
-               }else{
-                  let indexfindlast=this.panier_product.findLastIndex((v)=>v.idProduct==id);
-                  this.panier_product[indexfindlast].Quantity+=1;
-                  localStorage.setItem('ProductPanier',JSON.stringify(this.panier_product));
-               }
-              }else{
-                
-               let indexfind_multiple=this.panier_product.find((v)=>{
-                  if(v.idProduct==id && v.option.length==Option_for_product.length){
-                      return true;
-                   }
-                });
+              let id=Math.random(10,99999);
+              this.panier_product.push({id:id,Product:this.product_selected,option_Supp:Option_for_product,Option_glob:Option_glob_selected,Quantity:this.Qte,prix:this.total});
+              ServiceaddProducts.Add(this.panier_product);
+              console.log(this.panier_product);
+              this.dialog=false;
+              this.snackbar_added_panier=true;
+              this.total=0;
+              this.length_panier();
+      },
 
-                if(indexfind_multiple==undefined){
-                   this.panier_product.push({idProduct:id,option:Option_for_product,Quantity:1});
-                   localStorage.setItem('ProductPanier',JSON.stringify(this.panier_product));
-                }else{
-                   let indexfindlast=this.panier_product.findLastIndex((v)=>v.idProduct==id && v.option.length==Option_for_product.length);
-                   let trouve=0;
-                   let i=0;
-                   while(i<Option_for_product.length && trouve==0){
-                      let index=(this.panier_product[indexfindlast].option).find((v)=>
-                        v.name==Option_for_product[i].name && v.prix==Option_for_product[i].prix);
-                      if(index==undefined){
-                         i++;
-                      }else{
-                        trouve=1;
-                      }
-                   }
-
-                  if(trouve==0){
-                    this.panier_product.push({idProduct:id,option:Option_for_product,Quantity:1});
-                   localStorage.setItem('ProductPanier',JSON.stringify(this.panier_product));
-                  }else{
-                    this.panier_product[indexfindlast].Quantity+=1;
-                    localStorage.setItem('ProductPanier',JSON.stringify(this.panier_product));
-                  }
-                }
-              }
-               this.length_panier();
-           }
-    },
-      AddFavorite(id){
+       AddFavorite(id){
         if(this.store.isauth!=null){
-            //add favorite or remove favorite migration favorite
+          service_user.checkLiked(id,this.store.user['id']).then((res)=>{
+              if(res.data.data.length==0){
+                service_user.addLiked({idproduct:id,iduser:this.store.user['id']}).then((res)=>{
+                  this.get_all_liked();
+                  this.CoutProduct();
+                })
+              }else{
+                service_user.deleteFavorite(id,this.store.user['id']).then((res)=>{
+                  this.get_all_liked();
+                  this.CoutProduct();
+                })
+              }
+          })
         }else{
            this.snackbar_authentificate=true;
         }
+       
       },
+
       InitIndice(a){
         this.product_selected=a;
+        this.OptionsAdded_Selected=this.All_Option_Global;
         this.dialog=true;
       },
+
         MaxPrix(){
             service_product.getProductByIdCategory(this.id_category).then((res)=>{
-            this.Products_max=res.data;
-        })
+              this.Products_max=res.data;
+            })
         },
+
         GetOptionGlobal(){
           service_option.getOptionByIdCategory({id:this.id_category}).then((res)=>{
               this.All_Option_Global=res.data.data;
+              this.OptionsAdded_Selected=this.All_Option_Global;
           }) 
         },
+
         addOption(name,prix){
             let indexofption=this.OptionsAdded.find((v) => {
                 if (v.name==name  && v.idproduct==this.product_selected.id) {
@@ -441,50 +529,53 @@ export default{
             }else{
               let index=this.OptionsAdded.findIndex((v)=>(v.name==name  && v.idproduct==this.product_selected.id));
               this.OptionsAdded.splice(index,1);
+              let index_option=this.All_Prix_With_Option_Array.findIndex((v)=>( v.id==this.product_selected.id));
+              this.All_Prix_With_Option_Array.splice(index_option,1);
             }
             this.Total_prix();
         },
+
         FetchData(){
           service_product.GetProudctOptionSpecifiqueCategory(this.id_category,this.search,this.prix,this.type_Ordered_produdct,this.pagination.current_page).then((response)=>{
               this.Products=response.data.data.data;
+              this.loader=true;
               this.Total_prix();
+              this.CoutProduct();
+              this.length_panier();
           })
         },
+
         length_panier(){
-           this.nbr_panier=JSON.parse(localStorage.getItem('ProductPanier'))==null ? 'O' : JSON.parse(localStorage.getItem('ProductPanier')).length;
+           this.nbr_panier=this.store_products.Products==null ? 0 :this.store_products.Products.length;
         },
+
         Total_prix(){
             let prix=0;
             for(let i=0;i<this.Products.length;i++){
                if(this.OptionsAdded.find((v)=>v.idproduct==this.Products[i].id)){
                    this.OptionsAdded.forEach(element => {
-                      if(element.idproduct==this.Products[i].id){
-                           prix+=element.prix;
+                      if(element.idproduct  == this.Products[i].id){
+                           prix+= element.prix;
                       }
                    });
                    let indexofption=this.All_Prix_With_Option_Array.find((v) =>v.id==this.Products[i].id);
                    if(indexofption==undefined){
-                    this.All_Prix_With_Option_Array.push({id:this.Products[i].id,prix:prix});
+                      this.All_Prix_With_Option_Array.push({id:this.Products[i].id,prix:prix});
                    }else{
-                    let index=this.All_Prix_With_Option_Array.findIndex((v)=>(v.id==indexofption.id));
-                    this.All_Prix_With_Option_Array[index].prix=prix;
+                      let index=this.All_Prix_With_Option_Array.findIndex((v)=>(v.id==this.Products[i].id));
+                      this.All_Prix_With_Option_Array[index].prix=prix;
                    }
                    prix=0;
                }
             }
         },
-        
     },
     computed:{
-    
         name_category(){
             this.GetOptionGlobal();
             this.FetchData();
             let indice=this.types.find((v)=>v.id==this.id_category);
-            if(indice!=-1){
-              return indice.name;
-            }
-            return 'menu';
+            return indice?.name;
         },
         min(){
             if(this.Products_max!=''){
@@ -499,6 +590,7 @@ export default{
                 return 0;
              }
         },
+
         max(){
             if(this.Products_max!=''){
                 console.log(this.Products_max.length);
@@ -513,12 +605,25 @@ export default{
                 return 0;
              }
         },
+
     }
   
 }
 </script>
 
 <style>
+
+.input_number{
+  width: 40px !important;
+  border: none;
+  outline: none;
+}
+.items{
+  margin-left: 20%;
+}
+.items img{
+  border-radius: 25px;
+}
 .content_menu{
     margin-top: 140px !important;
     margin: 25px;
