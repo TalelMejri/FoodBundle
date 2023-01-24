@@ -28,6 +28,10 @@ class User extends Authenticatable
         'Isadmin'
     ];
 
+    public function Favorites(){
+        return $this->hasMany(favorite::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

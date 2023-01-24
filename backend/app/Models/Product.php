@@ -14,6 +14,10 @@ class Product extends Model
         return $this->hasMany(OptionSpecifique::class);
     }
 
+    public function Favorites(){
+        return $this->hasMany(favorite::class);
+    }
+
     public function categorie(){
         return $this->belongsTo(Category::class);
     }
