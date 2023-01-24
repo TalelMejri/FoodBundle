@@ -29,11 +29,17 @@ Route::group(['prefix'=>'/auth'],function(){
     Route::post('/loginUser',[LoginUser::class,'LoginUser']);
 });
 
+
 Route::group(['prefix'=>'/user'],function(){
     Route::get('/countUser',[UserController::class,'coutUser']);
     Route::get('/getuser',[UserController::class,'index']);
     Route::delete('/deleteUser/{id}',[UserController::class,'destroy']);
+    Route::delete('/deleteFavorite',[UserController::class,'deleteFavorite']);
     Route::Post('/Updateuser/{id}',[UserController::class,'update']);
+    Route::Post('/AddLiked',[UserController::class,'AddLiked']);
+    Route::get('/countLiked/{id}',[UserController::class,'countLiked']);
+    Route::get('/GetAllLikedProduct/{id}',[UserController::class,'GetAllLikedProduct']);
+    Route::get('/checkLiked',[UserController::class,'checkLiked']);
 });
 
 Route::group(['prefix'=>"/category"],function(){
@@ -73,4 +79,5 @@ Route::group(['prefix'=>'/product'],function(){
     Route::get('/GetProudctOptionSpecifiqueCategory',[ProductController::class,'GetProudctOptionSpecifiqueCategory']);
     Route::get('/getProductByIdCategory/{id}',[ProductController::class,'getProductByIdCategory']);
     Route::get('/GetProductCategoryOption',[ProductController::class,'GetProductCategoryOption']);
+
 });
