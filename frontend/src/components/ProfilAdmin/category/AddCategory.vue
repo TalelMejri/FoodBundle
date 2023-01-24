@@ -38,55 +38,7 @@
                  <small v-if="option_error!=''">
                   {{ option_error }}
                 </small>
-                <v-dialog
-                     v-model="dialog"
-                    width="500"
-                  >
-              <v-card>
-
-                <v-card-title class="text-h5 grey lighten-2">
-                  Prix
-               </v-card-title>
-
-               <v-card-text>
-                 Enter Prix For {{ select[current_item] }}
-               </v-card-text> 
-
-        <form @submit.prevent="addprix()">
-
-          <div class="mx-5 px-5">
-            <v-text-field
-            name="prix"
-            label="prix "
-            type="text"
-            v-model="prix"
-            placeholder="Enter Prix"
-          ></v-text-field>
-          
-          </div>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-          color="gray"
-          text
-          @click="dialog = false"
-        >
-          Close
-        </v-btn>
-          <v-btn
-            color="primary"
-            text
-            @click="addprix()"
-          >
-            Add Product
-          </v-btn>
-        </v-card-actions>
-      </form>
-      </v-card>
-    </v-dialog>
+           
            </div>
            </div>
            <div class="col-lg-12">
@@ -148,7 +100,6 @@ export default{
             current_item:0,
             dialog:false,
             items:[],
-            prix:0,
             snackbar:false,
             file:'',
             categories:[],
@@ -174,16 +125,11 @@ export default{
         fixIndice(){
             this.current_item=this.select.length-1;
             let index=this.items.findIndex((v)=>v.name==this.select[this.current_item]);
-            console.log(index);
+            console.log(index +''+this.select[this.current_item]);
             if(index==-1){
-              this.dialog=true;
+              this.items.push({name:this.select[this.current_item]});
             }
         },
-        addprix(){
-                this.items.push({name:this.select[this.current_item],prix:parseFloat(this.prix)});
-                this.dialog=false;
-                this.prix=0;
-          },
           handleImage(e) {
               const selectedImage = e.target.files[0]; 
               this.createBase64Image(selectedImage);
@@ -199,6 +145,7 @@ export default{
               j++;
             }
           }
+          
             service.addCategory({
                 'name':this.name,
                 'file':this.file,
