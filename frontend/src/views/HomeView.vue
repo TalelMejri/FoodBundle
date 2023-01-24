@@ -33,7 +33,7 @@
                 </v-col>
                 <v-col v-else cols="auto">
                   <!-- Client Better -->
-                    <InfoClient></InfoClient>
+                    <InfoClient :nbr_panier="nbr_panier"></InfoClient>
                 </v-col>
               </v-row>
                <v-content class="home my-5 py-5 d-flex justify-content-center"  >
@@ -177,7 +177,7 @@
      </div>
 </template>
 <script>
-
+  import { ProductStore } from "@/store/StoreProducts";
   import {AuthStore} from "../store/StoreAuth"
   import footerVue from "../components/home_page/FooterVue.vue"
   import ServiceVue from "../components/home_page/ServiceVue.vue"
@@ -187,6 +187,13 @@
   import InfoClient from "@/components/Client/InfoClient.vue"
   export default {
     name: 'Home', 
+    setup() {
+    const store = AuthStore();
+    const Store_Product = ProductStore();
+    return {
+      store,Store_Product
+    };
+  },
     created(){
       if(typeof(this.$route.query.content)!='undefined'){
              this.message = this.$route.query.content;
@@ -194,13 +201,14 @@
       };
       service_category.getAllCategorie().then((res)=>{
          this.All_Menu=res.data[0];
-         console.log(this.All_Menu);
       })
+      this.nbr_panier=this.Store_Product.Products==null ? 0 : this.Store_Product.Products.length;
     },
     data(){
         return{
           snackbar_edit:false,
           model:[],
+          nbr_panier:0,
           All_Menu:[],
                 items:[
                    {id:0,name:'all Ordered Product',icon:'home',link:'allOrderedProduct'},
@@ -208,6 +216,7 @@
                    {id:2,name:'Logout',icon:'logout'}
                 ],
           etatsidbar:false,
+          message:'',
           email:'',
           email_error:'',
           snackbar: false,
@@ -226,14 +235,7 @@
     components:{
         SideBar,footerVue,ServiceVue,preloader,InfoClient
     },
-    
-    setup() {
-    const store = AuthStore();
-    return {
-      store,
-    };
-  },
-  
+ 
     methods:{
       logout(){
           this.store.logout();

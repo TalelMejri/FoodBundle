@@ -70,12 +70,12 @@
         <v-combobox
             v-model="select"
             :items="items"
-            @change="fixIndice()"
-            item-text="name"
-            item-value="name"
-            label="Option Specifique"
-            multiple
-            outlined
+              @change="fixIndice()"
+              item-text="name"
+             item-value="name"
+             label="Option Specifique"
+             multiple
+             outlined
             dense
      ></v-combobox>
         <v-dialog
