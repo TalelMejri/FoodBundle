@@ -9,6 +9,7 @@ import dashboard from '../views/ProfilAdmin/dashboard/DashboardView.vue'
 import editProfil from "@/views/ProfilClient/EditProfilView.vue"
 import ConsulteMenuView from "@/views/Menu/ConsulteMenuView.vue"
 import PanierView from "@/views/Menu/PanierView.vue"
+import ConfirmerCommandeView from "@/views/Menu/ConfirmerCommandeView.vue"
 Vue.use(VueRouter)
 
 const routes = [
@@ -21,6 +22,11 @@ const routes = [
     path: '/PanierView',
     name: 'PanierView',
     component: PanierView
+  },
+  {
+    path: '/ConfirmerCommandeView',
+    name: 'ConfirmerCommandeView',
+    component: ConfirmerCommandeView
   },
   {
     path: '/ConsulteMenuView/:id',
