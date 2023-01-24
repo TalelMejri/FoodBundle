@@ -30,10 +30,21 @@ export default{
            };
 
            return Axios.post('user/Updateuser/'+id,data,config);
-
+     },
+     addLiked(user){
+          return Axios.post('user/AddLiked',user);
+     },
+     deleteFavorite(idproduct,iduser){
+          return Axios.delete(`user/deleteFavorite?idproduct=${idproduct}&iduser=${iduser}`);
+     },
+     checkLiked(idproduct,iduser){
+          return Axios.get(`user/checkLiked?idproduct=${idproduct}&iduser=${iduser}`);
+     },
+     countLiked(id){
+          return Axios.get('user/countLiked/'+id);
+     },
+     GetAllLikedProduct(id){
+          return Axios.get('user/GetAllLikedProduct/'+id);
      }
-
-
-
 
 }
