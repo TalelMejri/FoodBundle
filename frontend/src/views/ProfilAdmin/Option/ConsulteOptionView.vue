@@ -89,7 +89,7 @@
               <th  class="text-left ">
                 Name
               </th>
-              <th  class="text-left ">
+              <th v-if="list!='global'"  class="text-left ">
                 prix
               </th>
               <th v-if="list=='global'" class="text-left ">
@@ -124,7 +124,6 @@
             <tr v-for="option in Options" :key="option.id">
                 <td>{{option.id}}</td>
                 <td>{{option.nameOption}}</td>
-                <td>{{option.prixOption}}</td>
                 <td v-if="types.find((v)=>v.id==option.category_id) ? index=types.find((v)=>v.id==option.category_id) :'' ">
                     {{ index.name }} 
                 </td>
@@ -209,14 +208,6 @@
                           type="text"
                           v-model="name"
                           placeholder="Enter Name"
-                        ></v-text-field>
-
-                          <v-text-field
-                          name="prix"
-                          label="prix "
-                          type="text"
-                          v-model="prix"
-                          placeholder="Enter Prix"
                         ></v-text-field>
                         </div>
                       <v-divider></v-divider>
@@ -485,7 +476,7 @@ export default{
       },
       updateOption(){
         if(this.list=='global'){
-          service_option.UpdateOption(this.option_selected.id,{name:this.name,prix:this.prix}).then((r)=>{
+          service_option.UpdateOption(this.option_selected.id,{name:this.name}).then((r)=>{
             this.initedit();
             this.fetchData_global();
          })
