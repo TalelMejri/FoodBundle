@@ -25,7 +25,6 @@ class StoreOption extends FormRequest
     {
         return [
             'nameOption'=>"required",
-            'prixOption'=>"required",
             //'category_id'=>"required"
         ];
     }
