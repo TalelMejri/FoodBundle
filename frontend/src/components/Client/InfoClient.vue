@@ -2,11 +2,12 @@
     <div>
         <template>
             <v-row>
-              <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier">
-                <router-link  to="../PanierView" style="text-decoration:none !important">
-                     <v-icon @click="snackbar_notif = true" style="font-size:25px">mdi-cart-outline</v-icon>
-               </router-link>
-             </v-badge>
+                  <v-badge  class="mx-5 mt-3" color="red"  :content="nbr_panier==0 ? '0' : nbr_panier">
+                       <v-btn text :disabled="nbr_panier==0">
+                            <router-link to="../PanierView">panier</router-link>
+                       </v-btn>
+                    <v-icon @click="snackbar_notif = true" style="font-size:25px">mdi-cart-outline</v-icon>
+              </v-badge>
               <v-menu>
                 <template v-slot:activator="{ on }">
                   <v-btn
@@ -132,6 +133,7 @@
 
 <script>
 import {AuthStore} from "@/store/StoreAuth"
+import { ProductStore } from "@/store/StoreProducts";
 export default{
   props:{
     menu:String,
@@ -139,8 +141,9 @@ export default{
   },
     setup() {
     const store = AuthStore();
+    const Store_Product = ProductStore();
     return {
-      store,
+      store,Store_Product
     };
   },
     data(){
@@ -152,6 +155,7 @@ export default{
     methods:{
         logout(){
           this.store.logout();
+          this.Store_Product.ClearProducts();
           if(this.menu=='menu'){
             this.$router.push('../login');
           }else{
