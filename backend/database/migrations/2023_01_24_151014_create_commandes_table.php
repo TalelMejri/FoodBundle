@@ -11,14 +11,10 @@ return new class extends Migration
      *
      * @return void
      */
-    public $timestamps=false;
     public function up()
     {
-        Schema::create('options', function (Blueprint $table) {
+        Schema::create('commandes', function (Blueprint $table) {
             $table->id();
-            $table->string("nameOption");
-            $table->foreignId('category_id');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('options');
+        Schema::dropIfExists('commandes');
     }
 };
