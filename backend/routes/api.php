@@ -44,6 +44,7 @@ Route::group(['prefix'=>'/user'],function(){
     Route::get('/countLiked/{id}',[UserController::class,'countLiked']);
     Route::get('/GetAllLikedProduct/{id}',[UserController::class,'GetAllLikedProduct']);
     Route::get('/checkLiked',[UserController::class,'checkLiked']);
+    Route::get('/getAllProductLiekd/{id}',[UserController::class,'getAllProductLiekd']);
 });
 
 Route::group(['prefix'=>"/category"],function(){

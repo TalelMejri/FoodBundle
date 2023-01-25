@@ -45,6 +45,9 @@ export default{
      },
      GetAllLikedProduct(id){
           return Axios.get('user/GetAllLikedProduct/'+id);
+     },
+     getAllProductLiekd(id,page){
+          return Axios.get(`user/getAllProductLiekd/${+id}&page=${page}`);
      }
 
 }

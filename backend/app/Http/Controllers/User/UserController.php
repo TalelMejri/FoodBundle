@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\favorite;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -139,6 +140,11 @@ class UserController extends Controller
     Public function countLiked($idproduct){
         $count=favorite::where('product_id',$idproduct)->count();
         return  response()->json(['data'=>$count],200);
+    }
+
+    public function getAllProductLiekd($id){
+        $allProductLiked=favorite::with('product')->where('user_id',$id)->paginate(2);
+        return response()->json($allProductLiked,200);
     }
 
 }
