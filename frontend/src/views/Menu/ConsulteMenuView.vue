@@ -12,7 +12,9 @@
                 <div v-else>
                     <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier==0 ? '0' : nbr_panier">
                        <v-btn text :disabled="nbr_panier==0">
-                         <router-link to="../PanierView">panier</router-link>
+                        <router-link style="text-decoration:none !important" to="../PanierView">
+                          <v-icon  style="font-size:25px">mdi-cart-outline</v-icon>
+                        </router-link>
                        </v-btn>
                     </v-badge>
                 </div>
@@ -131,8 +133,8 @@
                                        <v-spacer></v-spacer>
                                      <div class="mb-4 mx-5 mt-2" >
                                         <v-btn text  @click="AddFavorite(product.id)">
-                                            <!--<v-icon>mdi-{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}</v-icon> -->
-                                            {{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}
+                                            <v-icon>mdi-{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}</v-icon>
+                                            <!--{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}-->
                                           </v-btn>
                                         {{ Nombre_liked_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_liked_for_products[Nombre_liked_for_products.findIndex((v)=>v.id==product.id)].nbr : 0 }} 
                                     </div>
@@ -372,7 +374,6 @@ export default{
       if(this.store.isauth!=null){
           this.get_all_liked();
         }
-        this.CoutProduct();
     },
     created(){
         this.id_category=parseInt(this.$route.params.id);
@@ -541,6 +542,7 @@ export default{
               this.Products=response.data.data.data;
               this.loader=true;
               this.Total_prix();
+              this.CoutProduct();
               this.length_panier();
           })
         },

@@ -12,8 +12,7 @@
                     <div v-else>
                         <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier">
                                 <router-link  to="../PanierView" style="text-decoration:none !important">
-                                        dfdfdf
-                                    <v-icon @click="snackbar_notif = true" style="font-size:25px">mdi-cart-outline</v-icon>
+                                    <v-icon  style="font-size:25px">mdi-cart-outline</v-icon>
                                 </router-link>
                         </v-badge>
                     </div>
