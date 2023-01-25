@@ -181,6 +181,7 @@
 </template>
 
 <script>
+import service_commande from "@/services/GererCommande/Commande.js";
 import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue"
 import { AuthStore } from "@/store/StoreAuth";
@@ -231,7 +232,16 @@ export default{
             this.$router.push('/');
         },
         passCommande(){
-
+           let Info_User={
+                   name:this.Nom,prenom:this.Prenom,
+                   ville:this.Ville,pays:this.Pays,
+                   code:this.Code,email:this.adresse_email,
+                   tlf:this.Numero,adresse:this.Adresse,
+                   userid:this.store.user['id']
+                  };
+          service_commande.AddCommande({user:Info_User,Product:this.store_products.Products}).then((res)=>{
+              console.log(res.data.data);
+          })
         }
     },
     components:{
