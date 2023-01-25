@@ -18,6 +18,11 @@ class Product extends Model
         return $this->hasMany(favorite::class);
     }
 
+    public function lignecommandes(){
+        return $this->hasMany(lignecommande::class);
+    }
+
+
     public function categorie(){
         return $this->belongsTo(Category::class);
     }
