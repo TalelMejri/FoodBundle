@@ -3,6 +3,7 @@
 use App\Http\Controllers\auth\LoginUser;
 use App\Http\Controllers\Auth\RegisterUser;
 use App\Http\Controllers\category\CategoryController;
+use App\Http\Controllers\commande\CommandeController;
 use App\Http\Controllers\Option\OptionController;
 use App\Http\Controllers\product\ProductController;
 use App\Http\Controllers\User\UserController;
@@ -29,6 +30,9 @@ Route::group(['prefix'=>'/auth'],function(){
     Route::post('/loginUser',[LoginUser::class,'LoginUser']);
 });
 
+Route::group(['prefix'=>'/commande'],function(){
+    Route::post('/AddCommande',[CommandeController::class,'AddCommande']);
+});
 
 Route::group(['prefix'=>'/user'],function(){
     Route::get('/countUser',[UserController::class,'coutUser']);
