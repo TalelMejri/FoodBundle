@@ -94,7 +94,13 @@ class ProductController extends Controller
       public function AllProduct(){
         $product=Product::all('nameProduct','id');
         return response()->json($product,200);
-    }
+      }
+
+      public function getALLproduct(){
+         $product=Product::all();
+         return response()->json($product,200);
+      }
+
 
     public function GetProudctOptionSpecifiqueCategory(Request $request){
          if(!isset($request->search) && !isset($request->typeordered)){
