@@ -32,6 +32,10 @@ class User extends Authenticatable
         return $this->hasMany(favorite::class);
     }
 
+    public function notifications(){
+        return $this->hasMany(Notification::class);
+    }
+
     public function commandes(){
         return $this->hasMany(Commande::class);
      }

@@ -19,7 +19,7 @@ class LignCommande extends Model
      }
 
      public function ligensOptions(){
-        return $this->hasmany(LignCommandeOption::class);
+        return $this->hasmany(ligneCommandeOption::class);
      }
 
 
