@@ -5,7 +5,7 @@
               <v-toolbar 
                 color="green"
                 dark
-                >Edit User  </v-toolbar>
+                >Edit</v-toolbar>
               <v-card-text >
                <form  @submit.prevent="EditUser()" enctype="multipart/form-data">
                  <div class="mx-5 px-5">

@@ -7,10 +7,12 @@
                </div>
           </li>
           <li>
-            <a  href="#home">
+              <router-link style="text-decoration:none;padding:0" to="/">
+             <a  href="#home">
               <v-icon   class="icon">mdi-home</v-icon>
                <span  class="nav-item"> Home</span>
-            </a>
+              </a>
+            </router-link>
           </li>
           <li>
             <a  href="#menu">
