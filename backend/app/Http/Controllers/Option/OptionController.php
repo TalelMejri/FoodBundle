@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Option;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOption;
 use App\Models\Category;
+use App\Models\ligneCommandeOption;
 use App\Models\Option;
 use App\Models\OptionSpecifique;
 use Illuminate\Http\Request;
@@ -133,6 +134,11 @@ class OptionController extends Controller
      public function CountOptionSpecifique(){
         $Option=OptionSpecifique::count();
         return response()->json(['data'=>$Option],200);
+     }
+
+     public function getAlloption(){
+        $option=ligneCommandeOption::all();
+        return response()->json($option,200);
      }
 
 
