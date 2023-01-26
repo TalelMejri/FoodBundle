@@ -37,6 +37,13 @@
               Vérification et paiment
               </v-stepper-step>
               <v-divider></v-divider>
+              <v-divider></v-divider>
+              <v-stepper-step
+                :complete="e1 > 3"
+                step="3"
+              >
+                Check
+              </v-stepper-step>
             </v-stepper-header>
             <v-stepper-items>
               <v-stepper-content step="1">
@@ -139,6 +146,31 @@
                   Cancel
                 </v-btn>
               </v-stepper-content>
+
+              <v-stepper-content step="3">
+                <v-card
+                  class="mb-12"
+                  height="200px"
+                >
+                Mode de paiment :
+                 <div style="font-size:18px;font-weight:600" class="mb-2 mt-2 text-center">
+                   MERCI POUR VOTRE COMMANDE !
+                  <br>
+                Votre commande # est : {{ code_Commande }}.
+                  <br>
+                  Nous vous enverrons la confirmation de commande avec les détails et les informations de suivi.
+                  <br>
+                 </div>
+            </v-card>
+            <v-btn @click="checkCommande()" class="mx-5" color="#000" style="color:#fff !important">
+                Check Commande
+            </v-btn>
+            <router-link to="/">
+            <v-btn class="mx-5" color="#000" style="color:#fff !important">
+                Continuer Achats
+             </v-btn>
+            </router-link>
+              </v-stepper-content>
             </v-stepper-items>
           </v-stepper>
         </div>
@@ -173,8 +205,24 @@
                   </v-expansion-panels>
             </v-card>
         </div>
+
     </div>
     </div>
+    <v-snackbar
+    v-model="snackbar"
+>
+ Yous should create an Account <router-link to="signup">Sing Up</router-link>
+<template v-slot:action="{ attrs }">
+ <v-btn
+   color="pink"
+      text
+      v-bind="attrs"
+      @click="snackbar = false"
+ >
+   Close
+  </v-btn>
+ </template>
+</v-snackbar>
     <FooterVue></FooterVue>
     </div>
 </template>
@@ -209,6 +257,7 @@ export default{
                      v => /.+@.+/.test(v) || 'E-mail must be valid',
             ],
             adresse_email:'',
+            code_Commande:0,
             Ville:'',
             Pays:'',
             Code:'',
@@ -236,11 +285,21 @@ export default{
                    ville:this.Ville,pays:this.Pays,
                    code:this.Code,email:this.adresse_email,
                    tlf:this.Numero,adresse:this.Adresse,
-                   userid:this.store.user['id']
+                   userid:this.store.isauth!=null ? this.store.user['id'] : null
                   };
-          service_commande.AddCommande({user:Info_User,Product:this.store_products.Products}).then((res)=>{
-              console.log(res.data.data);
+                  this.code_Commande=Math.random(10,99999);
+          service_commande.AddCommande({user:Info_User,Product:this.store_products.Products,code_Commande:this.code_Commande}).then((res)=>{
+              this.e1=3;
+              this.store_products.ClearProducts();
           })
+          this.store_products.ClearProducts();
+        },
+        checkCommande(){
+          if(this.store.isauth!=null){
+            this.$router.push('../allOrderedProduct');
+          }else{
+            this.snackbar=true;
+          }
         }
     },
     components:{

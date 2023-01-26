@@ -4,6 +4,7 @@ use App\Http\Controllers\auth\LoginUser;
 use App\Http\Controllers\Auth\RegisterUser;
 use App\Http\Controllers\category\CategoryController;
 use App\Http\Controllers\commande\CommandeController;
+use App\Http\Controllers\notification\ControllerNotification;
 use App\Http\Controllers\Option\OptionController;
 use App\Http\Controllers\product\ProductController;
 use App\Http\Controllers\User\UserController;
@@ -32,6 +33,18 @@ Route::group(['prefix'=>'/auth'],function(){
 
 Route::group(['prefix'=>'/commande'],function(){
     Route::post('/AddCommande',[CommandeController::class,'AddCommande']);
+    Route::get('/AllCommande',[CommandeController::class,'AllCommande']);
+    Route::get('/CommandeForUser',[CommandeController::class,'CommandeForUser']);
+    Route::get('/AllCommandeAccpted',[CommandeController::class,'AllCommandeAccpted']);
+    Route::delete('/deleteCommande/{id}',[CommandeController::class,'deleteCommande']);
+    Route::delete('/rejeterCommande',[CommandeController::class,'rejeterCommande']);
+    Route::put('/AccepterCommande',[CommandeController::class,'AccepterCommande']);
+});
+
+
+Route::group(['prefix'=>'/notif'],function(){
+    Route::get('/getnotif/{id}',[ControllerNotification::class,'getNotification']);
+    Route::delete('/deleteNotification/{id}',[ControllerNotification::class,'deleteNotification']);
 });
 
 Route::group(['prefix'=>'/user'],function(){
@@ -72,6 +85,7 @@ Route::group(['prefix'=>"/option"],function(){
     Route::POST('/UpdateOptionSpecifique/{id}',[OptionController::class,'UpdateOptionSpecifique']);
     Route::get('/getOptionGlobal',[OptionController::class,'getOptionGlobal']);
     Route::get('/getOptionSpecifique',[OptionController::class,'getOptionSpecifique']);
+    Route::get('/getAlloption',[OptionController::class,'getAlloption']);
 });
 
 Route::group(['prefix'=>'/product'],function(){
@@ -84,5 +98,5 @@ Route::group(['prefix'=>'/product'],function(){
     Route::get('/GetProudctOptionSpecifiqueCategory',[ProductController::class,'GetProudctOptionSpecifiqueCategory']);
     Route::get('/getProductByIdCategory/{id}',[ProductController::class,'getProductByIdCategory']);
     Route::get('/GetProductCategoryOption',[ProductController::class,'GetProductCategoryOption']);
-
+    Route::get('/getALLproduct',[ProductController::class,'getALLproduct']);
 });

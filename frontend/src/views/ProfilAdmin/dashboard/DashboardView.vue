@@ -11,9 +11,12 @@
      <h2> <span style="color:#E84C03;">{{(ViewCurrent.toUpperCase().substring(0,ViewCurrent.length-3))}}</span>{{(ViewCurrent.toUpperCase().substring(ViewCurrent.length,ViewCurrent.length-3))}}</h2>
         <v-spacer></v-spacer>
     <div class="mx-5">
-      <v-badge   class="mx-5 mt-4"  color="red"
-      content="6">
-        <v-icon  @click="snackbar = true"  color="#000">mdi-bell</v-icon>
+      <v-badge  class="mx-5 mt-4"  color="red"
+          :content="All_notif.length==0 ? '0' : All_notif.length">
+      <v-btn  @click="snackbar = true">
+        dd
+      </v-btn>
+          <v-icon  @click="snackbar = true"  color="#000">mdi-bell</v-icon>
       </v-badge>
     </div>
 
@@ -40,7 +43,13 @@
     right
     scroll
   >
-
+      <div v-if="All_notif==''"> 
+        No Notification available
+    </div>
+      <div v-else  class="all_notif" v-for="notif in All_notif" :key="notif.id">
+                 <v-btn @click="deleteNotif(notif.id)" text><v-icon>mdi-delete</v-icon></v-btn>
+                {{ notif.message }}
+      </div>
     <template v-slot:action="{ attrs }">
       <v-btn
         color="indigo"
@@ -134,6 +143,7 @@
   *  ? dsdsdsd
   *  TODO:dsdsdsd
  */
+    import service_notif from "@/services/Notification/notif.js"
     import ConsulteOptionView from "@/views/ProfilAdmin/Option/ConsulteOptionView.vue";
     import SatistiqueView from "@/views/ProfilAdmin/dashboard/SatistiqueView.vue"
     import SideBar from "@/components/SideBar.vue"
@@ -146,6 +156,9 @@
 
     export default{
         name:'dashboard',
+        created(){
+            this.getnotif();
+        },
         setup() {
              const store = AuthStore();
              return {
@@ -158,10 +171,21 @@
                 admin_dashboard:true,
                 snackbar:false,
                 ViewCurrent:'state',
-                snackbar_edit:false
+                snackbar_edit:false,
+                All_notif:[]
             }
         },
         methods:{
+            getnotif(){
+              service_notif.getNotification(this.store.user['id']).then((res)=>{
+                 this.All_notif=res.data;
+              })
+            },
+            deleteNotif(id){
+              service_notif.deleteNotification(id).then((res)=>{
+                 this.getnotif();
+              })
+            },
             changreetat(a){
                 this.etatsidbar=a;
             },
@@ -184,6 +208,12 @@
 </script>
 
 <style scoped>
+
+.all_notif{
+  scroll-behavior: smooth;
+  max-height:400px;
+  overflow-y: scroll;
+}
 .fade-enter,.fade-leave-to{
   opacity: 0; 
   transform: translateX(2em);

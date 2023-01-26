@@ -168,7 +168,7 @@
              <v-snackbar
              v-model="snackbar_auth"
          >
-             You shoul be connected
+              You shoul Add Product First
          <template v-slot:action="{ attrs }">
           <v-btn
             color="pink"
@@ -266,11 +266,16 @@ export default{
             this.snackbar=true;
         },
         verifier(){
-            if(this.store.isauth!=null){
+          if( this.nbr_panier>0){
+            this.$router.push('/ConfirmerCommandeView');
+          }else{
+            this.snackbar_auth=true;
+          }
+            /*if(this.store.isauth!=null){
                 this.$router.push('/ConfirmerCommandeView');
             }else{
                 this.snackbar_auth=true;
-            }
+            }*/
         }
     },
     components:{

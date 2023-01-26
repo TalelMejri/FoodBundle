@@ -35,10 +35,12 @@ export default{
         return axios.get('product/getProductByIdCategory/'+id);
     },
 
+    getProducts(){
+        return axios.get('product/getALLproduct');
+    },
 
     GetProudctOptionSpecifiqueCategory(id,search,prix,typeordered,page){
         return axios.get(`product/GetProudctOptionSpecifiqueCategory?id=${id}&${search ? 'search='+search : ''}&prix=${prix}&${typeordered ? 'typeordered='+typeordered : ''}&page=${page}`);
     }
-
 
 }

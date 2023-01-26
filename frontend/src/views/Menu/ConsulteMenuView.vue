@@ -11,7 +11,7 @@
                 </div>
                 <div v-else>
                     <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier==0 ? '0' : nbr_panier">
-                       <v-btn text :disabled="nbr_panier==0">
+                       <v-btn text >
                         <router-link style="text-decoration:none !important" to="../PanierView">
                           <v-icon  style="font-size:25px">mdi-cart-outline</v-icon>
                         </router-link>

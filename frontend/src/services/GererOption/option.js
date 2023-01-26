@@ -50,6 +50,9 @@ export default{
 
     getOptionSpecifique(id,search,page){
         return axios.get(`option/getOptionSpecifique?${search ? 'search='+search : ''}&id=${id!=-1 ? id :-1}&page=${page}`);
+    },
+    getAllOption(){
+        return axios.get('option/getAlloption');
     }
     
 
