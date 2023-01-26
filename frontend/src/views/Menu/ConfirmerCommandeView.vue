@@ -226,8 +226,21 @@
     <FooterVue></FooterVue>
     </div>
 </template>
+<button @click="start">Start</button>
+<button @click="stop">Stop</button>
+<button @click="love">Show some love</button>
 
+start() {
+ 
+  },
+
+stop() {
+   this.$confetti.stop();
+},
 <script>
+import Vue from 'vue'
+import VueConfetti from 'vue-confetti'
+Vue.use(VueConfetti)
 import service_commande from "@/services/GererCommande/Commande.js";
 import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue"
@@ -291,8 +304,9 @@ export default{
           service_commande.AddCommande({user:Info_User,Product:this.store_products.Products,code_Commande:this.code_Commande}).then((res)=>{
               this.e1=3;
               this.store_products.ClearProducts();
+              this.$confetti.start();
+              setTimeout(()=>this.$confetti.stop(),2000);
           })
-          this.store_products.ClearProducts();
         },
         checkCommande(){
           if(this.store.isauth!=null){
