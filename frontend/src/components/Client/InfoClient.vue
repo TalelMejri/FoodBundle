@@ -55,9 +55,6 @@
                       <v-divider class="my-2"></v-divider>
                       <v-badge  class="mx-5 mt-4"  color="red"
                       :content="All_notif.length==0 ? '0' : All_notif.length">
-                  <v-btn  @click="snackbar = true">
-                    dd
-                  </v-btn>
                       <v-icon  @click="snackbar = true"  color="#000">mdi-bell</v-icon>
                   </v-badge>
                       <v-divider class="my-2"></v-divider>

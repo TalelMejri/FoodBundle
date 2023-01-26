@@ -134,7 +134,6 @@
                                      <div class="mb-4 mx-5 mt-2" >
                                         <v-btn text  @click="AddFavorite(product.id)">
                                             <v-icon>mdi-{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}</v-icon>
-                                            <!--{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}-->
                                           </v-btn>
                                         {{ Nombre_liked_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_liked_for_products[Nombre_liked_for_products.findIndex((v)=>v.id==product.id)].nbr : 0 }} 
                                     </div>
@@ -148,7 +147,7 @@
                                  Commander
                              </v-btn>
                             </div>
-                            <!--<div v-else>
+                          <div v-else>
                               <v-list-item >
                                 <v-list-item-content>
                                   <v-spacer></v-spacer>
@@ -182,26 +181,14 @@
                               </v-list-item-avatar>
                               </v-list-item>
                               <v-card-actions>
-                                <v-btn
-                                  outlined
-                                  rounded
-                                  type="submit"
-                                  text
-                                  @click="AddPanier(product.id)"
-                                >
-                                  Add Card
-                                </v-btn>
-                                <v-btn
-                                outlined
-                                rounded
-                                text
-                                @click="InitIndice(product)" class="text-center "
+                                <v-btn style="width:100%" class="text-center mt-2 mb-1"
                                 color="deep-purple lighten-2"
-                              >
-                                Add Option
+                                @click="InitIndice(product)" 
+                               >
+                                  Commander
                               </v-btn>
                               </v-card-actions>
-                            </div>-->
+                            </div>
                       <v-dialog v-model="dialog"
                         transition="dialog-top-transition"
                         max-width="400"
@@ -477,7 +464,7 @@ export default{
               this.panier_product.push({id:id,Product:this.product_selected,option_Supp:Option_for_product,Option_glob:Option_glob_selected,Quantity:this.Qte,prix:this.total});
               ServiceaddProducts.Add(this.panier_product);
               this.nbr_panier=this.panier_product.length;
-              this.$router.go();
+             // this.$router.go();
               this.total=0;
       },
 
