@@ -10,9 +10,27 @@ class ControllerNotification extends Controller
 {
 
    public function getNotification($id){
-      $notification=Notification::where('user_id',$id)->get();
+      $notification=Notification::where('user_id',$id)->where('etat',0)->get();
       return response()->json($notification,200);
    }
+
+   public function getAllNotification($id){
+    $notification=Notification::where('user_id',$id)->orderBy('etat')->get();
+    return response()->json($notification,200);
+ }
+
+ public function changeretat($id){
+    $notification=Notification::find($id);
+   if($notification){
+        $notification->update([
+            'etat'=>1
+        ]);
+   }else{
+     return response()->json(['message'=>"Notification Not found"],404);
+   }
+ }
+
+
 
    public function deleteNotification($id){
     $notification=Notification::find($id);
