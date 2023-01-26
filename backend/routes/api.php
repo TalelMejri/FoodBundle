@@ -44,6 +44,8 @@ Route::group(['prefix'=>'/commande'],function(){
 
 Route::group(['prefix'=>'/notif'],function(){
     Route::get('/getnotif/{id}',[ControllerNotification::class,'getNotification']);
+    Route::get('/getAllNotification/{id}',[ControllerNotification::class,'getAllNotification']);
+    Route::put('/changeretat/{id}',[ControllerNotification::class,'changeretat']);
     Route::delete('/deleteNotification/{id}',[ControllerNotification::class,'deleteNotification']);
 });
 
