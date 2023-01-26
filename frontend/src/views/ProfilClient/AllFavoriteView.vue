@@ -1,8 +1,11 @@
 <template>
     <div>
+      <div class="sidebar_position">    
+        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+      </div>
+      <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' ">
         <v-card class="header" elavation="3">
             <div class="row">
-                    <img src="../../assets/logo.png" width="70px" height="70px" alt="FoodBundle logo">
                     <h3 style="padding:15px"><span style="color:#E84C03;">Food</span>Bundle</h3>
                     <v-spacer></v-spacer>
                     <div v-if="store.isauth!=null">
@@ -94,10 +97,12 @@
             </v-simple-table>
           </v-card>
         </div>
+        </div>
     </div>
 </template>
 
 <script>
+import SideBar from "@/components/SideBar.vue";
 import service_user from "@/services/GererUser/GererUser"
 import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue"
@@ -127,10 +132,14 @@ export default{
                 per_page:0,
             },
             loader:false,
-            All_favorite:[]
+            All_favorite:[],
+            etatsidbar:true
         }
     },
     methods:{
+      changreetat(a){
+        this.etatsidbar=a;
+      },
      changerPage(num){
         this.pagination.curentpage=num;
         this.fetchdata();
@@ -153,7 +162,7 @@ export default{
     },
     components:{
         FooterVue,
-        InfoClient
+        InfoClient,SideBar
     }
 }
 </script>

@@ -1,8 +1,11 @@
-<template>
+ <template>
     <div>
+      <div class="sidebar_position">    
+        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+      </div>
+      <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' ">
         <v-card class="header" elavation="3">
             <div class="row">
-                    <img src="../../assets/logo.png" width="70px" height="70px" alt="FoodBundle logo">
                     <h3 style="padding:15px"><span style="color:#E84C03;">Food</span>Bundle</h3>
                     <v-spacer></v-spacer>
                     <div v-if="store.isauth!=null">
@@ -37,7 +40,7 @@
                     v-for="item in All_Commande"
                            :key="item.id"
                       >
-                      <v-expansion-panel-header >
+                      <v-expansion-panel-header style="padding:15px" :color="item.statu==0 ? 'yellow' : item.statu==1 ? 'green' : 'red'" >
                         <v-simple-table>
                             <template v-slot:default>
                               <thead>
@@ -160,28 +163,31 @@
        </template>
      </v-dialog> 
 
-     <v-snackbar
-            v-model="snackbar"
-        >
-         Delete Completed With Success
-        <template v-slot:action="{ attrs }">
-         <v-btn
-           color="pink"
-              text
-              v-bind="attrs"
-              @click="snackbar = false"
-         >
-           Close
-          </v-btn>
-         </template>
-        </v-snackbar>
         <div class="py-5 mt-5">
           <FooterVue class="py-5 mt-5"></FooterVue>
         </div>
+        </div>
+        
+     <v-snackbar
+     v-model="snackbar"
+ >
+  Delete Completed With Success
+ <template v-slot:action="{ attrs }">
+  <v-btn
+    color="pink"
+       text
+       v-bind="attrs"
+       @click="snackbar = false"
+  >
+    Close
+   </v-btn>
+  </template>
+ </v-snackbar>
     </div>
 </template>
 
 <script>
+import SideBar from "@/components/SideBar.vue";
 import service_commande from "@/services/GererCommande/Commande.js";
 import service_product from "@/services/GererProduct/GererProduct";
 import service_option from "@/services/GererOption/option";
@@ -226,9 +232,13 @@ export default{
             All_Commande:[],
             dialog:false,
             All_product:[],
+            etatsidbar:true
         }
     },
     methods:{
+      changreetat(a){
+        this.etatsidbar=a;
+      },
      changerPage(num){
         this.pagination.curentpage=num;
         this.fetchdata();
@@ -256,7 +266,7 @@ export default{
       }
     },
     components:{
-        FooterVue,InfoClient
+        FooterVue,InfoClient,SideBar
     }
 }
-</script>
+</script> 

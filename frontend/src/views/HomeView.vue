@@ -76,9 +76,9 @@
                 <v-hover v-for="menu in All_Menu" :key="menu.id"  v-slot="{ hover }">
                 <div class="col-lg-4">
                   <v-card
-                    class="mx-auto"
-                    color="grey lighten-4"
-                    max-width="300"
+                     class="mx-auto"
+                     color="grey lighten-4"
+                     max-width="400"
                   >
                     <v-img
                       :aspect-ratio="16/9"
@@ -87,7 +87,7 @@
                       <v-expand-transition>
                         <div
                           v-if="hover"
-                          class=" white justify-content-center"
+                          class=" white justify-content-center py-3"
                           style="height: 100%;"
                         >
                            <div class="text-center py-5">
@@ -325,7 +325,7 @@ small{
 
 .sidebar_position{
   position: fixed;
-  z-index: 999999;
+  z-index: 9;
 }
 
 .btn{

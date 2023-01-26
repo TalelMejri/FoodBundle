@@ -11,11 +11,10 @@
      <h2> <span style="color:#E84C03;">{{(ViewCurrent.toUpperCase().substring(0,ViewCurrent.length-3))}}</span>{{(ViewCurrent.toUpperCase().substring(ViewCurrent.length,ViewCurrent.length-3))}}</h2>
         <v-spacer></v-spacer>
     <div class="mx-5">
-      <v-badge  class="mx-5 mt-4"  color="red"
-          :content="All_notif.length==0 ? '0' : All_notif.length">
-          <v-icon  @click="snackbar = true"  color="#000">mdi-bell</v-icon>
-      </v-badge>
+    
+     
     </div>
+   
 
   <v-snackbar
     dark
@@ -35,29 +34,35 @@
     </template>
   </v-snackbar>
 
-  <v-snackbar
-    v-model="snackbar"
-    right
-    scroll
-  >
-      <div v-if="All_notif==''"> 
-        No Notification available
-    </div>
-      <div v-else  class="all_notif" v-for="notif in All_notif" :key="notif.id">
-                 <v-btn @click="deleteNotif(notif.id)" text><v-icon>mdi-delete</v-icon></v-btn>
-                {{ notif.message }}
-      </div>
-    <template v-slot:action="{ attrs }">
-      <v-btn
-        color="indigo"
-        text
-        v-bind="attrs"
-        @click="snackbar = false"
-      >
-        Close
-      </v-btn>
-    </template>
-  </v-snackbar>
+<v-menu 
+  bottom
+  origin="center center"
+  transition="scale-transition"
+>
+  <template v-slot:activator="{ on, attrs }">
+    <v-badge 
+     class="mx-5 mt-4"  color="red"
+     :content="All_notif_yet.length==0 ? '0' : All_notif_yet.length">
+    <v-icon   
+      v-bind="attrs"
+      v-on="on"
+       color="#000">
+        mdi-bell
+      </v-icon>
+    </v-badge>
+  </template>
+  <v-list   style="overflow-y:scroll;max-height:300px">
+    <v-list-item v-if="All_notif==''">
+      <v-list-item-title class="mb-1" > No Datat available</v-list-item-title>
+  </v-list-item>
+    <v-list-item v-else
+      v-for="(item) in All_notif"
+      :key="item.id"
+    >
+      <v-list-item-title class="mb-1" :style=" item.etat==0 ? 'background-color:gray;padding:15px;border-radius:25px;cursor:pointer' : 'cursor:pointer;background-color:#fff;padding:15px;border-radius:25px'" @click="Seenotification(item.id)">{{ item.message }} <v-btn  text @click="deleteNotif(item.id)"> <v-icon color="red">mdi-delete</v-icon></v-btn></v-list-item-title>
+    </v-list-item>
+  </v-list>
+</v-menu> 
       <v-menu>
         <template v-slot:activator="{ on }">
           <v-btn
@@ -129,11 +134,27 @@
             </v-container>
             </div>
        </div>
+  
       </transition>  
+      <v-snackbar
+      v-model="snackbar"
+  >
+   Delete Notification Completed With Success
+  <template v-slot:action="{ attrs }">
+   <v-btn
+     color="pink"
+        text
+        v-bind="attrs"
+        @click="snackbar = false"
+   >
+     Close
+    </v-btn>
+   </template>
+  </v-snackbar>
     </div>
+
 </template>
 <script>
-
  /** 
   *  test better comment
   *  !sqdsqsqdq
@@ -154,7 +175,8 @@
     export default{
         name:'dashboard',
         created(){
-            this.getnotif();
+            this.getNotif();
+            this.getNotifNotyet();
         },
         setup() {
              const store = AuthStore();
@@ -169,18 +191,33 @@
                 snackbar:false,
                 ViewCurrent:'state',
                 snackbar_edit:false,
-                All_notif:[]
+                All_notif:[],
+                All_notif_yet:[]
             }
         },
         methods:{
-            getnotif(){
+             Seenotification(id){
+              service_notif.changeretat(id).then((res)=>{
+                  this.getNotif();
+                  this.getNotifNotyet();
+                  this.changerView('commande');
+              })
+            },
+             getNotifNotyet(){
               service_notif.getNotification(this.store.user['id']).then((res)=>{
+                 this.All_notif_yet=res.data;
+              })
+            },
+             getNotif(){
+              service_notif.getAllNotification(this.store.user['id']).then((res)=>{
                  this.All_notif=res.data;
               })
             },
             deleteNotif(id){
               service_notif.deleteNotification(id).then((res)=>{
-                 this.getnotif();
+                 this.getNotif();
+                 this.getNotifNotyet();
+                 this.snackbar=true;
               })
             },
             changreetat(a){

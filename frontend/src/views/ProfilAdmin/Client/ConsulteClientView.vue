@@ -26,7 +26,7 @@
                 v-on="on"
                 @click="dialog = true"
               >
-                  dd
+                  delete
               </v-icon>
             </template>
             <template v-slot:default="dialog">

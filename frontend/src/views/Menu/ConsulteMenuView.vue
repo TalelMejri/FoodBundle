@@ -1,8 +1,11 @@
 <template>
-    <div>
+    <div class="all">
+      <div class="sidebar_position">    
+        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+      </div>
+     <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' "> 
       <v-card class="header" elavation="3">
-        <div class="row">
-                <img src="../../assets/logo.png" width="70px" height="70px" alt="FoodBundle logo">
+        <div class="row ">
                 <h3 style="padding:15px"><span style="color:#E84C03;">Food</span>Bundle</h3>
                 <v-spacer></v-spacer>
                 <div v-if="store.isauth!=null">
@@ -191,7 +194,7 @@
                             </div>
                       <v-dialog v-model="dialog"
                         transition="dialog-top-transition"
-                        max-width="400"
+                        max-width="500"
                         v-if="product_selected!=''"
                       >
                         <template >
@@ -233,14 +236,14 @@
                                 <div v-else  class="mx-3  justify-center">
                                   <v-combobox
                                      v-model="OptionsAdded_Selected"
-                                     :items="All_Option_Global"
-                                     item-text="nameOption"
-                                     item-value="id"
-                                     label="Option"
-                                     
-                                     multiple
-                                     outlined
-                                     dense
+                                      :items="All_Option_Global"
+                                      item-text="nameOption"
+                                      item-value="id"
+                                      label="Option"
+                                      multiple
+                                      outlined
+                                      solo
+                                      clearable
                                  ></v-combobox>
                               </div>
                                 <h2 class="text-center  mx-2 mt-2">
@@ -251,7 +254,6 @@
                                 </div>
                                 <div v-else>
                                 <v-chip-group 
-                                  
                                   class="mx-3  justify-center mb-3"
                                 >
                                   <v-chip 
@@ -263,8 +265,19 @@
                                         @change="addOption(i.nameOptionSpecifique,i.prixOptionSpecifique)"
                                         :color="OptionsAdded.find((v)=>{ if(v.name==i.nameOptionSpecifique && v.idproduct==product_selected.id){ return true} else { return false } }) ? '#E84C03' :  '' "
                                   >
-                                       {{ i.nameOptionSpecifique }} 
-                                       <input class="mx-2" type="checkbox" :checked="OptionsAdded.find((v)=>{ if(v.name==i.nameOptionSpecifique && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'checked' :  '' " id="id">
+                                  <v-tooltip bottom>
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-btn
+                                        text
+                                        v-bind="attrs"
+                                        v-on="on"
+                                      >
+                                      {{ i.nameOptionSpecifique }}
+                                      <input   @change="addOption(i.nameOptionSpecifique,i.prixOptionSpecifique)" class="mx-2" type="checkbox" :checked="OptionsAdded.find((v)=>{ if(v.name==i.nameOptionSpecifique && v.idproduct==product_selected.id){ return true} else { return false } }) ? 'checked' :  '' " id="id">
+                                      </v-btn>
+                                    </template>
+                                    <span> {{ i.prixOptionSpecifique }} TND</span>
+                                  </v-tooltip>
                                   </v-chip>
                                 </v-chip-group>
                               </div>
@@ -275,10 +288,10 @@
                                      label
                                      outlined>
                                     <p style="display:none">{{ index = All_Prix_With_Option_Array.findIndex((v)=>v.id==product_selected.id) }} {{ total= index !=-1 ? All_Prix_With_Option_Array[index].prix + product_selected.PrixProduct : product_selected.PrixProduct  }}</p><input type="hidden" v-model="total">{{ index !=-1 ? All_Prix_With_Option_Array[index].prix + product_selected.PrixProduct : product_selected.PrixProduct}} TND</v-chip></h3>
-                                  <h3>Quantity :<v-chip 
-                                      color="green"
+                                  <h3>Quantité :<v-chip 
+                                      color="#E84C03"
                                       label
-                                      outlined><v-chip @click="Qte> 1 ? Qte-=Qte : Qte=1">-</v-chip><input class="input_number text-center" type="text" min="1" v-model="Qte"/><v-chip @click="Qte+=1">+</v-chip></v-chip> </h3> 
+                                      outlined><v-chip small @click="Qte> 1 ? Qte-=Qte : Qte=1">-</v-chip><input class="input_number text-center" type="text" min="1" v-model="Qte"/><v-chip small @click="Qte+=1">+</v-chip></v-chip> </h3> 
                               </div>
                             <v-card-actions class="justify-center">
                               <v-btn class="mx-2"
@@ -287,16 +300,26 @@
                             >Commander</v-btn>
                               <v-btn
                                 @click="dialog = false"
-                              >Close</v-btn>
+                              >fermer</v-btn>
                             </v-card-actions>
                        </v-card>
                         </template>
                       </v-dialog>
                     </v-card>
                 </div>
-                <v-snackbar
-                 color="green"
-                 top
+               
+            </div>
+        </div>
+     
+        </div>
+        <ServiceVue></ServiceVue>
+        <FooterVueVue></FooterVueVue>
+      </div>
+      </div>
+      <v-snackbar 
+                 class="v-snack"
+                  color="green"
+                  top
                  v-model="snackbar_added_panier"
                 >
                  votre commande a été bien enregistrer <router-link to="../PanierView">check Panier</router-link>  
@@ -312,11 +335,12 @@
                 </template>
               </v-snackbar>
               <v-snackbar
+              class="v-snack"
                 color="red"
                 v-model="snackbar_authentificate"
               >
                   You Should Create an Account <router-link to="../signup"><small>Click Here</small></router-link>
-                <template v-slot:action="{ attrs }">
+             
                   <v-btn
                     color="#fff"
                     text
@@ -325,18 +349,12 @@
                   >
                     Close
                   </v-btn>
-                </template>
+              
               </v-snackbar>
-            </div>
-        </div>
-        </div>
-        <ServiceVue></ServiceVue>
-        <FooterVueVue></FooterVueVue>
-      </div>
     </div>
 </template>
-
 <script>
+import SideBar from "@/components/SideBar.vue"
 import service_user from "@/services/GererUser/GererUser";
 import { AuthStore } from "@/store/StoreAuth";
 import { ProductStore } from "@/store/StoreProducts";
@@ -389,6 +407,7 @@ export default{
            search:'',
            Products_max:[],
            All_Liked:[],
+           displaySnackBar:true,
            affichage:'card',
            Ordered: ['nameProduct','PrixProduct'],
            types:[],
@@ -412,13 +431,17 @@ export default{
            snackbar_authentificate:false,
            snackbar_added_panier:false,
            loader:false,
-           Nombre_liked_for_products:[]
+           Nombre_liked_for_products:[],
+           etatsidbar:true
         }
     },
     components:{
-        InfoClient,FooterVueVue,ServiceVue,preloaderVue
+        InfoClient,FooterVueVue,ServiceVue,preloaderVue,SideBar
     },
     methods:{
+      changreetat(a){
+        this.etatsidbar=a;
+      },
       CoutProduct(){
         for(let i=0;i<this.Products.length;i++){
          service_user.countLiked(this.Products[i].id).then((res)=>{
@@ -600,7 +623,9 @@ export default{
 </script>
 
 <style>
-
+.v-snack{
+  z-index:9999 !important;
+}
 .input_number{
   width: 40px !important;
   border: none;
@@ -613,17 +638,15 @@ export default{
   border-radius: 25px;
 }
 .content_menu{
-    margin-top: 140px !important;
-    margin: 25px;
+    margin-top: 40px !important;
+    margin:25px;
 }
 .header{
     padding:18px;
     background-color: #FFF9EB !important;
-    position:fixed !important;
     width:100%;
     z-index: 99;
     max-height: 80px;
-
 }
 
 </style>

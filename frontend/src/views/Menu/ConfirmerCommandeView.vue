@@ -1,8 +1,11 @@
 <template>
     <div>
+      <div class="sidebar_position">    
+        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+      </div>
+      <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' "> 
         <v-card class="header" elavation="3">
             <div class="row">
-                    <img src="../../assets/logo.png" width="70px" height="70px" alt="FoodBundle logo">
                     <h3 style="padding:15px"><span style="color:#E84C03;">Food</span>Bundle</h3>
                     <v-spacer></v-spacer>
                     <div v-if="store.isauth!=null">
@@ -49,9 +52,9 @@
               <v-stepper-content step="1">
                 <v-card
                     style="padding:15px !important"
-                  height="400px"
-                  class="mb-5"
-                  color="#FFF9EB"
+                    height="950px"
+                    class="mb-5"
+                    color="#FFF9EB"
                 >
                  <v-form v-model="valid">
                     <div class="row">
@@ -113,16 +116,18 @@
                             </v-text-field>
                         </div>
                     </div>
+                    <div class="text-center">
                     <v-btn
                     color="#E84C03"
-                    class="mx-2"
+                    class="mx-2 mb-2"
                       @click="valid==true ? e1 = 2 : e1=1"
                     >
-                      Continue
+                      continuer
                     </v-btn>
                     <v-btn @click="retourn()" >
-                      Cancel
+                      fermer
                     </v-btn>
+                  </div>
                  </v-form>
                 </v-card>
               </v-stepper-content>
@@ -130,6 +135,7 @@
                 <v-card
                   class="mb-12"
                   height="200px"
+                  style="padding:25px"
                 >
                 Mode de paiment :
                  <div style="font-size:18px;font-weight:600" class="mb-2 mt-2 text-center">
@@ -139,18 +145,20 @@
                     {{ Numero }}
                  </div>
             </v-card>
-            <v-btn @click="passCommande()" class="mx-5" color="#000" style="color:#fff !important">
+            <div class="text-center">
+            <v-btn @click="passCommande()" class="mx-5 mb-2" color="#000" style="color:#fff !important">
                 Valider Commande
             </v-btn>
                 <v-btn @click="e1=1">
                   Cancel
                 </v-btn>
+              </div>
               </v-stepper-content>
-
               <v-stepper-content step="3">
                 <v-card
                   class="mb-12"
-                  height="200px"
+                  height="50%"
+                  style="padding:35px"
                 >
                 Mode de paiment :
                  <div style="font-size:18px;font-weight:600" class="mb-2 mt-2 text-center">
@@ -162,14 +170,16 @@
                   <br>
                  </div>
             </v-card>
-            <v-btn @click="checkCommande()" class="mx-5" color="#000" style="color:#fff !important">
+            <div class="text-center">
+            <v-btn @click="checkCommande()" class="mx-5 mb-2" color="#000" style="color:#fff !important">
                 Check Commande
             </v-btn>
-            <router-link to="/">
-            <v-btn class="mx-5" color="#000" style="color:#fff !important">
+            <router-link style="text-decoration:none" to="/">
+            <v-btn class="mx-5 mb-2" color="#000" style="color:#fff !important">
                 Continuer Achats
              </v-btn>
             </router-link>
+          </div>
               </v-stepper-content>
             </v-stepper-items>
           </v-stepper>
@@ -225,22 +235,13 @@
 </v-snackbar>
     <FooterVue></FooterVue>
     </div>
+    </div>
 </template>
-<button @click="start">Start</button>
-<button @click="stop">Stop</button>
-<button @click="love">Show some love</button>
-
-start() {
- 
-  },
-
-stop() {
-   this.$confetti.stop();
-},
 <script>
 import Vue from 'vue'
 import VueConfetti from 'vue-confetti'
 Vue.use(VueConfetti)
+import SideBar from "@/components/SideBar.vue"
 import service_commande from "@/services/GererCommande/Commande.js";
 import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue"
@@ -286,9 +287,13 @@ export default{
             snackbar_auth:false,
             snackbar:false,
             e1: 1,
+            etatsidbar:true
         }
     },
     methods:{
+      changreetat(a){
+        this.etatsidbar=a;
+      },
         retourn(){
             this.$router.push('/');
         },
@@ -317,7 +322,7 @@ export default{
         }
     },
     components:{
-        InfoClient,FooterVue
+        InfoClient,FooterVue,SideBar
     },
   
 

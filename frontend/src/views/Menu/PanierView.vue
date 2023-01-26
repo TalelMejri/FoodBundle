@@ -1,5 +1,9 @@
 <template>
     <div>
+      <div class="sidebar_position">    
+        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+      </div>
+      <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' "> 
         <v-card class="header" elavation="3">
             <div class="row">
                     <img src="../../assets/logo.png" width="70px" height="70px" alt="FoodBundle logo">
@@ -22,7 +26,7 @@
             <div class="col-lg-10">
              <h1>Panier</h1>
                     <v-card elavation="7" style="padding:25px">
-                              <div class="row gap-4 p-5 mt-3">
+                              <div class="row mb-3 gap-4 p-5 mt-3">
                                   <div class="col-lg-3 mx-2 text-center">
                                      <v-text-field
                                         v-model="search"
@@ -33,12 +37,8 @@
                                         hide-details
                                      ></v-text-field>  
                                </div>
-                               <v-spacer></v-spacer>
-                               <div class="col-lg-3">
-                                <router-link to="/">
-                                       <v-btn color="#000" style="color:#fff !important">Home</v-btn>
-                                </router-link>
-                           </div>
+                            
+                             
                             </div>
                     <v-simple-table>
                       <template v-slot:default>
@@ -165,41 +165,44 @@
                  </v-card>
                </template>
              </v-dialog> 
-             <v-snackbar
-             v-model="snackbar_auth"
-         >
-              You shoul Add Product First
-         <template v-slot:action="{ attrs }">
-          <v-btn
-            color="pink"
-               text
-               v-bind="attrs"
-               @click="snackbar_auth = false"
-          >
-            Close
-           </v-btn>
-          </template>
-         </v-snackbar>
-             <v-snackbar
-             v-model="snackbar"
-         >
-          Delete Completed With Success
-         <template v-slot:action="{ attrs }">
-          <v-btn
-            color="pink"
-               text
-               v-bind="attrs"
-               @click="snackbar = false"
-          >
-            Close
-           </v-btn>
-          </template>
-         </v-snackbar>
+            
       </div>
       <FooterVue></FooterVue>
+      </div>
+      <v-snackbar
+      v-model="snackbar_auth"
+  >
+       You shoul Add Product First
+  <template v-slot:action="{ attrs }">
+   <v-btn
+     color="pink"
+        text
+        v-bind="attrs"
+        @click="snackbar_auth = false"
+   >
+     Close
+    </v-btn>
+   </template>
+  </v-snackbar>
+      <v-snackbar
+      v-model="snackbar"
+  >
+   Delete Completed With Success
+  <template v-slot:action="{ attrs }">
+   <v-btn
+     color="pink"
+        text
+        v-bind="attrs"
+        @click="snackbar = false"
+   >
+     Close
+    </v-btn>
+   </template>
+  </v-snackbar>
     </div>
 </template>
 <script>
+import SideBar from "@/components/SideBar.vue"
 import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue"
 import { AuthStore } from "@/store/StoreAuth";
@@ -224,10 +227,14 @@ export default{
             product_selected:[],
             dialog_delete:false,
             snackbar_auth:false,
-            snackbar:false
+            snackbar:false,
+            etatsidbar:true
         }
     },
     methods:{
+      changreetat(a){
+        this.etatsidbar=a;
+      },
         recherche_indice(data,id){
             let index=-1;
             let i=0;
@@ -279,7 +286,7 @@ export default{
         }
     },
     components:{
-        InfoClient,FooterVue
+        InfoClient,FooterVue,SideBar
     },
     computed:{
         Prix_Total(){
