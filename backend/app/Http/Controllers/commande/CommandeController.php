@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Commande;
 use App\Models\LignCommande;
 use App\Models\LignCommandeOption;
+use App\Models\LigneCommandeOption;
+use App\Models\Notification;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class CommandeController extends Controller
@@ -27,29 +30,136 @@ class CommandeController extends Controller
             'Numero_tlf'=>$request->user['tlf'],
             'Adresse'=>$request->user['adresse'],
             'user_id'=>$request->user['userid'],
-            'Prix_Total'=>$total_prix
+            'Prix_Total'=>$total_prix,
+            'Code_Commande'=>$request->code_Commande
         ]);
+
         for($i=0;$i<count($request->Product);$i++){
             $ligneCommande=new LignCommande();
             $ligneCommande->Quantity=$request->Product[$i]['Quantity'];
-            $ligneCommande->commmandeId=$commade->id;
+            $ligneCommande->commande_id=$commade->id;
             $ligneCommande->prix_ligne_commande=$request->Product[$i]['prix'];
-            $ligneCommande->ProductId=$request->Product[$i]['Product']['id'];
+            $ligneCommande->product_id=$request->Product[$i]['Product']['id'];
             $ligneCommande->save();
+
             for($countopsupp=0;$countopsupp<count($request->Product[$i]['option_Supp']);$countopsupp++){
-                $ligneCommandeOptionSupp=new LignCommandeOption();
+                $ligneCommandeOptionSupp=new ligneCommandeOption();
                 $ligneCommandeOptionSupp->nameOption=$request->Product[$i]['option_Supp'][$countopsupp]['name'];
-                $ligneCommandeOptionSupp->IdLignCommande=$ligneCommande->id;
+                $ligneCommandeOptionSupp->lign_commande_id=$ligneCommande->id;
                 $ligneCommandeOptionSupp->save();
             }
+
             for($countglobal=0;$countglobal<count($request->Product[$i]['Option_glob']);$countglobal++){
-                $ligneCommandeOptionGlobal=new LignCommandeOption();
+                $ligneCommandeOptionGlobal=new ligneCommandeOption();
                 $ligneCommandeOptionGlobal->nameOption=$request->Product[$i]['Option_glob'][$countglobal]['name'];
-                $ligneCommandeOptionGlobal->IdLignCommande=$ligneCommande->id;
+                $ligneCommandeOptionGlobal->lign_commande_id=$ligneCommande->id;
                 $ligneCommandeOptionGlobal->save();
             }
-
         }
-        return  response()->json(['commade'=>$commade],200);
+
+        $notification=new Notification();
+        $notification->user_id=1;
+        $notification->commande_id=$commade->id;
+        $notification->message="Commande Avec Code : ".$request->code_Commande. "Addeed ";
+        $notification->save();
+
+        return  response()->json(['commade'=>$notification],200);
     }
+
+    public function deleteCommande($id){
+        $commade=Commande::find($id);
+        if($commade){
+            $commade->delete();
+        }else{
+            return  response()->json(['message'=>'Not Found'],404);
+        }
+    }
+
+    public function CommandeForUser(Request $request){
+        if($request->code){
+            $commandes=Commande::with('ligencommandes')
+                                ->where('user_id',$request->id)
+                                ->where('Code_commande','like','%'.$request->code.'%')
+                                ->paginate(3);
+        }else{
+            $commandes=Commande::with('ligencommandes')
+                                    ->where('user_id',$request->id)
+                                    ->paginate(3);
+        }
+        return response()->json($commandes,200);
+          /*if(isset($request->code)){
+                $ligneCommande=LignCommande::with('commande','product','ligensOptions')->get();
+            }else{
+                $ligneCommande=LignCommande::with('commande','product','ligensOptions')->get();
+            }
+            return response()->json($ligneCommande,200);*/
+    }
+
+    public function AllCommande(Request $request){
+        if($request->code){
+            $commandes=Commande::with('ligencommandes')
+                                ->where('Code_commande','like','%'.$request->code.'%')
+                                ->where('statu','=',0)
+                                ->paginate(3);
+        }else{
+            $commandes=Commande::with('ligencommandes')
+                                 ->where('statu','=',0)
+                                ->paginate(3);
+        }
+        return response()->json($commandes,200);
+
+    }
+
+    public function AllCommandeAccpted(Request $request){
+        if($request->code){
+            $commandes=Commande::with('ligencommandes')
+                                ->where('Code_commande','like','%'.$request->code.'%')
+                                ->where('statu','=',1)
+                                ->paginate(3);
+        }else{
+            $commandes=Commande::with('ligencommandes')
+                                 ->where('statu','=',1)
+                                ->paginate(3);
+        }
+        return response()->json($commandes,200);
+
+    }
+
+    public function rejeterCommande(Request $request){
+       $commade=Commande::find($request->idcommande);
+        if($commade){
+            if(isset($request->iduser)){
+                $notification=new Notification();
+                $notification->user_id=$request->iduser;
+                $notification->commande_id=null;
+                $notification->message="Commande Avec Code : ".$request->code. "a été Rejeter";
+                $notification->save();
+            }
+            $commade->update([
+                'statu'=>2
+            ]);
+        }else{
+            return  response()->json(['message'=>'Not Found'],404);
+        }
+    }
+
+    public function AccepterCommande(Request $request){
+        $commade=Commande::find($request->id);
+        if(isset($request->iduser)){
+            $notification=new Notification();
+            $notification->user_id=$request->iduser;
+            $notification->commande_id=$commade->id;
+            $notification->message="Commande Avec Code : ".$request->code. "a été Accepter";
+            $notification->save();
+        }
+        if($commade){
+            $commade->update([
+                'statu'=>1
+            ]);
+        }else{
+            return  response()->json(['message'=>'Not Found'],404);
+        }
+    }
+
+
 }
