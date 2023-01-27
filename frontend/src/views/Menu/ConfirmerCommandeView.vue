@@ -56,15 +56,17 @@
                     class="mb-5"
                     color="#FFF9EB"
                 >
-                 <v-form v-model="valid">
+                 <form @submit.prevent="onSubmit">
                     <div class="row">
                         <div class="col-lg-6">
                             <v-text-field 
-                                 :rules="adresseEmailRules"
-                                 v-model="adresse_email"
+                                  v-model="v$.formdata.adresse_email.$model"
                                   type="text" 
                                   label="adresse email">
                             </v-text-field>
+                            <div class="input-errors" v-for="(error, index) of v$.formdata.adresse_email.$errors" :key="index">
+                              <div class="error">{{ error.$message }}</div>
+                            </div>
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
@@ -90,21 +92,26 @@
                         <div class="col-lg-6">
                             <v-text-field
                             :rules="nameRules"
-                            v-model="Prenom"
+                            v-model="v$.formdata.Prenom.$model"
                              type="text" label="Prenom">
                             </v-text-field>
+                            <div class="input-errors" v-for="(error, index) of v$.formdata.Prenom.$errors" :key="index">
+                              <div class="error">{{ error.$message }}</div>
+                            </div>
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
                             :rules="phoneNumber"
-                            v-model="Numero"
+                            v-model="v$.formdata.Numero.$model"
                              type="text" label="Numero tlf">
                             </v-text-field>
+                            <div class="input-errors" v-for="(error, index) of v$.formdata.Numero.$errors" :key="index">
+                              <div class="error">{{ error.$message }}</div>
+                            </div>
                         </div>
                         <div class="col-lg-6">
-                            <v-text-field
-                            :rules="nameRules"
-                            v-model="Nom"
+                            <v-text-field 
+                             v-model="Nom"
                              type="text" label="Nom">
                             </v-text-field>
                         </div>
@@ -118,6 +125,7 @@
                     </div>
                     <div class="text-center">
                     <v-btn
+                    :disabled="v$.formdata.$invalid"
                     color="#E84C03"
                     class="mx-2 mb-2"
                       @click="valid==true ? e1 = 2 : e1=1"
@@ -128,7 +136,7 @@
                       fermer
                     </v-btn>
                   </div>
-                 </v-form>
+                 </form>
                 </v-card>
               </v-stepper-content>
               <v-stepper-content step="2">
@@ -246,6 +254,8 @@ import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue"
 import { AuthStore } from "@/store/StoreAuth";
 import { ProductStore } from "@/store/StoreProducts";
+import useVuelidate from '@vuelidate/core'
+import { required, email, minLength,numeric, maxLength } from '@vuelidate/validators'
 export default{
     name:'Confirmer',
     created(){
@@ -255,33 +265,60 @@ export default{
         const store=AuthStore();
         const store_products=ProductStore();
         return{
-            store,store_products
+            store,store_products,v$: useVuelidate() 
         }
     },
-
+    validations() {
+    return {
+      formdata:{
+               adresse_email:{
+                    required,email
+               },
+               Ville:'',
+               Pays:'',
+               Code:'',
+               Prenom:{
+                  required,min: minLength(6)
+               },
+               Numero:{
+                required,numeric,min:minLength(8),max:maxLength(8)
+               },
+               Nom:'',
+               Adresse:'',
+        },
+    }
+  },
     data(){
         return{
             valid: false,
-            nameRules: [
-                      v => !!v || 'field is required',
-            ],
-            adresseEmailRules: [
+            formdata:{
+               adresse_email:'',
+               Ville:'',
+               Pays:'',
+               Code:'',
+               Prenom:'',
+               Numero:'',
+               Nom:'',
+               Adresse:'',
+            },
+          
+           /* adresseEmailRules: [
                      v => !!v || 'E-mail is required',
                      v => /.+@.+/.test(v) || 'E-mail must be valid',
             ],
             phoneNumber: [
                      v => !!v || 'Phone is required',
                      v => v.length==8 || 'needs to be 8 Number',
-            ],
-            adresse_email:'',
+            ],*/
+           // adresse_email:'',
             code_Commande:0,
-            Ville:'',
+           /* Ville:'',
             Pays:'',
             Code:'',
             Prenom:'',
             Numero:'',
             Nom:'',
-            Adresse:'',
+            Adresse:'',*/
             nbr_panier:0,
             snackbar_notif:false,
             search:'',
@@ -340,6 +377,11 @@ export default{
 }
 </script>
 
-<style>
-
+<style scoped>
+.error {
+  border: 1px solid red;
+  border-radius: 5px;
+  padding: 5px;
+  color: white !important;
+}
 </style>

@@ -501,7 +501,7 @@ export default{
               this.panier_product.push({id:id,Product:this.product_selected,option_Supp:Option_for_product,Option_glob:Option_glob_selected,Quantity:this.Qte,prix:this.total});
               ServiceaddProducts.Add(this.panier_product);
               this.nbr_panier=this.panier_product.length;
-              setTimeout(()=>this.$router.go(),3000);
+              setTimeout(()=>this.$router.go(),2000);
               this.total=0;
       },
 
