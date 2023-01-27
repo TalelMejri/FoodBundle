@@ -7,7 +7,7 @@
                     class="mx-auto"
                     :max-width="500"
                     elavation="4"
-                  >
+                    >
                     <v-list-item >  
                         <v-list-item-avatar
                         color="#FBE1D4"
@@ -23,7 +23,7 @@
                         <v-list-item-subtitle v-else-if="item.id==2">{{countProduct}}</v-list-item-subtitle>
                         <v-list-item-subtitle v-else-if="item.id==3">{{countoption}}</v-list-item-subtitle>
                         <v-list-item-subtitle v-else-if="item.id==4">{{CountOptionSpecifique}}</v-list-item-subtitle>
-                        <v-list-item-subtitle v-else>none</v-list-item-subtitle>
+                        <v-list-item-subtitle v-else>{{countcommande}}</v-list-item-subtitle>
                     </v-list-item-content>
                     </v-list-item>
                   </v-card>
@@ -56,6 +56,7 @@ import service from "@/services/GererUser/GererUser"
 import service_category from "@/services/GererCategory/category"
 import service_product from "@/services/GererProduct/GererProduct"
 import service_option from "@/services/GererOption/option"
+import service_command from "@/services/GererCommande/Commande"
  export default{
      name:'view',
      mounted(){
@@ -74,6 +75,9 @@ import service_option from "@/services/GererOption/option"
         service_option.CountOptionSpecifique().then((response)=>{
             this.CountOptionSpecifique=response.data.data;
         });
+        service_command.countCommande().then((response)=>{
+            this.countcommande=response.data.data;
+        });
      },
      data(){
         return{
@@ -87,6 +91,7 @@ import service_option from "@/services/GererOption/option"
             nbrcategory:0,
             countProduct:0,
             countoption:0,
+            countcommande:0,
             items:[
                 {id:0,name:' Category',icon:'filter-variant'},
                 {id:1,name:' Client',icon:'account-group'},

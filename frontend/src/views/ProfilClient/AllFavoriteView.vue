@@ -1,7 +1,7 @@
 <template>
     <div>
       <div class="sidebar_position">    
-        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+        <SideBar :etatsidbar="etatsidbar" :border_radius="'no'" @changreetat="changreetat" ></SideBar>
       </div>
       <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' ">
         <v-card class="header" elavation="3">
