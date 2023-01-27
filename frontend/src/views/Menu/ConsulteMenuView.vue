@@ -1,7 +1,7 @@
 <template>
     <div class="all">
       <div class="sidebar_position">    
-        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+        <SideBar :etatsidbar="etatsidbar" :border_radius="'no'" @changreetat="changreetat" ></SideBar>
       </div>
      <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' "> 
       <v-card class="header" elavation="3">
@@ -16,7 +16,7 @@
                     <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier==0 ? '0' : nbr_panier">
                        <v-btn text >
                         <router-link style="text-decoration:none !important" to="../PanierView">
-                          <v-icon  style="font-size:25px">mdi-cart-outline</v-icon>
+                          dd<v-icon  style="font-size:25px">mdi-cart-outline</v-icon>
                         </router-link>
                        </v-btn>
                     </v-badge>
@@ -307,10 +307,20 @@
                       </v-dialog>
                     </v-card>
                 </div>
-               
             </div>
         </div>
-     
+         <div class="text-center">
+              <v-btn :disabled="pagination.prev_page==null"  @click="changerpage(pagination.current_page-1)">
+                  PREV
+              </v-btn>
+              <v-btn v-for="num in (Math.ceil(pagination.per_page ? pagination.total/pagination.per_page : 1))" :key="num"
+                  :disabled="num==pagination.current_page" @click="changerpage(num)">
+                  {{ num }}
+              </v-btn>
+              <v-btn :disabled="pagination.next_page==null" @click="changerpage(pagination.current_page+1)">
+                SUIV
+              </v-btn>
+         </div>
         </div>
         <ServiceVue></ServiceVue>
         <FooterVueVue></FooterVueVue>
@@ -323,11 +333,11 @@
                  v-model="snackbar_added_panier"
                 >
                  votre commande a été bien enregistrer <router-link to="../PanierView">check Panier</router-link>  
-                <template v-slot:action="{ attrs }">
+                <template >
                   <v-btn
                     color="#fff"
                     text
-                    v-bind="attrs"
+                   
                     @click="snackbar_added_panier = false"
                   >
                     Close
@@ -349,7 +359,6 @@
                   >
                     Close
                   </v-btn>
-              
               </v-snackbar>
     </div>
 </template>
@@ -396,6 +405,7 @@ export default{
         this.GetOptionGlobal();
         this.MaxPrix();
         this.length_panier();
+        this.changerpage(1);
     },
     data(){
         return{ 
@@ -439,6 +449,10 @@ export default{
         InfoClient,FooterVueVue,ServiceVue,preloaderVue,SideBar
     },
     methods:{
+      changerpage(a){
+        this.pagination.current_page=a;
+        this.FetchData();
+      },
       changreetat(a){
         this.etatsidbar=a;
       },
@@ -487,7 +501,7 @@ export default{
               this.panier_product.push({id:id,Product:this.product_selected,option_Supp:Option_for_product,Option_glob:Option_glob_selected,Quantity:this.Qte,prix:this.total});
               ServiceaddProducts.Add(this.panier_product);
               this.nbr_panier=this.panier_product.length;
-             // this.$router.go();
+              setTimeout(()=>this.$router.go(),3000);
               this.total=0;
       },
 
@@ -550,6 +564,11 @@ export default{
         FetchData(){
           service_product.GetProudctOptionSpecifiqueCategory(this.id_category,this.search,this.prix,this.type_Ordered_produdct,this.pagination.current_page).then((response)=>{
               this.Products=response.data.data.data;
+              this.pagination.current_page=response.data.data.current_page;
+              this.pagination.total=response.data.data.total;
+              this.pagination.next_page=response.data.data.next_page_url?.split('=')[1];
+              this.pagination.prev_page=response.data.data.prev_page_url?.split('=')[1];
+              this.pagination.per_page=response.data.data.per_page;
               this.loader=true;
               this.Total_prix();
               this.CoutProduct();

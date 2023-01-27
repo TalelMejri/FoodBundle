@@ -23,6 +23,9 @@ export default{
     },
     AccepterCommande(id,iduser){
       return axios.put(`commande/AccepterCommande?${iduser!=null ? 'iduser='+iduser : ''}&id=${id}`);
+    },
+    countCommande(){
+      return axios.get('commande/countCommande');
     }
      
 }

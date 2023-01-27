@@ -1,12 +1,11 @@
 <template>
     <div>
       <div class="sidebar_position">    
-        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+        <SideBar :etatsidbar="etatsidbar" :border_radius="'no'" @changreetat="changreetat" ></SideBar>
       </div>
       <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' "> 
         <v-card class="header" elavation="3">
             <div class="row">
-                    <img src="../../assets/logo.png" width="70px" height="70px" alt="FoodBundle logo">
                     <h3 style="padding:15px"><span style="color:#E84C03;">Food</span>Bundle</h3>
                     <v-spacer></v-spacer>
                     <div v-if="store.isauth!=null">
@@ -85,12 +84,14 @@
                                 <v-select
                                     :items="item.Option_glob"
                                     item-text="name"
+                                    label="Option Global"
                                  >
                                 </v-select>
                                 <v-select
                                     :items="item.option_Supp"
                                     item-text="name"
                                     item-value="prix"
+                                    label="Option Supplement"
                              >
                             </v-select>
                             </td>

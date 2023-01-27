@@ -1,7 +1,7 @@
 <template>
     <div>
       <div class="sidebar_position">    
-        <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat" ></SideBar>
+        <SideBar :etatsidbar="etatsidbar" :border_radius="'no'" @changreetat="changreetat" ></SideBar>
       </div>
       <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' "> 
         <v-card class="header" elavation="3">
@@ -96,7 +96,7 @@
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            :rules="nameRules"
+                            :rules="phoneNumber"
                             v-model="Numero"
                              type="text" label="Numero tlf">
                             </v-text-field>
@@ -215,7 +215,6 @@
                   </v-expansion-panels>
             </v-card>
         </div>
-
     </div>
     </div>
     <v-snackbar
@@ -264,11 +263,15 @@ export default{
         return{
             valid: false,
             nameRules: [
-                v => !!v || 'field is required',
-                ],
+                      v => !!v || 'field is required',
+            ],
             adresseEmailRules: [
                      v => !!v || 'E-mail is required',
                      v => /.+@.+/.test(v) || 'E-mail must be valid',
+            ],
+            phoneNumber: [
+                     v => !!v || 'Phone is required',
+                     v => v.length==8 || 'needs to be 8 Number',
             ],
             adresse_email:'',
             code_Commande:0,
@@ -291,6 +294,14 @@ export default{
         }
     },
     methods:{
+      testnumber(a){
+        for(let i=0;i<a.length;i++){
+          if((a.charAt[i]<'0')|| (a.charAt[i]>'9')){
+              return false;
+          }
+          return true;
+        }
+      },
       changreetat(a){
         this.etatsidbar=a;
       },

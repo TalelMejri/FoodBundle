@@ -33,24 +33,44 @@
       </v-btn>
     </template>
   </v-snackbar>
-
+ 
+    <v-menu offset-y>
+     <template v-slot:activator="{ on, attrs }">
+    <v-badge 
+     class="mx-5 mt-4"  color="red"
+     :content="All_notif_yet.length==0 ? '0' : All_notif_yet.length">
+     <v-btn     v-bind="attrs"
+      v-on="on">   ddd
+    <v-icon   
+  
+       color="#000">
+        mdi-bell
+      </v-icon></v-btn>
+   
+    </v-badge>
+  </template>
+      <v-toolbar dark color="#E84C03">
+       <v-toolbar-title >Welcome Back</v-toolbar-title>
+      </v-toolbar>
+      <v-list   style="overflow-y:scroll;max-height:300px">
+        <v-list-item v-if="All_notif==''">
+          <v-list-item-title class="mb-1" > No Datat available</v-list-item-title>
+      </v-list-item>
+        <v-list-item v-else
+          v-for="(item) in All_notif"
+          :key="item.id"
+        >
+          <v-list-item-title class="mb-1" :style=" item.etat==0 ? 'background-color:gray;padding:15px;border-radius:25px;cursor:pointer' : 'cursor:pointer;background-color:#fff;padding:15px;border-radius:25px'" @click="Seenotification(item.id)">{{ item.message }} <v-btn  text @click="deleteNotif(item.id)"> <v-icon color="red">mdi-delete</v-icon></v-btn></v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+  <!--
 <v-menu 
   bottom
   origin="center center"
   transition="scale-transition"
 >
-  <template v-slot:activator="{ on, attrs }">
-    <v-badge 
-     class="mx-5 mt-4"  color="red"
-     :content="All_notif_yet.length==0 ? '0' : All_notif_yet.length">
-    <v-icon   
-      v-bind="attrs"
-      v-on="on"
-       color="#000">
-        mdi-bell
-      </v-icon>
-    </v-badge>
-  </template>
+ 
   <v-list   style="overflow-y:scroll;max-height:300px">
     <v-list-item v-if="All_notif==''">
       <v-list-item-title class="mb-1" > No Datat available</v-list-item-title>
@@ -62,7 +82,7 @@
       <v-list-item-title class="mb-1" :style=" item.etat==0 ? 'background-color:gray;padding:15px;border-radius:25px;cursor:pointer' : 'cursor:pointer;background-color:#fff;padding:15px;border-radius:25px'" @click="Seenotification(item.id)">{{ item.message }} <v-btn  text @click="deleteNotif(item.id)"> <v-icon color="red">mdi-delete</v-icon></v-btn></v-list-item-title>
     </v-list-item>
   </v-list>
-</v-menu> 
+</v-menu> -->
       <v-menu>
         <template v-slot:activator="{ on }">
           <v-btn
