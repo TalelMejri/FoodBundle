@@ -1,27 +1,33 @@
 <template>
-      <nav  :class="etatsidbar==false ? 'close' : '' ">
+      <nav :id="border_radius=='no' ? 'fix_border_radius' : ''"    :class="etatsidbar==false ? 'close' : '' ">
         <ul v-if="!admin_dashboard">
           <li >
                <div href="#"  :class="etatsidbar==true ? 'close' : '' " class="logo">
                  <img src="../assets/logo.png" alt="">
                </div>
           </li>
-          <li>
+          <li v-if="border_radius=='no'">
               <router-link style="text-decoration:none;padding:0" to="/">
-             <a  href="#home">
-              <v-icon   class="icon">mdi-home</v-icon>
-               <span  class="nav-item"> Home</span>
-              </a>
+                <a href="#home">
+                  <v-icon   class="icon">mdi-home</v-icon>
+                  <span  class="nav-item"> Home</span>
+                </a>
             </router-link>
           </li>
+          <li v-else>
+            <a href="#home">
+              <v-icon   class="icon">mdi-home</v-icon>
+              <span  class="nav-item"> Home</span>
+            </a>
+          </li>
           <li>
-            <a  href="#menu">
+            <a  v-if="border_radius!='no'" href="#menu">
               <v-icon  class="icon">mdi-menu</v-icon>
               <span class="nav-item">Menu</span>
             </a>
           </li>
           <li>
-            <a  href="#contact">
+            <a v-if="border_radius!='no'" href="#contact">
               <v-icon class="icon">mdi-message-bulleted</v-icon>
               <span class="nav-item">Contact</span>
             </a>
@@ -90,45 +96,56 @@
 </template>
 
 <script>
+
 import { AuthStore } from '@/store/StoreAuth';
+
 export default{
+
     name:"sidebar",
+
     setup(){
         const store=AuthStore();
         return {store}
     },
+
+    props:{
+        etatsidbar:Boolean,
+        admin_dashboard:Boolean,
+        ViewCurrent:String,
+        border_radius:String
+    },
+
     data(){
         return{
 
         }
     },
+
     methods:{
+
       changerView(a){
         this.$emit("changerView",a)
       },
+
         changer(){
             this.etatsidbar=this.etatsidbar==true ? false : true;
             this.$emit("changreetat", this.etatsidbar);
         },
+
         logout(){
             this.store.logout();
         }
-    },
 
+    }, 
 
-    props:{
-        etatsidbar:Boolean,
-        admin_dashboard:Boolean,
-        ViewCurrent:String
-    }
-    
 }
 
 </script>
 
 <style scoped>
-
-
+#fix_border_radius{
+  border-radius: 2px !important;
+}
    nav{
         background: #E84C03;
         position: absolute;
@@ -151,14 +168,12 @@ export default{
         transition: all  0.5s ease;
         margin:20px 0 0 15px;
     }
-
     .logo img{
         width: 100px;
         height: 100px;
         margin-left: 25px;
         border-radius: 50%;
     }
-    
     .logo span{
         font-weight: bold;
         padding: 15px;
@@ -192,36 +207,34 @@ export default{
         text-align: center;
         margin-left: -20px;
     }
-
     .nav-item{
         position: relative;
         top: 19px;
         margin-left: 10px;
     }
    
-    nav.close{
+     nav.close{
         width: 280px;
         transition:all 0.5s ease;
     }
-    .logo.close img{
+     .logo.close img{
         width: 70px;
         height: 70px;
         margin-left:-32px;
         border-radius: 50%;
     }
 
-    .logout{
+     .logout{
         position: absolute;
         bottom: 0; 
         margin-left: 70px;
         margin-bottom: 20px;
     }
-    .logout.close{
+     .logout.close{
         position: absolute;
         bottom: 0; 
         margin-left: 0;
         margin-bottom: 20px;
     }
 
-   
 </style>

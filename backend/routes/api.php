@@ -39,6 +39,7 @@ Route::group(['prefix'=>'/commande'],function(){
     Route::delete('/deleteCommande/{id}',[CommandeController::class,'deleteCommande']);
     Route::delete('/rejeterCommande',[CommandeController::class,'rejeterCommande']);
     Route::put('/AccepterCommande',[CommandeController::class,'AccepterCommande']);
+    Route::get('/countCommande',[CommandeController::class,'countCommande']);
 });
 
 

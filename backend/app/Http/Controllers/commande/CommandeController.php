@@ -75,6 +75,11 @@ class CommandeController extends Controller
         }
     }
 
+    public function countCommande(){
+        $commade=Commande::count();
+        return  response()->json(['data'=>$commade],200);
+    }
+
     public function CommandeForUser(Request $request){
         if($request->code){
             $commandes=Commande::with('ligencommandes')
