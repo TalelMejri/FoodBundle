@@ -21,12 +21,12 @@
                   gap="4px"
                 >  <router-link  to="login" class="text-decoration-none">
                   <v-btn class="login mx-2"   >
-                    Login
+                    Connexion
                   </v-btn>
                 </router-link> 
                 <router-link to="/signup" class="text-decoration-none">
                   <v-btn class="signup" >
-                     Sign Up
+                    S'inscrire
                   </v-btn>
                 </router-link> 
                 </v-row>
@@ -42,8 +42,8 @@
                   >
                     <div class="mt-5 py-5 col-lg-6">
                          <p class="py-5 mt-5 paragh" >
-                          Taste Our <br>
-                            Delicious Food
+                          Goûtez notre<br>
+                              Nourriture délicieuse
                          </p>
                          <p  >
                            Lorem ipsum dolor sit amet, consectetur adipiscing 
@@ -57,7 +57,7 @@
                         <img class="image" src="../assets/home-img.png" alt="">
                       </div>
                   </div>
-                  <v-btn class="btn">See Menu</v-btn>
+                  <v-btn class="btn"><a style="text-decoration:none;color:#fff" href="#menu"> Voir Menu</a></v-btn>
                 </v-container>
                </v-content>
             </v-container>
@@ -71,7 +71,7 @@
 
           <div class="ma-5 pa-5" id="menu">
             <v-container >
-                <h2 class="text-center mb-5">Our Menu</h2>
+                <h2 class="text-center mb-5">Notre Menu</h2>
                <div class="row">
                 <v-hover v-for="menu in All_Menu" :key="menu.id"  v-slot="{ hover }">
                 <div class="col-lg-4">
@@ -119,7 +119,7 @@
                       <div class="row">
                          <div class="col-lg-6 text-center premier_partie_contact">
                               <div class="py-5">
-                                  <p style="font-size:18px" class="white--text font-weight-black ">Let's Stay in Touch</p>
+                                  <p style="font-size:18px" class="white--text font-weight-black ">Restons en contact</p>
                                   <v-text-field
                                      label="Entre Email"
                                      v-model="email"
@@ -142,7 +142,7 @@
                                       v-bind="attrs"
                                       @click="snackbar = false"
                                     >
-                                      Confirm
+                                      Confirmer
                                    </v-btn>
                                   </template>
                                 </v-snackbar>
@@ -165,7 +165,7 @@
                   v-bind="attrs"
                   @click="snackbar_edit = false"
                 >
-                  Close
+                  Fermer
                 </v-btn>
               </template>
             </v-snackbar>
@@ -221,8 +221,8 @@
           email_error:'',
           snackbar: false,
           snackbar_notif:false,
-          text: `Thank you for sending us  your mail one of our agents
-                          will get back to you soon`,
+          text: `Merci de nous envoyer votre mail un de nos agents
+                           vous répondra bientôt`,
           /*All_Menu:[
             {id:1,name:'Dessert',src_back:require('../assets/Menu/dessert.jpg'),src_hover:require('../assets/Menu/dessertt.png')},
             {id:2,name:'Drinks',src_back:require('../assets/Menu/drinks.jpg'),src_hover:require('../assets/Menu/d.png')},
@@ -248,12 +248,12 @@
       validate(input){
         if(input=="email"){
            if(this.email==""){
-             this.email_error="email required"
+             this.email_error="email obligatoire"
            }else if( !String(this.email)
             .toLowerCase()
             .match(
               /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-                  this.email_error = "Please enter a valid email";
+                  this.email_error = "Veuillez entrer un email valide";
               }else{
               this.email_error = "";
               this.snackbar=true;
