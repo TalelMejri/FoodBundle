@@ -27,7 +27,7 @@ export default{
     addOption(option){
         return axios.post('option/addOption',option);
     },
-
+    
     addOptionSpecifique(option){
         return axios.post('option/addOptionSpecifique',option);
     },
@@ -47,7 +47,7 @@ export default{
     getOptionGlobal(id,search,page){
          return axios.get(`option/getOptionGlobal?${search ? 'search='+search : ''}&id=${id!=-1 ? id :-1}&page=${page}`);
     },
-
+    
     getOptionSpecifique(id,search,page){
         return axios.get(`option/getOptionSpecifique?${search ? 'search='+search : ''}&id=${id!=-1 ? id :-1}&page=${page}`);
     },
