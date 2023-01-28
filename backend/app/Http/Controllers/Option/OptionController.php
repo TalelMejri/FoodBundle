@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Option;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOption;
+use App\Http\Requests\StoreOptionSupp;
 use App\Models\Category;
 use App\Models\ligneCommandeOption;
 use App\Models\Option;
@@ -21,7 +22,7 @@ class OptionController extends Controller
         return response()->json($option,200);
     }
 
-    public function addOptionSpecifique(Request $request){
+    public function addOptionSpecifique(StoreOptionSupp $request){
         $option=new OptionSpecifique();
         $option->nameOptionSpecifique=$request->name;
         $option->prixOptionSpecifique=$request->prix;
