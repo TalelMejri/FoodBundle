@@ -5,7 +5,7 @@
               <v-toolbar
                 color="red"
                 dark
-              >Add Option  </v-toolbar>
+              >Ajouter Option  </v-toolbar>
               <v-card-text>
                <form @submit.prevent="AddNewOption()">
                  <div class="mx-5 px-5">
@@ -13,26 +13,24 @@
                   v-model="name_new"
                   :counter="8"
                   label="Name"
-               
                 ></v-text-field>
-                <!-- <small v-if="name_error!=''">{{name_error}}</small> -->
+                <small v-if="name_error!=''">{{name_error}}</small>
                 <v-text-field
                 v-model="prix_new"
                 :counter="5"
                 label="Prix"
-              
               ></v-text-field>
-              <!-- <small v-if="prix_error!=''">{{prix_error}}</small> -->
+              <small v-if="prix_error!=''">{{prix_error}}</small>
                  </div>
                <v-divider></v-divider>
               <v-card-actions class="justify-end">
                 <v-btn type="submit"
                   text
-                 >Add</v-btn>
+                 >Ajouter</v-btn>
                 <v-btn
                 text
                 @click="closeAdd()"
-              >close</v-btn>
+              >Fermer</v-btn>
               </v-card-actions>
               </form>
              </v-card-text>
@@ -64,8 +62,11 @@ export default{
             service.addOptionSpecifique({id:this.id,name:this.name_new,prix:this.prix_new}).then(()=>{
                 this.$emit('closeAdd');
             }).catch((error)=>{
-                 /*this.name_error=error.response.data.errors.nameOption ? error.response.data.errors.nameOption[0] : '';
-                 this.prix_error=error.response.data.errors.prixOption ? error.response.data.errors.prixOption[0] : '';*/
+                 this.name_error=error.response.data.errors.nameOptionSpecifique
+ ? error.response.data.errors.nameOptionSpecifique[0] : '';
+                 this.prix_error=error.response.data.errors.prixOptionSpecifique
+ ? error.response.data.errors.prixOptionSpecifique
+[0] : '';
             })
         }
     }

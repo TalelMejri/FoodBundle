@@ -4,7 +4,7 @@
             <v-toolbar dark color="#E84C03">
                <v-toolbar-title >
                   <div class="d-flex justify-content-center">
-                      <p style="text-align:center !important">Add Category</p>
+                      <p style="text-align:center !important">Ajouter Categorie</p>
                   </div>
                </v-toolbar-title>
             </v-toolbar>
@@ -57,10 +57,10 @@
          </div>
         <div class="text-center mt-5 float-end">
             <v-btn class="mx-2" type="submit" style="color:#fff !important" color="#E84C03">
-                Add Category
+                Ajouter Categorie
            </v-btn>
            <v-btn @click="cancel()"  color="gray">
-                Cancel
+                Fermer
            </v-btn>
         </div>
              </form>
@@ -69,7 +69,7 @@
          <v-snackbar
          v-model="snackbar"
        >
-          Category Added
+          Categorie a été ajouter
        <template v-slot:action="{ attrs }">
         <v-btn
           color="green"
@@ -77,7 +77,7 @@
              v-bind="attrs"
              @click="snackbar = false"
         >
-          Close
+          Fermer
          </v-btn>
         </template>
        </v-snackbar>

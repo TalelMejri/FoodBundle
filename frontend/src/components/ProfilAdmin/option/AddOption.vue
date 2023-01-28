@@ -5,7 +5,7 @@
               <v-toolbar
                 color="red"
                 dark
-              >Add Option  </v-toolbar>
+              >Ajouter Option</v-toolbar>
               <v-card-text>
                <form @submit.prevent="AddNewOption()">
                  <div class="mx-5 px-5">
@@ -20,11 +20,11 @@
               <v-card-actions class="justify-end">
                 <v-btn type="submit"
                 color="red"
-                 >Add</v-btn>
+                 >Ajouter</v-btn>
                 <v-btn
                 color="gray"
                 @click="closeAdd()"
-              >close</v-btn>
+              >Fermer</v-btn>
               </v-card-actions>
               </form>
              </v-card-text>
