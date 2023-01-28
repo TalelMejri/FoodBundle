@@ -16,7 +16,7 @@
                     <v-badge class="mx-5 mt-3" color="red"  :content="nbr_panier==0 ? '0' : nbr_panier">
                        <v-btn text >
                         <router-link style="text-decoration:none !important" to="../PanierView">
-                          dd<v-icon  style="font-size:25px">mdi-cart-outline</v-icon>
+                           <v-icon  style="font-size:25px">mdi-cart-outline</v-icon>
                         </router-link>
                        </v-btn>
                     </v-badge>
@@ -49,7 +49,7 @@
                         item-value="id"
                         @change="MaxPrix()"
                         v-model="id_category"
-                        label="Category"
+                        label="Catégorie"
                     ></v-select>
               </div>
               <div class="mt-3">
@@ -67,7 +67,7 @@
                 :items="Ordered"
                 @change="FetchData()"
                 v-model="type_Ordered_produdct"
-                label="Ordered By"
+                label="Trier par"
             ></v-select>
               </div>
             </v-card>
@@ -83,7 +83,7 @@
                         <v-text-field
                             v-model="search"
                             append-icon="mdi-magnify"
-                            label="Search By NameProduct"
+                            label="Recherché par Nom Produit"
                             single-line
                             hide-details
                         ></v-text-field>
@@ -100,7 +100,7 @@
                 </div>
                           <div class="row mt-4"   >
                              <v-card style="padding:25px;" class="text-center" v-if="Products==''">
-                                  No Products for this category
+                              Aucun produit pour cette catégorie
                              </v-card>
                             <v-card v-else  v-for="product in Products" :key="product.id"
                                class=" mx-2 my-5 col-lg-5"
@@ -231,7 +231,7 @@
                                       Choix
                                 </h2>
                                 <div class="mx-3 justify-center" v-if="All_Option_Global==''">
-                                      No Option
+                                   Pas le choix
                                 </div>
                                 <div v-else  class="mx-3  justify-center">
                                   <v-combobox
@@ -247,10 +247,10 @@
                                  ></v-combobox>
                               </div>
                                 <h2 class="text-center  mx-2 mt-2">
-                                   Supplement
+                                  Supplément
                                 </h2>
                                 <div class="mx-2  justify-center" v-if="product_selected.optionspecifiques==''">
-                                    No Option
+                                  pas le choix
                                 </div>
                                 <div v-else>
                                 <v-chip-group 
@@ -310,15 +310,15 @@
             </div>
         </div>
          <div class="text-center">
-              <v-btn :disabled="pagination.prev_page==null"  @click="changerpage(pagination.current_page-1)">
-                  PREV
+              <v-btn class="mx-2" :disabled="pagination.prev_page==null"  @click="changerpage(pagination.current_page-1)">
+               <v-icon>mdi-arrow-left</v-icon>
               </v-btn>
-              <v-btn v-for="num in (Math.ceil(pagination.per_page ? pagination.total/pagination.per_page : 1))" :key="num"
+              <v-btn  class="mx-2" v-for="num in (Math.ceil(pagination.per_page ? pagination.total/pagination.per_page : 1))" :key="num"
                   :disabled="num==pagination.current_page" @click="changerpage(num)">
                   {{ num }}
               </v-btn>
               <v-btn :disabled="pagination.next_page==null" @click="changerpage(pagination.current_page+1)">
-                SUIV
+                <v-icon>mdi-arrow-right</v-icon>
               </v-btn>
          </div>
         </div>
@@ -340,7 +340,7 @@
                    
                     @click="snackbar_added_panier = false"
                   >
-                    Close
+                    Fermer
                   </v-btn>
                 </template>
               </v-snackbar>
@@ -349,7 +349,7 @@
                 color="red"
                 v-model="snackbar_authentificate"
               >
-                  You Should Create an Account <router-link to="../signup"><small>Click Here</small></router-link>
+              Vous devriez créer un compte <router-link to="../signup"><small>Tapez ici</small></router-link>
              
                   <v-btn
                     color="#fff"
@@ -357,7 +357,7 @@
                     v-bind="attrs"
                     @click="snackbar_authentificate = false"
                   >
-                    Close
+                    Fermer
                   </v-btn>
               </v-snackbar>
     </div>

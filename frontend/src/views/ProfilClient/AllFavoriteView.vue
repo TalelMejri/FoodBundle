@@ -23,7 +23,7 @@
         </v-card>
          <div class="content_menu">
                <v-card elavation="7" style="padding:25px">
-                <h4 class="text-center py-4">List Favorite</h4>
+                <h4 class="text-center py-4">List Produit préfére</h4>
             <v-simple-table>
               <template v-slot:default>
                 <thead>
@@ -32,7 +32,7 @@
                       Name
                     </th>
                     <th  class="text-left ">
-                      Photo
+                      Image
                     </th>
                     <th  class="text-left ">
                       Prix
@@ -51,7 +51,7 @@
                   </tbody>
                 <tbody v-else-if="All_favorite==''">
                   <tr >
-                    <td colspan="6" class="text-center">No data available</td>
+                    <td colspan="6" class="text-center">Pas Produit Préfére</td>
                   </tr>
                 </tbody>
                 <tbody v-else>

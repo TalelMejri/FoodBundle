@@ -23,7 +23,7 @@
         </v-card>
          <div class="content_menu">
                <v-card elavation="7" style="padding:25px">
-                <h4 class="text-center py-4">List Ordered</h4>
+                <h4 class="text-center py-4">List Produits Commandés</h4>
                 <v-text-field
                     v-model="search"
                     @keyup="fetchdata()"
@@ -33,8 +33,8 @@
                     hide-details
                 ></v-text-field>
                 <v-expansion-panels v-if="All_Commande==''" focusable>
-                   No data
-                </v-expansion-panels>
+                   pas  produit Commandé
+                  </v-expansion-panels>
                 <v-expansion-panels v-else focusable>
                     <v-expansion-panel class="mt-5"
                     v-for="item in All_Commande"
@@ -96,7 +96,7 @@
                                      Prix
                                   </th>
                                   <th  class="text-left ">
-                                      Qte
+                                      Quantité
                                   </th>
                                   <th  class="text-left ">
                                       Prix Total
@@ -145,7 +145,7 @@
            <v-toolbar
              color="danger"
              dark
-           >Delete Commande</v-toolbar>
+           >Suprrimer Commande</v-toolbar>
            <v-card-text>
              <div class="text-h4 pa-12">Code :{{commande_selected.Code_Commande}}</div>
            </v-card-text>
@@ -153,11 +153,11 @@
              <v-btn 
                text
                @click="deleteCommande(commande_selected.id)"
-             >Delete</v-btn>
+             >Suprrimer</v-btn>
              <v-btn
              text
              @click="dialog=false"
-           >close</v-btn>
+           >Fermer</v-btn>
            </v-card-actions>
          </v-card>
        </template>
@@ -171,7 +171,8 @@
      <v-snackbar
      v-model="snackbar"
  >
-  Delete Completed With Success
+ Suppression terminée avec succès
+ 
  <template v-slot:action="{ attrs }">
   <v-btn
     color="pink"
@@ -179,7 +180,7 @@
        v-bind="attrs"
        @click="snackbar = false"
   >
-    Close
+    Fermer
    </v-btn>
   </template>
  </v-snackbar>

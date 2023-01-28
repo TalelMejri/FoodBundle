@@ -31,7 +31,7 @@
                                         v-model="search"
                                         @keyup="FetchData()"
                                         append-icon="mdi-magnify"
-                                        label="Search"
+                                        label="Rechercher"
                                         single-line
                                         hide-details
                                      ></v-text-field>  
@@ -44,19 +44,19 @@
                         <thead>
                           <tr>
                             <th  class="text-left">
-                                Photo
+                                Image
                             </th>
                             <th  class="text-left ">
-                                Name
+                                Nom
                             </th>
                             <th  class="text-left ">
                                 Prix
                             </th>
                             <th class="text-left">
-                                Qte
+                                Quantité
                             </th>
                             <th class="text-left">
-                                Show Option
+                                Voir Option
                             </th>
                             <th class="text-left">
                                 Total
@@ -68,7 +68,7 @@
                         </thead>
                         <tbody v-if="store_products.Products==null">
                           <tr >
-                            <td colspan="6" class="text-center">No data available</td>
+                            <td colspan="6" class="text-center">Pas de données disponibles</td>
                           </tr>
                         </tbody>
                         <tbody v-else>
@@ -91,7 +91,7 @@
                                     :items="item.option_Supp"
                                     item-text="name"
                                     item-value="prix"
-                                    label="Option Supplement"
+                                    label="Option Supplément"
                              >
                             </v-select>
                             </td>
@@ -149,19 +149,19 @@
                    <v-toolbar
                      color="danger"
                      dark
-                   >Delete Product</v-toolbar>
+                   >Supprimer Produit</v-toolbar>
                    <v-card-text>
-                     Do You Want Delete Product id : {{ product_selected.id }}
+                    Voulez-vous supprimer produit: {{ product_selected.id }}
                    </v-card-text>
                    <v-card-actions class="justify-end">
                      <v-btn 
                        text
                        @click="deleteProduct()"
-                     >Delete</v-btn>
+                     >Supprimer</v-btn>
                      <v-btn
                      text
                      @click="dialog_delete=false"
-                   >close</v-btn>
+                   >Fermer</v-btn>
                    </v-card-actions>
                  </v-card>
                </template>
@@ -173,7 +173,7 @@
       <v-snackbar
       v-model="snackbar_auth"
   >
-       You shoul Add Product First
+  Vous devez d'abord ajouter le produit
   <template v-slot:action="{ attrs }">
    <v-btn
      color="pink"
@@ -181,14 +181,14 @@
         v-bind="attrs"
         @click="snackbar_auth = false"
    >
-     Close
+     Fermer
     </v-btn>
    </template>
   </v-snackbar>
       <v-snackbar
       v-model="snackbar"
   >
-   Delete Completed With Success
+  Suppression terminée avec succès
   <template v-slot:action="{ attrs }">
    <v-btn
      color="pink"
@@ -196,7 +196,7 @@
         v-bind="attrs"
         @click="snackbar = false"
    >
-     Close
+     Fermer
     </v-btn>
    </template>
   </v-snackbar>

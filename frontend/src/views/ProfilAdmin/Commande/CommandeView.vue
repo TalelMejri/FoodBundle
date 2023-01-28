@@ -13,7 +13,7 @@
         ></v-text-field>
             <v-row class="mt-2">
             <v-card class="mt-5"  style="padding:25px 15px;margin:0 auto" v-if="AllCommande==''">
-                    No Commande Demander
+                    Pas de  Commande Demander
             </v-card>
             <v-card v-else v-for="commande in AllCommande" :key="commande" class="mx-5" style="padding:15px;" max-width="300">
                  <h4 class="text-center mb-4">{{commande.Nom+' '+commande.Prenom}}</h4>
@@ -124,26 +124,26 @@
            <v-card-actions class="justify-end">
              <v-btn
              text
-             @click="dialog=false"
-           >close</v-btn>
+             @click="commande_selected=[]"
+           >Fermer</v-btn>
            </v-card-actions>
          </v-card>
        </template>
      </v-dialog> 
      <div class="mt-5 py-5">
-        <h4 class="text-center">Commande Accepted</h4>
+        <h4 class="text-center">Commande Accepter</h4>
         <div class="mt-5">
             <v-card elavation="7" style="padding:25px">
              <v-text-field
                  v-model="search"
                  @keyup="fetchAllcommandeAccepter()"
                  append-icon="mdi-magnify"
-                 label="Search"
+                 label="Rechercher"
                  single-line
                  hide-details
              ></v-text-field>
              <v-expansion-panels v-if="AllCommandeAccpted==''" focusable>
-                No data
+                pas de donneés
              </v-expansion-panels>
              <v-expansion-panels v-else focusable>
                  <v-expansion-panel class="mt-5"
@@ -161,7 +161,6 @@
                                <th  class="text-left ">
                                  Prix Total
                                </th>
-                              
                                <th  class="text-left ">
                                    Operation
                                </th>
@@ -195,7 +194,7 @@
                                   Prix
                                </th>
                                <th  class="text-left ">
-                                   Qte
+                                   Quantité
                                </th>
                                <th  class="text-left ">
                                    Prix Total
@@ -222,6 +221,7 @@
                                    <v-select
                                        :items="option_current"
                                        item-text="nameOption"
+                                       label="Option"
                                       >
                                    </v-select> 
                                </td>
@@ -258,7 +258,7 @@
           <v-btn
           text
           @click="dialog_rejeter=false"
-        >close</v-btn>
+        >Fermer</v-btn>
         </v-card-actions>
       </v-card>
     </template>
@@ -275,7 +275,7 @@
         <v-toolbar
           color="danger"
           dark
-        >Delete Commande</v-toolbar>
+        >Supprimer Commande</v-toolbar>
         <v-card-text>
           <div class="text-h4 pa-12">Code :{{commande_selected_deleted.Code_Commande}}</div>
         </v-card-text>
@@ -283,11 +283,11 @@
           <v-btn 
             text
             @click="deleteCommande(commande_selected_deleted.id)"
-          >Delete</v-btn>
+          >Supprimer</v-btn>
           <v-btn
           text
           @click="dialog_deleted=false"
-        >close</v-btn>
+        >Fermer</v-btn>
         </v-card-actions>
       </v-card>
     </template>
@@ -295,7 +295,7 @@
      <v-snackbar
      v-model="snackbar"
  >
-  Delete Completed With Success
+ Suppression terminée avec succès
  <template v-slot:action="{ attrs }">
   <v-btn
     color="pink"
@@ -303,7 +303,7 @@
        v-bind="attrs"
        @click="snackbar = false"
   >
-    Close
+    Fermer
    </v-btn>
   </template>
  </v-snackbar>

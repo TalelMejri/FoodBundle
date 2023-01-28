@@ -11,18 +11,18 @@
                          <div class="col-lg-4 text-center">
                                 <p style="color:#000">Menu</p>
                                 <ul class="list-group">
-                                    <li class="list-group-item">Home</li>
-                                    <li class="list-group-item">About</li>
+                                    <li class="list-group-item">Domicile</li>
+                                    <li class="list-group-item">À propos de</li>
                                     <li class="list-group-item">Blog</li>
                                   </ul>
                          </div>
                          <div class="col-lg-4 text-center">
-                            <p style="color:#000">Download Our App</p>
+                            <p style="color:#000">Téléchargez notre application</p>
                              <img width="100px" height="100px" src="../../assets/apple-app-store-travel-awards-globestamp-7.png" alt="">
                          </div>
                          <v-divider></v-divider>
                          <div class="col-lg-12 py-2 text-center">
-                            © 2022. All rights reserved.
+                            © 2023. Tous les droits sont réservés.
                          </div>
                     </div>
 

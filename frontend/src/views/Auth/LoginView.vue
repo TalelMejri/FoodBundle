@@ -9,7 +9,7 @@
                        <v-flex xs12 sm8 md4>
                           <v-card class="elevation-12">
                              <v-toolbar dark color="#E84C03">
-                                <v-toolbar-title >Welcome Back</v-toolbar-title>
+                                <v-toolbar-title >Content de te revoir</v-toolbar-title>
                              </v-toolbar>
                              <v-card-text>
                              <form  @submit.prevent="login()">
@@ -25,7 +25,7 @@
                                   v-bind="attrs"
                                   @click="snackbar_error = false"
                                 >
-                                  Close
+                                  Fermer
                                 </v-btn>
                               </template>
                             </v-snackbar>
@@ -56,10 +56,10 @@
                                          {{ password_error }}
                                     </small>
                                     <div class="mt-3 text-center">
-                                        <v-btn type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" value="log in">Login</v-btn>
-                                        <v-btn @click="refresh()" type="button" class="mt-4 " color="gray" value="log in">Close</v-btn>
+                                        <v-btn type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" value="log in">Connexion</v-btn>
+                                        <v-btn @click="refresh()" type="button" class="mt-4 " color="gray" value="log in">Fermer</v-btn>
                                         <div class="text-center mt-3">
-                                          You are New Here ?<router-link to="signup" class="text-decoration-none  mx-2">  <span>Sign up</span></router-link>
+                                          Vous êtes nouveau ici ?<router-link to="signup" class="text-decoration-none  mx-2">  <span>S'incrire</span></router-link>
                                       </div>
                                     </div>
                               </form>
@@ -75,7 +75,7 @@
                                   v-bind="attrs"
                                   @click="snackbar = false"
                                 >
-                                  Close
+                                  Fermer
                                 </v-btn>
                               </template>
                             </v-snackbar>
@@ -103,12 +103,12 @@
                     gap="4px"
                   >  <router-link  to="login" class="text-decoration-none">
                     <v-btn class="login mx-2"   >
-                      Login
+                      Connexion
                     </v-btn>
                   </router-link> 
                   <router-link to="/signup" class="text-decoration-none">
                     <v-btn class="signup" >
-                       Sign Up
+                       S'incrire
                     </v-btn>
                   </router-link> 
                   </v-row>
@@ -120,8 +120,8 @@
                     >
                       <div class="mt-5 py-5 col-lg-6">
                            <p class="py-5 mt-5 paragh" >
-                            Taste Our <br>
-                              Delicious Foods
+                            Goûtez notre<br>
+                              Nourriture délicieuse
                            </p>
                            <p  >
                             lore"Lorem ipsum dolor sit amet, consectetur adipiscing 
@@ -135,7 +135,7 @@
                           <img class="image" src="../../assets/home-img.png" alt="">
                         </div>
                     </div>
-                    <v-btn class="btn">See Menu</v-btn>
+                    <v-btn class="btn">Voir Menu</v-btn>
                   </v-container>
                  </v-content>
               </v-container>
@@ -181,7 +181,7 @@ import {AuthStore} from "../../store/StoreAuth"
                         }
                     }).catch((error)=>{
                           this.snackbar_error=true;
-                          this.message_error="User Not Found";
+                          this.message_error="Utilisateur non trouvé";
                     })
                 }
           },
@@ -192,19 +192,19 @@ import {AuthStore} from "../../store/StoreAuth"
             validate(input){
                 if(input=='email'){
                     if(this.email==""){
-                        this.email_error="Email required";
+                        this.email_error="Email Obligatoire";
                     }else if( !String(this.email)
                              .toLowerCase()
                              .match(
                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-                        this.email_error = "Please enter a valid email";
+                        this.email_error = "Veuillez tapez un email valid";
                      }else{
                              this.email_error ="";
                              return true;
                      }
                 }else if(input=='password'){
                     if(this.password==""){
-                        this.password_error="password required";
+                        this.password_error="password Obligatoire";
                     }else {
                         this.password_error ="";
                         return true;

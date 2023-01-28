@@ -4,7 +4,7 @@
             <v-toolbar dark color="yellow">
                <v-toolbar-title >
                   <div class="d-flex justify-content-center">
-                      <p style="text-align:center !important;color:#000">Update Product  </p>
+                      <p style="text-align:center !important;color:#000">Modifier Produit  </p>
                   </div>
                </v-toolbar-title>
             </v-toolbar>
@@ -35,7 +35,7 @@
                                 item-text="name"
                                 item-value="id"
                                 v-model="id_category"
-                                label="Type"
+                                label="Categorie"
                        ></v-select>
                  
                         </div>
@@ -51,10 +51,10 @@
                         </div>
                         <div class="mt-3">
                                  <v-btn type="submit" class="mx-2" color="yellow">
-                                        update
+                                        Modifier
                                  </v-btn>
                                  <v-btn @click="close()">
-                                        close
+                                        Fermer
                                  </v-btn>
                         </div>
                   </form>

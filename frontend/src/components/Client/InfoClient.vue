@@ -40,7 +40,7 @@
                             rounded
                             text
                           >
-                        Edit Account
+                          Modifier le compte
                       </v-btn>
                       </router-link>
                       <router-link v-else to="editProfil" style="text-decoration:none !important;">
@@ -49,7 +49,7 @@
                            rounded
                            text
                          >
-                       Edit Account
+                         Modifier le compte
                      </v-btn>
                      </router-link>
                       <v-divider class="my-2"></v-divider>
@@ -64,7 +64,7 @@
                            rounded
                            text
                          >
-                         all Ordered Product
+                         Liste Produit commandé
                      </v-btn>
                      </router-link>
                      <router-link v-else to="allOrderedProduct" style="text-decoration:none !important;">
@@ -73,7 +73,7 @@
                          rounded
                          text
                        >
-                       all Ordered Product
+                       Liste Produit commandé
                    </v-btn>
                    </router-link>
                      <v-divider class="my-2"></v-divider>
@@ -83,7 +83,7 @@
                           rounded
                           text
                         >
-                        All Favorite Product
+                        Liste Produits préféré
                     </v-btn>
                     </router-link>
 
@@ -93,7 +93,7 @@
                          rounded
                          text
                        >
-                       All Favorite Product
+                       Liste Produits préféré
                    </v-btn>
                    </router-link>
                       <v-divider class="my-2"></v-divider>
@@ -102,7 +102,7 @@
                             rounded
                             text
                           >
-                           Logout
+                          Se déconnecter
                           </v-btn>
                     </div>
                   </v-list-item-content>
@@ -116,7 +116,7 @@
         scroll
       >
           <div v-if="All_notif==''"> 
-            No Notification available
+            Aucune notification disponible
         </div>
           <div v-else  class="all_notif" v-for="notif in All_notif" :key="notif.id">
                      <v-btn @click="deleteNotif(notif.id)" text><v-icon>mdi-delete</v-icon></v-btn>
@@ -129,7 +129,7 @@
             v-bind="attrs"
             @click="snackbar = false"
           >
-            Close
+            Fermer
           </v-btn>
         </template>
       </v-snackbar>

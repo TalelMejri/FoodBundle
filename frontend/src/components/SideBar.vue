@@ -10,14 +10,14 @@
               <router-link style="text-decoration:none;padding:0" to="/">
                 <a href="#home">
                   <v-icon   class="icon">mdi-home</v-icon>
-                  <span  class="nav-item"> Home</span>
+                  <span  class="nav-item">Domicile</span>
                 </a>
             </router-link>
           </li>
           <li v-else>
             <a href="#home">
               <v-icon   class="icon">mdi-home</v-icon>
-              <span  class="nav-item"> Home</span>
+              <span  class="nav-item"> Domicile</span>
             </a>
           </li>
           <li>
@@ -61,7 +61,7 @@
             <li >
               <a @click="changerView('category')" href="#">
                 <v-icon :color="ViewCurrent=='category' ? '#000' : ''" class="icon">mdi-view-grid-plus</v-icon>
-                <span :style="ViewCurrent=='category' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Category</span>
+                <span :style="ViewCurrent=='category' ? 'color:#000;font-size:20px;font-wieght:700' : ''" class="nav-item">Categories</span>
               </a>
             </li>
             <li >

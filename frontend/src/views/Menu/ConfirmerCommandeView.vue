@@ -70,28 +70,33 @@
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            :rules="nameRules"
-                            v-model="Ville"
-                             type="text" label="Ville">
+                             v-model="v$.formdata.Ville.$model"
+                              type="text" label="Ville">
                             </v-text-field>
+                             <div class="input-errors" v-for="(error, index) of v$.formdata.Ville.$errors" :key="index">
+                                <div class="error">{{ error.$message }}</div>
+                            </div>
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            :rules="nameRules"
-                            v-model="Pays"
+                            v-model="v$.formdata.Pays.$model"
                              type="text" label="Pays">
                             </v-text-field>
+                            <div class="input-errors" v-for="(error, index) of v$.formdata.Pays.$errors" :key="index">
+                              <div class="error">{{ error.$message }}</div>
+                          </div>
                         </div>
                         <div class="col-lg-6">
                             <v-text-field 
-                            :rules="nameRules"
-                            v-model="Code"
+                            v-model="v$.formdata.Code.$model"
                             type="text" label="Code postale">
                             </v-text-field>
+                            <div class="input-errors" v-for="(error, index) of v$.formdata.Code.$errors" :key="index">
+                              <div class="error">{{ error.$message }}</div>
+                          </div>
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            :rules="nameRules"
                             v-model="v$.formdata.Prenom.$model"
                              type="text" label="Prenom">
                             </v-text-field>
@@ -101,7 +106,6 @@
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            :rules="phoneNumber"
                             v-model="v$.formdata.Numero.$model"
                              type="text" label="Numero tlf">
                             </v-text-field>
@@ -111,16 +115,21 @@
                         </div>
                         <div class="col-lg-6">
                             <v-text-field 
-                             v-model="Nom"
+                            v-model="v$.formdata.Nom.$model"
                              type="text" label="Nom">
                             </v-text-field>
+                            <div class="input-errors" v-for="(error, index) of v$.formdata.Nom.$errors" :key="index">
+                              <div class="error">{{ error.$message }}</div>
+                          </div>
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            :rules="nameRules"
-                            v-model="Adresse"
+                            v-model="v$.formdata.Adresse.$model"
                              type="text" label="Adresse">
                             </v-text-field>
+                            <div class="input-errors" v-for="(error, index) of v$.formdata.Adresse.$errors" :key="index">
+                              <div class="error">{{ error.$message }}</div>
+                          </div>
                         </div>
                     </div>
                     <div class="text-center">
@@ -128,7 +137,7 @@
                     :disabled="v$.formdata.$invalid"
                     color="#E84C03"
                     class="mx-2 mb-2"
-                      @click="valid==true ? e1 = 2 : e1=1"
+                      @click="e1 = 2 "
                     >
                       continuer
                     </v-btn>
@@ -147,10 +156,10 @@
                 >
                 Mode de paiment :
                  <div style="font-size:18px;font-weight:600" class="mb-2 mt-2 text-center">
-                    {{ Nom +' '+ Prenom }} <br>
-                    {{ Adresse }} <br>
-                    {{ Pays }} <br>
-                    {{ Numero }}
+                    {{ this.formdata.Nom +' '+ this.formdata.Prenom }} <br>
+                    {{this.formdata. Adresse }} <br>
+                    {{ this.formdata.Pays }} <br>
+                    {{ this.formdata.Numero }}
                  </div>
             </v-card>
             <div class="text-center">
@@ -158,7 +167,7 @@
                 Valider Commande
             </v-btn>
                 <v-btn @click="e1=1">
-                  Cancel
+                  Fermer
                 </v-btn>
               </div>
               </v-stepper-content>
@@ -196,7 +205,7 @@
             <v-card style="padding:15px !important"  class="mt-5 py-5 ">
                  <div style="background-color: #E84C03;color:#fff;text-align:center;padding:15px">
                     <p>Resume</p>
-                    {{ nbr_panier }} Food in panier 
+                    {{ nbr_panier }} Food Dans panier 
                 </div>
                 <v-expansion-panels>
                     <v-expansion-panel
@@ -212,7 +221,7 @@
                                 <img width="40px" :src="item.Product.PhotoProduct" alt="">
                             </div>
                             <div class="col-lg-4">
-                                Qte:{{item.Quantity}}
+                                Quantité:{{item.Quantity}}
                             </div>
                             <div class="col-lg-4">
                                 Prix:{{item.Quantity*item.prix}}
@@ -228,7 +237,7 @@
     <v-snackbar
     v-model="snackbar"
 >
- Yous should create an Account <router-link to="signup">Sing Up</router-link>
+ Vous devez créer un compte <router-link to="signup">S'incrire</router-link>
 <template v-slot:action="{ attrs }">
  <v-btn
    color="pink"
@@ -236,7 +245,7 @@
       v-bind="attrs"
       @click="snackbar = false"
  >
-   Close
+   Fermer
   </v-btn>
  </template>
 </v-snackbar>
@@ -274,17 +283,27 @@ export default{
                adresse_email:{
                     required,email
                },
-               Ville:'',
-               Pays:'',
-               Code:'',
+               Ville:{
+                required
+               },
+               Pays:{
+                required
+               },
+               Code:{
+                required,numeric
+               },
                Prenom:{
                   required,min: minLength(6)
                },
                Numero:{
                 required,numeric,min:minLength(8),max:maxLength(8)
                },
-               Nom:'',
-               Adresse:'',
+               Nom:{
+                required
+               },
+               Adresse:{
+                required
+               },
         },
     }
   },
@@ -301,24 +320,7 @@ export default{
                Nom:'',
                Adresse:'',
             },
-          
-           /* adresseEmailRules: [
-                     v => !!v || 'E-mail is required',
-                     v => /.+@.+/.test(v) || 'E-mail must be valid',
-            ],
-            phoneNumber: [
-                     v => !!v || 'Phone is required',
-                     v => v.length==8 || 'needs to be 8 Number',
-            ],*/
-           // adresse_email:'',
             code_Commande:0,
-           /* Ville:'',
-            Pays:'',
-            Code:'',
-            Prenom:'',
-            Numero:'',
-            Nom:'',
-            Adresse:'',*/
             nbr_panier:0,
             snackbar_notif:false,
             search:'',
@@ -347,10 +349,10 @@ export default{
         },
         passCommande(){
            let Info_User={
-                   name:this.Nom,prenom:this.Prenom,
-                   ville:this.Ville,pays:this.Pays,
-                   code:this.Code,email:this.adresse_email,
-                   tlf:this.Numero,adresse:this.Adresse,
+                   name:this.formdata.Nom,prenom:this.formdata.Prenom,
+                   ville:this.formdata.Ville,pays:this.formdata.Pays,
+                   code:this.formdata.Code,email:this.formdata.adresse_email,
+                   tlf:this.formdata.Numero,adresse:this.formdata.Adresse,
                    userid:this.store.isauth!=null ? this.store.user['id'] : null
                   };
                   this.code_Commande=Math.random(10,99999);
@@ -377,7 +379,7 @@ export default{
 }
 </script>
 
-<style scoped>
+<style>
 .error {
   border: 1px solid red;
   border-radius: 5px;

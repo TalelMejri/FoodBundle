@@ -11,7 +11,7 @@
                          <v-toolbar dark color="#E84C03">
                             <v-toolbar-title >
                                <div class="d-flex justify-content-center mt-5">
-                                   <p>Sign Up</p>
+                                   <p>S'incrire</p>
                                </div>
                             </v-toolbar-title>
                          </v-toolbar>
@@ -29,7 +29,7 @@
                                   v-model="name.value"
                                   type="text"
                                   
-                                  placeholder="Enter Name"
+                                  placeholder="Tapez Nom"
                                 ></v-text-field>
                              
                                  </div>
@@ -42,7 +42,7 @@
                                   label="LastName"
                                   v-model="lastname.value"
                                   type="text"
-                                  placeholder="Enter LastName"
+                                  placeholder="Tapez Prenom"
                                 ></v-text-field>
 
                                  </div>
@@ -71,7 +71,7 @@
                                   label="Password"
                                   type="password"
                                   v-model="password.value"
-                                  placeholder="password"
+                                  placeholder="Mot de passe"
                                ></v-text-field>
                               </div>
                            </div>
@@ -93,7 +93,7 @@
                              :messages="numero_tlf.error!='' ? numero_tlf.error : ''"
                              :class="numero_tlf.error!='' ? 'move_input' : ''"
                              :color="numero_tlf.error!='' ? 'red': ''" 
-                             label="N° Phone"
+                             label="N° Télephone"
                              v-model="numero_tlf.value"
                              type="text"
                              placeholder="+216"
@@ -103,9 +103,9 @@
                         <v-checkbox v-model="check.value" >
                           <template v-slot:label>
                             <div>
-                              I agree to the 
-                              <span style="color:blue"> Terms and Conditions </span>  
-                                is awesome
+                           je suis d'accord avec le
+                              <span style="color:blue"> Termes et conditions </span>  
+                                est génial
                             </div>
                             <div>
                              
@@ -119,11 +119,11 @@
                         </small>
                         </div>
                                 <div class="mt-3 text-center ">
-                                    <v-btn type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="Sign Up">Sign Up</v-btn>
-                                    <router-link to="/" class="text-decoration-none  mx-2"> <v-btn type="button" class="mt-4 " color="gray" value="close">Close</v-btn></router-link>
+                                    <v-btn type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="Sign Up">S'incrire</v-btn>
+                                    <router-link to="/" class="text-decoration-none  mx-2"> <v-btn type="button" class="mt-4 " color="gray" value="close">Fermer</v-btn></router-link>
                                 </div>
                                 <div class="text-center mt-3">
-                                    Already have an account ?<router-link to="login" class="text-decoration-none  mx-2">  <span>Login</span></router-link>
+                                  Vous avez déjà un compte ?<router-link to="login" class="text-decoration-none  mx-2">  <span>Connexion</span></router-link>
                                 </div>
                           </form>
                          </v-card-text>
@@ -150,12 +150,12 @@
                 gap="4px"
               >  <router-link  to="login" class="text-decoration-none">
                 <v-btn class="login mx-2"   >
-                  Login
+                  Connexion
                 </v-btn>
               </router-link> 
               <router-link to="/signup" class="text-decoration-none">
                 <v-btn class="signup" >
-                   Sign Up
+                  S'incrire
                 </v-btn>
               </router-link> 
               </v-row>
@@ -167,8 +167,8 @@
                 >
                   <div class="mt-5 py-5 col-lg-6">
                        <p class="py-5 mt-5 paragh" >
-                        Taste Our <br>
-                          Delicious Foods
+                        Goûtez notre<br>
+                              Nourriture délicieuse
                        </p>
                        <p  >
                         lore"Lorem ipsum dolor sit amet, consectetur adipiscing 
@@ -182,7 +182,7 @@
                       <img class="image" src="../../assets/home-img.png" alt="">
                     </div>
                 </div>
-                <v-btn class="btn">See Menu</v-btn>
+                <v-btn class="btn">Voir Menu</v-btn>
               </v-container>
              </v-content>
           </v-container>
@@ -254,7 +254,7 @@ import SideBar from "../../components/SideBar.vue"
               this.lastname.value="";
               this.numero_tlf.value="";
               this.check.value="";
-              this.$router.push({name:"login", query: {content: 'Register Succesfully'}});
+              this.$router.push({name:"login", query: {content: 'Inscrivez-vous avec succès'}});
             }).catch((error)=>{
               this.name.error=error.response.data.errors.name ? error.response.data.errors.name[0] : '';
               this.photo.error=error.response.data.errors.Photo ? error.response.data.errors.Photo[0] : '';
@@ -262,7 +262,7 @@ import SideBar from "../../components/SideBar.vue"
               this.password.error=error.response.data.errors.password ? error.response.data.errors.password[0] : '';
               this.lastname.error=error.response.data.errors.lastname ? error.response.data.errors.lastname[0] : '';
               this.numero_tlf.error=error.response.data.errors.numero_tlf ? error.response.data.errors.numero_tlf[0] : '';
-              this.check.error=this.check.value==false ? 'the agree is required' : '' ;
+              this.check.error=this.check.value==false ? 'check Agree obligatoire' : '' ;
             })
           }
         }

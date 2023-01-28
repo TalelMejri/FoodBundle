@@ -5,7 +5,7 @@
               <v-toolbar 
                 color="green"
                 dark
-                >Edit</v-toolbar>
+                >Changer</v-toolbar>
               <v-card-text >
                <form  @submit.prevent="EditUser()" enctype="multipart/form-data">
                  <div class="mx-5 px-5">
@@ -45,12 +45,12 @@
               <v-card-actions class="justify-end">
                 <v-btn class="mx-2" type="submit" color="green"
                     >
-                 Edit
+                 Changer
                 </v-btn>
                 <router-link  v-if="store.isAdmin!=1" style="text-decoration:none !important" to="/">
                 <v-btn  type="submit" color="gray"
                      >
-                    Close
+                    Fermer
                 </v-btn>
              </router-link>
               </v-card-actions>
@@ -111,7 +111,7 @@ export default{
             }).then((response)=>{
                  this.store.login(this.store.user['token'],response.data.data,this.store.getisadmin);
                  if(this.direction=='home'){
-                    this.$router.push({name:"home", query: {content: 'Edit Account With Success'}});
+                    this.$router.push({name:"home", query: {content: 'Modifier le compte avec succès'}});
                  }else{
                     this.$emit('returnstate');
                  }

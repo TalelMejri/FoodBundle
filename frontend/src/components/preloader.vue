@@ -7,7 +7,7 @@
 export default{
     name:"loader",
     mounted(){
-        setTimeout(()=>this.preloader=false,2000);
+        setTimeout(()=>this.preloader=false,1);
     },
     data(){
         return{

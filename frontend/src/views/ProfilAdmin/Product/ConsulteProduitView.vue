@@ -21,7 +21,7 @@
                                   @change="FetchData()"
                                   item-value="id"
                                  v-model="select_id"
-                                 label="Type"
+                                 label="Categorie"
                              ></v-select>
                        
                     </div>
@@ -30,7 +30,7 @@
                               <v-text-field
                                   v-model="search"
                                   append-icon="mdi-magnify"
-                                  label="Search By Name"
+                                  label="Recherche Par Name"
                                   @keyup="FetchData()"
                                   single-line
                                   hide-details
@@ -52,7 +52,7 @@
                               <v-icon class="px-2">mdi-plus-box</v-icon>
                               </v-btn>
                             </template>
-                            <span>Add Product</span>
+                            <span>Ajouter Produit</span>
                           </v-tooltip>
                     </div>
                         </div> 
@@ -69,15 +69,14 @@
                             Name
                           </th>
                           <th class="text-left">
-                            Photo
+                            Image
                           </th>
                           <th class="text-left">
-                            Category
+                            Categorie
                           </th>
                           <th class="text-left">
                             Prix
                           </th>
-                      
                           <th class="text-left">
                             Operation
                           </th>
@@ -95,7 +94,7 @@
                     </tbody>
                       <tbody v-else-if="Products==''">
                         <tr >
-                          <td colspan="6" class="text-center">No data available</td>
+                          <td colspan="6" class="text-center">Pas de données disponibles</td>
                         </tr>
                       </tbody>
                       <tbody v-else>
@@ -110,7 +109,6 @@
                               {{ index.name }} 
                           </td>
                           <td>{{ item.PrixProduct }}</td>
-                         
                              <td>
                              <v-tooltip c bottom>
                               <template v-slot:activator="{ on, attrs }">
@@ -124,7 +122,7 @@
                                   <v-icon>mdi-delete</v-icon>
                                 </v-btn>
                               </template>
-                              <span>Delete Product</span>
+                              <span>Supprimer Produit</span>
                             </v-tooltip>
                                
                                 <v-dialog  v-if="item_selected!=''"
@@ -137,7 +135,7 @@
                                    <v-toolbar
                                      color="danger"
                                      dark
-                                   >Delete Product</v-toolbar>
+                                   >Supprimer Produit</v-toolbar>
                                    <v-card-text>
                                      <div class="text-h2 pa-12">{{item_selected.nameProduct}}</div>
                                    </v-card-text>
@@ -145,11 +143,11 @@
                                      <v-btn 
                                        text
                                        @click="deleteProduct(item_selected.id)"
-                                     >Delete</v-btn>
+                                     >Supprimer</v-btn>
                                      <v-btn
                                      text
                                      @click="dialog=false"
-                                   >close</v-btn>
+                                   >Fermer</v-btn>
                                    </v-card-actions>
                                  </v-card>
                                </template>
@@ -167,7 +165,7 @@
                                   <v-icon>mdi-square-edit-outline</v-icon>
                                 </v-btn>
                               </template>
-                              <span>Edit Product </span>
+                              <span>Modifier Produit </span>
                             </v-tooltip>
  
                             <v-tooltip bottom>
@@ -182,7 +180,7 @@
                                 <v-icon> mdi-food</v-icon>
                               </v-btn>
                             </template>
-                            <span>Add Option </span>
+                            <span>Ajouter Option </span>
                           </v-tooltip>
                              
                              </td>
@@ -215,7 +213,7 @@
                   <v-snackbar
                   v-model="snackbar"
                 >
-                     Delete with success
+                Supprimer avec succès
                   <template v-slot:action="{ attrs }">
                     <v-btn
                       color="indigo"
@@ -223,7 +221,7 @@
                       v-bind="attrs"
                       @click="snackbar = false"
                     >
-                      Close
+                      Fermer
                     </v-btn>
                   </template>
                 </v-snackbar>

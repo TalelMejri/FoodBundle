@@ -50,12 +50,11 @@
               v-model="search"
               append-icon="mdi-magnify"
               @keyup="serchdata()"
-              label="Search Option"
+              label="Recherche Option"
               single-line
               hide-details
          ></v-text-field>  
       </div>
-
       <v-spacer></v-spacer>
       <div class="col-lg-3" v-if="list=='global'">
         <v-select
@@ -64,7 +63,7 @@
         item-value="id"
         @change="fetchData_global()"
         v-model="id_category_selected"
-        label="Category"
+        label="Categorie"
     ></v-select>
       </div>
       <div v-else class="col-lg-3">
@@ -93,10 +92,10 @@
                 prix
               </th>
               <th v-if="list=='global'" class="text-left ">
-               Category
+               Categorie
               </th>
               <th v-else class="text-left ">
-                Product
+                Produit
               </th>
               <th class="text-left">
                 Operation
@@ -116,7 +115,7 @@
           <tbody v-else-if="Options==''">
             <tr>
                  <td colspan="5" class="text-center">
-                    No data available
+                  Pas de données disponibles
                  </td>
             </tr>
           </tbody>
@@ -141,7 +140,7 @@
                         <v-icon>mdi-delete</v-icon>
                       </v-btn>
                     </template>
-                    <span>Delete Option</span>
+                    <span>Supprimer Option</span>
                   </v-tooltip>
 
           <v-dialog
@@ -155,7 +154,7 @@
                  <v-toolbar
                    color="danger"
                    dark
-                 >Delete Option</v-toolbar>
+                 >Supprimer Option</v-toolbar>
                  <v-card-text>
                    <div class="text-h2 pa-12">{{option_selected_delete.nameOption}}</div>
                  </v-card-text>
@@ -163,11 +162,11 @@
                    <v-btn
                      text
                      @click="deleteOption(option_selected_delete.id)"
-                   >Delete</v-btn>
+                   >Supprimer</v-btn>
                    <v-btn
                    text
                    @click="option_selected_delete=[]"
-                 >close</v-btn>
+                 >Fermer</v-btn>
                  </v-card-actions>
                </v-card>
              </template>
@@ -185,7 +184,7 @@
                       <v-icon>mdi-square-edit-outline</v-icon>
                       </v-btn>
                     </template>
-                    <span>Edit Option</span>
+                    <span>Modifier Option</span>
                   </v-tooltip>
 
               <v-dialog v-if="option_selected!=''"
@@ -198,7 +197,7 @@
                      <v-toolbar
                        color="yellow"
                        dark
-                     >Edit Option</v-toolbar>
+                     >Modifier Option</v-toolbar>
                      <v-card-text>
                       <form @submit.prevent="updateOption()">
                         <div class="mx-5 px-5">
@@ -214,11 +213,11 @@
                      <v-card-actions class="justify-end">
                        <v-btn type="submit"
                          text
-                        >Update</v-btn>
+                        >Modifier</v-btn>
                        <v-btn
                        text
                        @click="option_selected=[]"
-                     >close</v-btn>
+                     >Fermer</v-btn>
                      </v-card-actions>
                      </form>
                     </v-card-text>
@@ -249,7 +248,7 @@
                         <v-icon>mdi-delete</v-icon>
                       </v-btn>
                     </template>
-                    <span>Delete Option</span>
+                    <span>Supprimer Option</span>
                   </v-tooltip>
 
           <v-dialog
@@ -263,7 +262,7 @@
                  <v-toolbar
                    color="danger"
                    dark
-                 >Delete Option</v-toolbar>
+                 >Supprimer Option</v-toolbar>
                  <v-card-text>
                    <div class="text-h2 pa-12">{{option_selected_delete.nameOptionSpecifique}}</div>
                  </v-card-text>
@@ -271,11 +270,11 @@
                    <v-btn
                      text
                      @click="deleteOption(option_selected_delete.id)"
-                   >Delete</v-btn>
+                   >Supprimer</v-btn>
                    <v-btn
                    text
                    @click="option_selected_delete=[]"
-                 >close</v-btn>
+                 >Fermer</v-btn>
                  </v-card-actions>
                </v-card>
              </template>
@@ -293,7 +292,7 @@
                         <v-icon>mdi-square-edit-outline</v-icon>
                       </v-btn>
                     </template>
-                    <span>Edit Option</span>
+                    <span>Modifier Option</span>
                   </v-tooltip>
                   <v-dialog v-if="option_selected!=''"
                   transition="dialog-bottom-transition"
@@ -305,7 +304,7 @@
                      <v-toolbar
                        color="yellow"
                        dark
-                     >Edit Option</v-toolbar>
+                     >Modifier Option</v-toolbar>
                      <v-card-text>
                       <form @submit.prevent="updateOption()">
                         <div class="mx-5 px-5">
@@ -329,11 +328,11 @@
                      <v-card-actions class="justify-end">
                        <v-btn type="submit"
                          text
-                        >Update</v-btn>
+                        >Modifier</v-btn>
                        <v-btn
                        text
                        @click="option_selected=[]"
-                     >close</v-btn>
+                     >Fermer</v-btn>
                      </v-card-actions>
                      </form>
                     </v-card-text>
@@ -370,7 +369,7 @@
           <v-snackbar
           v-model="snackbar"
         >
-             Delete Option with success
+          Supprimer l'option avec succès
           <template v-slot:action="{ attrs }">
             <v-btn
               color="indigo"
@@ -378,7 +377,7 @@
               v-bind="attrs"
               @click="snackbar = false"
             >
-              Close
+              Fermer
             </v-btn>
           </template>
         </v-snackbar>
@@ -386,7 +385,7 @@
         <v-snackbar
         v-model="snackbar_edit"
       >
-           Update Option with success
+      Mettre à jour l'option avec succès
         <template v-slot:action="{ attrs }">
           <v-btn
             color="indigo"
@@ -394,7 +393,7 @@
             v-bind="attrs"
             @click="snackbar_edit = false"
           >
-            Close
+            Fermer
           </v-btn>
         </template>
       </v-snackbar>

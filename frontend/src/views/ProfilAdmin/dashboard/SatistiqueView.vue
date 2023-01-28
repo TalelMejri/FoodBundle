@@ -93,12 +93,12 @@ import service_command from "@/services/GererCommande/Commande"
             countoption:0,
             countcommande:0,
             items:[
-                {id:0,name:' Category',icon:'filter-variant'},
+                {id:0,name:' Categorie',icon:'filter-variant'},
                 {id:1,name:' Client',icon:'account-group'},
-                {id:2,name:' Products',icon:'hamburger'},
+                {id:2,name:' Produit',icon:'hamburger'},
                 {id:3,name:' Option Global',icon:'shaker'},
                 {id:4,name:' Option Specifique',icon:'shaker-outline'},
-                {id:5,name:' Commande',icon:'truck-delivery'}
+                {id:5,name:' Commandes',icon:'truck-delivery'}
             ]
         }
      },

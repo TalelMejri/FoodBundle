@@ -11,17 +11,13 @@
      <h2> <span style="color:#E84C03;">{{(ViewCurrent.toUpperCase().substring(0,ViewCurrent.length-3))}}</span>{{(ViewCurrent.toUpperCase().substring(ViewCurrent.length,ViewCurrent.length-3))}}</h2>
         <v-spacer></v-spacer>
     <div class="mx-5">
-    
-     
     </div>
-   
-
   <v-snackbar
     dark
     v-model="snackbar_edit"
     scroll
   >
-      edit With Success
+   Modifier avec succès
     <template v-slot:action="{ attrs }">
       <v-btn
         color="indigo"
@@ -29,7 +25,7 @@
         v-bind="attrs"
         @click="snackbar_edit = false"
       >
-        Close
+        Fermer
       </v-btn>
     </template>
   </v-snackbar>
@@ -39,22 +35,20 @@
     <v-badge 
      class="mx-5 mt-4"  color="red"
      :content="All_notif_yet.length==0 ? '0' : All_notif_yet.length">
-     <v-btn     v-bind="attrs"
-      v-on="on">   ddd
+     <v-btn  text   v-bind="attrs"
+      v-on="on">  
     <v-icon   
-  
        color="#000">
         mdi-bell
       </v-icon></v-btn>
-   
     </v-badge>
   </template>
       <v-toolbar dark color="#E84C03">
-       <v-toolbar-title >Welcome Back</v-toolbar-title>
+          <v-toolbar-title style="font-size:15px" >Notifi Back</v-toolbar-title>
       </v-toolbar>
       <v-list   style="overflow-y:scroll;max-height:300px">
         <v-list-item v-if="All_notif==''">
-          <v-list-item-title class="mb-1" > No Datat available</v-list-item-title>
+          <v-list-item-title class="mb-1" >Pas de données disponibles</v-list-item-title>
       </v-list-item>
         <v-list-item v-else
           v-for="(item) in All_notif"
@@ -114,7 +108,7 @@
                 text
                 @click="ViewCurrent='edit'"
               >
-                Edit Account
+                Modifier Account
               </v-btn>
               <v-divider class="my-3"></v-divider>
               <v-btn @click="logout()"
@@ -122,7 +116,7 @@
                 rounded
                 text
               >
-                Logout
+               Se déconnecter
               </v-btn>
             </div>
           </v-list-item-content>
@@ -159,7 +153,7 @@
       <v-snackbar
       v-model="snackbar"
   >
-   Delete Notification Completed With Success
+  Supprimer la notification terminée
   <template v-slot:action="{ attrs }">
    <v-btn
      color="pink"
@@ -167,7 +161,7 @@
         v-bind="attrs"
         @click="snackbar = false"
    >
-     Close
+     Fermer
     </v-btn>
    </template>
   </v-snackbar>

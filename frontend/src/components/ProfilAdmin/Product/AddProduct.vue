@@ -4,7 +4,7 @@
             <v-toolbar dark color="#E84C03">
                <v-toolbar-title >
                   <div class="d-flex justify-content-center">
-                      <p style="text-align:center !important">Add Product {{select_type_food}}</p>
+                      <p style="text-align:center !important">Ajouter Produit {{select_type_food}}</p>
                   </div>
                </v-toolbar-title>
             </v-toolbar>
@@ -14,11 +14,14 @@
                       <div class="col-md-6">
                         <v-text-field
                          name="Name"
-                         v-model="name_food"
+                         v-model="v$.formdata.name_food.$model"
                          label="Name Food"
                          type="text"
                          placeholder="Enter Name"
                       ></v-text-field>
+                      <div class="input-errors" v-for="(error, index) of v$.formdata.name_food.$errors" :key="index">
+                        <div class="error">{{ error.$message }}</div>
+                    </div>
                     </div>
               <div class="col-md-6">
                    <v-select
@@ -36,10 +39,13 @@
                 <v-text-field
                     name="Prix"
                     label="Prix Food"
-                    v-model="prix_food"
+                    v-model="v$.formdata.prix_food.$model"
                     type="text"
                     placeholder="Enter Prix"
                  ></v-text-field>
+                 <div class="input-errors" v-for="(error, index) of v$.formdata.prix_food.$errors" :key="index">
+                  <div class="error">{{ error.$message }}</div>
+              </div>
             </div>
           <div class="col-md-6">
              <v-text-field
@@ -114,14 +120,14 @@
           text
           @click="dialog = false"
         >
-          Close
+          Fermer
         </v-btn>
           <v-btn
             color="primary"
             text
             @click="addprix()"
           >
-            Add Option
+            Ajouter Option
           </v-btn>
         </v-card-actions>
       </form>
@@ -133,11 +139,11 @@
          </div>
         </div>
         <div class="text-center mt-5 ">
-            <v-btn type="submit" style="color:#fff !important" color="#E84C03" class="mx-2">
-                Add Product
+            <v-btn :disabled="v$.formdata.$invalid" type="submit" style="color:#fff !important" color="#E84C03" class="mx-2">
+                Ajouter Produit
            </v-btn>
            <v-btn @click="close_add()"  style="color:#000 !important" color="gray">
-                Close
+                Fermer
             </v-btn>
         </div>
              </form>
@@ -147,6 +153,8 @@
 </template>
 
 <script>
+import useVuelidate from '@vuelidate/core'
+import { required,numeric } from '@vuelidate/validators'
 import service from "@/services/GererProduct/GererProduct";
 import service_option from "@/services/GererOption/option"
 import service_category from "@/services/GererCategory/category"
@@ -158,6 +166,23 @@ export default{
             }
         })
     },
+    setup(){
+        return{
+           v$: useVuelidate() 
+        }
+    },
+    validations(){
+       return{
+        formdata:{
+        name_food:{
+          required
+        },
+        prix_food:{
+          required,numeric
+        },
+      }
+       }
+    },
     data(){
         return{ 
          select_type_food:'',
@@ -168,13 +193,16 @@ export default{
          items:[],
          Option_food_option:[],
          prix:0,
+         formdata:{
+          name_food:'',
+          prix_food:'',
+         },
          select_id:0,
-         name_food:'',
-         prix_food:0,
+         id_category:0,
          file_food:'',
-         id_category:'',
          dialog:false,
-         current_item:''
+         current_item:'',
+         snackbar:false
         }
     },
     methods:{
@@ -208,20 +236,20 @@ export default{
           },
         Add_Product(){
                service.Add_Product({
-                 'name_product':this.name_food,
+                 'name_product':this.formdata.name_food,
                  'file':this.file_food,
                  'options':this.items,
                  'idCategory':this.select_id,
-                 'prixFood':this.prix_food
+                 'prixFood':this.formdata.prix_food
                }).then((res)=>{
-                this.name_food="";
+                this.formdata.name_food="";
                 this.file_food="";
                 this.items=[];
                 this.select_id=0;
                 this.total_Prix=0;
                 this.$emit("retourn_consulte");
                }).catch((error)=>{
-                  console.log("nooooooooo");
+                  console.log("error");
                })
         }
     },
