@@ -177,7 +177,7 @@ import {AuthStore} from "../../store/StoreAuth"
                         if(auth.getisadmin==1){
                             this.$router.push('dashboard');
                         }else{
-                            this.$router.push('/');
+                            this.$router.push('/'); 
                         }
                     }).catch((error)=>{
                           this.snackbar_error=true;
