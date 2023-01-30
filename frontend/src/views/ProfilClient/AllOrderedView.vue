@@ -55,7 +55,10 @@
                                     statu
                                   </th>
                                   <th  class="text-left ">
-                                      Operation
+                                      Annuler
+                                  </th>
+                                  <th v-if="item.statu==1">
+                                      Télecharger Commande  Pdf
                                   </th>
                                 </tr>
                               </thead>
@@ -79,6 +82,11 @@
                                          <v-btn text @click="initcommande(item)">
                                              <v-icon>mdi-delete</v-icon>
                                          </v-btn>
+                                    </td>
+                                    <td v-if="item.statu==1">
+                                        <v-btn text @click="GeneratePdf(item)">
+                                          <v-icon>mdi-file-pdf-box</v-icon>
+                                        </v-btn>
                                     </td>
                               </tbody>
                               </template>
@@ -133,7 +141,22 @@
                       </v-expansion-panel-content>
                     </v-expansion-panel>
                   </v-expansion-panels>
+                  <div class="justify-center mt-3">
+                    <v-btn  class="mx-2" :disabled="pagination.prevpage==null" @click="changerPage(pagination.curentpage-1)">
+                        prev
+                    </v-btn>
+                    <v-btn v-for="num in (Math.ceil(pagination.per_page ? pagination.total/pagination.per_page : 1))"
+                        :key="num"
+                        color="primary"
+                        :disabled="pagination.curentpage==num">
+                          {{num}}
+                    </v-btn>
+                    <v-btn class="mx-2" :disabled="pagination.nextpage==null" @click="changerPage(pagination.curentpage+1)">
+                          suivant
+                    </v-btn>
+                 </div>
           </v-card>
+         
         </div>
         <v-dialog  v-if="commande_selected!=''"
         transition="dialog-bottom-transition"
@@ -188,6 +211,8 @@
 </template>
 
 <script>
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import SideBar from "@/components/SideBar.vue";
 import service_commande from "@/services/GererCommande/Commande.js";
 import service_product from "@/services/GererProduct/GererProduct";
@@ -237,6 +262,30 @@ export default{
         }
     },
     methods:{
+      GeneratePdf(commande){
+        const doc = new jsPDF({
+          orientation:"portrait",
+          unit:"in",
+          format:"letter"
+       });
+       doc.text('code Commande' +''+(commande.Code_Commande),0.1,0.4);
+       var total_payment="Total  :"+commande.Prix_Total+" Dt ";
+       doc.text(total_payment,7,0.4);
+       autoTable(doc, { html: '#my-table' }) 
+        commande.ligencommandes.forEach((v)=>{
+        var val= v.product_id;
+        var name=v.prix_ligne_commande;
+        var quantity=v.Quantity;
+        autoTable(doc, {
+          head: [['Product Id', 'Prix Total', 'Quantity']],
+          body: [
+            [val, name, quantity],
+          ],
+        })
+      })  
+     
+      doc.save(`${Math.random()}.pdf`);
+      },
       changreetat(a){
         this.etatsidbar=a;
       },
@@ -247,6 +296,7 @@ export default{
       fetchdata(){
         service_commande.CommandeForUser(this.store.user['id'],this.search,this.pagination.curentpage).then((res)=>{
             this.All_Commande=res.data.data;
+            this.pagination.curentpage=res.data.current_page;
             this.pagination.prevpage=res.data.prev_page_url?.split("=")[1];
             this.pagination.nextpage=res.data.next_page_url?.split("=")[1];
             this.pagination.per_page=res.data.per_page;
@@ -263,6 +313,7 @@ export default{
            this.commande_selected=[];
            this.dialog=false;
            this.snackbar=true;
+           this.$router.go();
         })
       }
     },
