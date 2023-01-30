@@ -1,6 +1,7 @@
 <template>
     <div class="mt-3 py-5">
-        <v-container class="mt-3 mb-5">
+        <v-container  
+                class="mx-auto mt-3 mb-5">
             <h4 class="text-center">Commande Demander</h4>
             <v-text-field
             v-model="search_demander"
@@ -11,26 +12,40 @@
             single-line
             hide-details
         ></v-text-field>
-            <v-row class="mt-2">
+            <v-row max-width="700" class="mt-2 mb-2">
             <v-card class="mt-5"  style="padding:25px 15px;margin:0 auto" v-if="AllCommande==''">
                     Pas de  Commande Demander
             </v-card>
-            <v-card v-else v-for="commande in AllCommande" :key="commande" class="mx-5" style="padding:15px;" max-width="300">
+            <v-card v-else v-for="commande in AllCommande" :key="commande" class="mx-5 mb-2" style="padding:15px;" max-width="300">
                  <h4 class="text-center mb-4">{{commande.Nom+' '+commande.Prenom}}</h4>
                  <p class="text-center py-2">Commande N°{{commande.Code_Commande}}</p>
                  <div class="text-center py-2">
                     <v-btn class="text-center" color="primary" @click="initIndice(commande)">More Info</v-btn>
                  </div>
                  <v-container>
-                 <v-row class="mt-2">
-                        <v-btn @click="AccepterCommande(commande.id,commande.user_id)" class="mx-2" style="color:blue" text outlined>Approve</v-btn>
+                 <v-row class="mt-2 justify-center">
+                        <v-btn @click="AccepterCommande(commande.id,commande.user_id)" class="mx-2 mb-1" style="color:blue" text outlined>Approve</v-btn>
                         <v-btn type="button" @click="initRegeter(commande)" text outlined style="color:red">Remove</v-btn>
                  </v-row>
                 </v-container>
             </v-card>
         </v-row>
+        <div class="justify-center mt-3">
+          <v-btn  class="mx-2" :disabled="pagination.prevpage==null" @click="changerPage(pagination.curentpage-1)">
+              prev
+          </v-btn>
+          <v-btn v-for="num in (Math.ceil(pagination.per_page ? pagination.total/pagination.per_page : 1))"
+              :key="num"
+              color="primary"
+              @click="changerPage(num)"
+              :disabled="pagination.curentpage==num">
+                {{num}}
+          </v-btn>
+          <v-btn class="mx-2" :disabled="pagination.nextpage==null" @click="changerPage(pagination.curentpage+1)">
+                suivant
+          </v-btn>
+       </div>
         </v-container>
-
     <v-dialog  v-if="commande_selected!=''"
         transition="dialog-bottom-transition"
         max-width="500"
@@ -232,6 +247,21 @@
                    </v-expansion-panel-content>
                  </v-expansion-panel>
                </v-expansion-panels>
+               <div class="justify-center mt-3">
+                <v-btn  class="mx-2" :disabled="paginatione.prevpage==null" @click="changerPagee(paginatione.curentpage-1)">
+                    prev
+                </v-btn>
+                <v-btn v-for="num in (Math.ceil(paginatione.per_page ? paginatione.total/paginatione.per_page : 1))"
+                    :key="num"
+                    color="primary"
+                    @click="changerPagee(num)"
+                    :disabled="paginatione.curentpage==num">
+                      {{num}}
+                </v-btn>
+                <v-btn class="mx-2" :disabled="paginatione.nextpage==null" @click="changerPagee(paginatione.curentpage+1)">
+                      suivant
+                </v-btn>
+             </div>
        </v-card>
      </div>
      
@@ -318,6 +348,8 @@ import service_commande from "@/services/GererCommande/Commande"
 export default{
     name:'commande',
     created(){
+        this.changerPage(1);
+        this.changerPagee(1);
         this.fetchAllcommandeDemaander();
         this.fetchAllcommandeAccepter();
         service_product.getProducts().then((res)=>{
@@ -334,6 +366,20 @@ export default{
             commande_selected_deleted:[],
             search:'',
             commande_selected:[],
+            pagination:{
+                curentpage:1,
+                nextpage:0,
+                prevpage:0,
+                total:0,
+                per_page:0,
+            },
+            paginatione:{
+                curentpage:1,
+                nextpage:0,
+                prevpage:0,
+                total:0,
+                per_page:0,
+            },
             commande_selected_rejeter:[],
             dialog_rejeter:false,
             All_option:[],
@@ -379,13 +425,31 @@ export default{
             this.dialog=true;
         },
         fetchAllcommandeDemaander(){
-            service_commande.AllCommande(this.search_demander,1).then((res)=>{
+            service_commande.AllCommande(this.search_demander,this.pagination.curentpage).then((res)=>{
                  this.AllCommande=res.data.data;
+                 this.pagination.curentpage=res.data.current_page;
+            this.pagination.prevpage=res.data.prev_page_url?.split("=")[1];
+            this.pagination.nextpage=res.data.next_page_url?.split("=")[1];
+            this.pagination.per_page=res.data.per_page;
+            this.pagination.total=res.data.total;
             })
         },
+        changerPage(num){
+        this.pagination.curentpage=num;
+        this.fetchAllcommandeDemaander();
+      },
+      changerPagee(num){
+        this.paginatione.curentpage=num;
+        this.fetchAllcommandeAccepter();
+      },
         fetchAllcommandeAccepter(){
-            service_commande.AllCommandeAccpted(this.search,1).then((res)=>{
+            service_commande.AllCommandeAccpted(this.search,this.paginatione.curentpage).then((res)=>{
                  this.AllCommandeAccpted=res.data.data;
+                 this.paginatione.curentpage=res.data.current_page;
+            this.paginatione.prevpage=res.data.prev_page_url?.split("=")[1];
+            this.paginatione.nextpage=res.data.next_page_url?.split("=")[1];
+            this.paginatione.per_page=res.data.per_page;
+            this.paginatione.total=res.data.total;
             })
         },
     }
