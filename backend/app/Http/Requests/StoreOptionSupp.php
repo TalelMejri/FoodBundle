@@ -24,8 +24,8 @@ class StoreOptionSupp extends FormRequest
     public function rules()
     {
         return [
-            'nameOptionSpecifique'=>"required",
-            'prixOptionSpecifique'=>"required"
+            /*'nameOptionSpecifique'=>"required",
+            'prixOptionSpecifique'=>"required"*/
         ];
     }
 }

@@ -18,6 +18,10 @@ class Product extends Model
         return $this->hasMany(favorite::class);
     }
 
+    public function rates(){
+        return $this->hasMany(Rate::class);
+    }
+
     public function lignecommandes(){
         return $this->hasMany(lignecommande::class);
     }

@@ -36,6 +36,11 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
+
+    public function rates(){
+        return $this->hasMany(Rate::class);
+    }
+
     public function commandes(){
         return $this->hasMany(Commande::class);
      }
