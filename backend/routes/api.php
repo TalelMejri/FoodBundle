@@ -102,4 +102,7 @@ Route::group(['prefix'=>'/product'],function(){
     Route::get('/getProductByIdCategory/{id}',[ProductController::class,'getProductByIdCategory']);
     Route::get('/GetProductCategoryOption',[ProductController::class,'GetProductCategoryOption']);
     Route::get('/getALLproduct',[ProductController::class,'getALLproduct']);
+    Route::post('/addrate',[ProductController::class,'addrate']);
+    Route::get('/getrate',[ProductController::class,'getrate']);
+    Route::get('/Avgrate/{id}',[ProductController::class,'Avgrate']);
 });
