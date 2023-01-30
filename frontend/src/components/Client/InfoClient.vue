@@ -2,6 +2,53 @@
     <div>
         <template>
             <v-row>
+              <v-menu class="overflow-y-auto"
+              max-height="400" 
+              transition="slide-x-transition"
+              style="z-index:9999 !important" offset-y>
+       <template v-slot:activator="{ on: menu, attrs }">
+      <v-badge 
+       class="mx-5 mt-4"  color="red"
+       :content="All_notif_yet.length==0 ? '0' : All_notif_yet.length">
+       <v-tooltip bottom>
+        <template v-slot:activator="{ on: tooltip }">
+          <v-btn  text   v-bind="attrs"
+          v-on="{ ...tooltip, ...menu }"> 
+            <v-icon  color="#000">
+                mdi-bell
+            </v-icon>
+           </v-btn>
+        </template>
+        <span>Notification</span>
+      </v-tooltip>
+      </v-badge>
+    </template>
+        <v-toolbar>
+            <v-toolbar-title class="row gap-5" style="font-size:15px">
+                    <div class="col-lg-6">
+                      <v-btn :disabled="All_notif_yet.length==0" text>
+                          View Read ({{  All_notif_yet.length }} ) 
+                      </v-btn>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <div class="col-lg-3">
+                       <v-icon>mdi-email</v-icon>
+                    </div>
+            </v-toolbar-title>
+        </v-toolbar>
+        <v-list  style="overflow-y:scroll;max-height:300px">
+          <v-list-item v-if="All_notif==''">
+            <v-list-item-title class="mb-1">Pas de notification</v-list-item-title>
+         </v-list-item>
+          <v-list-item
+            v-else
+            v-for="(item) in All_notif"
+            :key="item.id"
+          >
+            <v-list-item-title  class="mb-1" :style=" item.etat==0 ? 'font-weight:600;cursor:pointer' : 'color:gray' "  @click="Seenotification(item.id)">{{ item.message }} <v-btn  text @click="deleteNotif(item.id)"> <v-icon color="red">mdi-delete</v-icon></v-btn></v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
                   <v-badge  class="mx-5 mt-3" color="red"  :content="nbr_panier==0 ? '0' : nbr_panier">
                        <v-btn text >
                             <router-link style="text-decoration:none !important" to="../PanierView">
@@ -52,11 +99,6 @@
                          Modifier le compte
                      </v-btn>
                      </router-link>
-                      <v-divider class="my-2"></v-divider>
-                      <v-badge  class="mx-5 mt-4"  color="red"
-                      :content="All_notif.length==0 ? '0' : All_notif.length">
-                      <v-icon  @click="snackbar = true"  color="#000">mdi-bell</v-icon>
-                  </v-badge>
                       <v-divider class="my-2"></v-divider>
                       <router-link v-if="menu=='menu'" to="../allOrderedProduct" style="text-decoration:none !important;">
                         <v-btn 
@@ -110,29 +152,7 @@
               </v-menu>
             </v-row>
           </template>
-        <v-snackbar
-        v-model="snackbar"
-        right
-        scroll
-      >
-          <div v-if="All_notif==''"> 
-            Aucune notification disponible
-        </div>
-          <div v-else  class="all_notif" v-for="notif in All_notif" :key="notif.id">
-                     <v-btn @click="deleteNotif(notif.id)" text><v-icon>mdi-delete</v-icon></v-btn>
-                    {{ notif.message }}
-          </div>
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            color="indigo"
-            text
-            v-bind="attrs"
-            @click="snackbar = false"
-          >
-            Fermer
-          </v-btn>
-        </template>
-      </v-snackbar>
+      
 
     </div>
 </template>
@@ -145,6 +165,7 @@ export default{
 
   created(){
             this.getnotif();
+            this.getNotifNotyet();
         },
   props:{
     menu:String,
@@ -163,11 +184,24 @@ export default{
             All_notif:[],
             snackbar_edit:false,
             snackbar_notif:false,
+            All_notif_yet:[]
         }
     },
     methods:{
-          getnotif(){
+      getNotifNotyet(){
               service_notif.getNotification(this.store.user['id']).then((res)=>{
+                 this.All_notif_yet=res.data;
+              })
+            },
+            Seenotification(id){
+              service_notif.changeretat(id).then((res)=>{
+                  this.getnotif();
+                  this.getNotifNotyet();
+                  this.$router.push('allOrderedProduct');
+              })
+            },
+          getnotif(){
+              service_notif.getAllNotification(this.store.user['id']).then((res)=>{
                  this.All_notif=res.data;
               })
             },
