@@ -122,24 +122,45 @@
                                        >
                                        <v-col>
                                      <v-rating
-                                        :value="4.5"
-                                        color="amber"
-                                        dense
-                                        half-increments
-                                       readonly
-                                       size="14"
+                                         :value="Nombre_rate_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_rate_for_products[Nombre_rate_for_products.findIndex((v)=>v.id==product.id)].Avg : 0"
+                                         color="amber"
+                                         dense
+                                         :readonly="true"
+                                         size="14"
                                       ></v-rating>
+                                      
                                        <div class="grey--text ms-4">
-                                         4.5 (413)
+                                       
+                                       {{Nombre_rate_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_rate_for_products[Nombre_rate_for_products.findIndex((v)=>v.id==product.id)].Avg : 0}}
                                        </div>
                                       </v-col>
                                        <v-spacer></v-spacer>
-                                     <div class="mb-4 mx-5 mt-2" >
+                                     <div class="mb-4 mx-5 mt-2">
                                         <v-btn text  @click="AddFavorite(product.id)">
                                             <v-icon>mdi-{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}</v-icon>
                                           </v-btn>
                                         {{ Nombre_liked_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_liked_for_products[Nombre_liked_for_products.findIndex((v)=>v.id==product.id)].nbr : 0 }} 
                                     </div>
+                                    <v-tooltip bottom>
+                                      <template v-slot:activator="{ on, attrs }">
+                                        <v-btn 
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        class="mx-2"
+                                        fab
+                                        dark
+                                        small
+                                        :disabled="check_rate_user.find((v)=>v.user_id== (store.isauth==null ? 0 : store.user['id'])  && v.product_id==product.id)==undefined ? false : true"
+                                         color="yellow"
+                                        @click="ShowDialogAddArate(product)"
+                                      >
+                                       <v-icon color="dark" >
+                                          mdi-star-box
+                                       </v-icon>
+                                       </v-btn>
+                                      </template>
+                                      <span>Ajouter rate</span>
+                                    </v-tooltip>
                                   </v-row>
                                 </v-card-text>
                               <v-divider class="mx-4"></v-divider>
@@ -165,15 +186,36 @@
                                       <h3>{{ index !=-1 ? All_Prix_With_Option_Array[index].prix : product.PrixProduct}} TND</h3>
                                     </div>
                                     <v-rating
-                                    :value="4.5"
+                                    :value="Nombre_rate_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_rate_for_products[Nombre_rate_for_products.findIndex((v)=>v.id==product.id)].Avg : 0"
                                     color="amber"
                                     dense
                                     half-increments
-                                   readonly
-                                   size="14"
+                                    readonly
+                                    size="14"
                                   ></v-rating>
+                                  
                                    <div class="grey--text ms-4">
-                                     4.5 (413)
+                                    <v-tooltip bottom>
+                                      <template v-slot:activator="{ on, attrs }">
+                                        <v-btn 
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        class="mx-2"
+                                        fab
+                                        dark
+                                        small
+                                        :disabled="check_rate_user.find((v)=>v.user_id== (store.isauth==null ? 0 : store.user['id'])  && v.product_id==product.id)==undefined ? false : true"
+                                         color="yellow"
+                                        @click="ShowDialogAddArate(product)"
+                                      >
+                                       <v-icon color="dark" >
+                                          mdi-star-box
+                                       </v-icon>
+                                       </v-btn>
+                                      </template>
+                                      <span>Ajouter rate</span>
+                                    </v-tooltip>
+                                    {{Nombre_rate_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_rate_for_products[Nombre_rate_for_products.findIndex((v)=>v.id==product.id)].Avg : 0}} 
                                    </div>
                                   </v-list-item-content>
                                 <v-list-item-avatar
@@ -305,6 +347,44 @@
                        </v-card>
                         </template>
                       </v-dialog>
+                  <v-dialog
+                      v-if="productrate!=''"
+                      persistent
+                      max-width="290"
+                      v-model="dialog_rate"
+                    >
+                      <v-card>
+                        <v-card-title class="text-h5">
+                          {{productrate.nameProduct}}
+                        </v-card-title>
+                        <v-card-text>ratiez ce product</v-card-text>
+                        <v-card-text class="text-center">
+                          <v-rating
+                          v-model="rating"
+                            color="amber"
+                            dense
+                            size="25"
+                       ></v-rating>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="black"
+                            style="color:#fff !important"
+                            @click="addrate(productrate.id,rating)"
+                          >
+                            Add
+                          </v-btn>
+                          <v-btn
+                            color="gray"
+                            @click="productrate = false"
+                          >
+                            Close
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+
                     </v-card>
                 </div>
             </div>
@@ -350,11 +430,10 @@
                 v-model="snackbar_authentificate"
               >
               Vous devriez créer un compte <router-link to="../signup"><small>Tapez ici</small></router-link>
-             
                   <v-btn
                     color="#fff"
                     text
-                    v-bind="attrs"
+                  
                     @click="snackbar_authentificate = false"
                   >
                     Fermer
@@ -396,6 +475,8 @@ export default{
                 this.types.push({name:response.data[i].name,id:response.data[i].id});
             }
         });
+       this.checkrate();
+      
         if(this.store.isauth!=null){
           this.get_all_liked();
         };
@@ -406,6 +487,7 @@ export default{
         this.MaxPrix();
         this.length_panier();
         this.changerpage(1);
+        this.countRate();
     },
     data(){
         return{ 
@@ -413,6 +495,7 @@ export default{
            OptionsAdded:[],
            prix: 0,
            dialog:false,
+           check_rate_user:[],
            selected:[],
            search:'',
            Products_max:[],
@@ -430,9 +513,12 @@ export default{
             total:0
            },
            Products:[],
+           Nombre_rate_for_products:[],
            All_Option_Global:[],
+           productrate:[],
            OptionsAdded_Selected:[],
            id_category:0,
+           nbr_rate:0,
            total:0,
            type_Ordered_produdct:'',
            product_selected:0,
@@ -442,13 +528,27 @@ export default{
            snackbar_added_panier:false,
            loader:false,
            Nombre_liked_for_products:[],
-           etatsidbar:true
+           etatsidbar:true,
+           dialog_rate:false
         }
     },
     components:{
         InfoClient,FooterVueVue,ServiceVue,preloaderVue,SideBar
     },
     methods:{
+      checkrate(){
+        service_product.getrate().then((res)=>{
+           this.check_rate_user=res.data;
+        });
+      },
+      ShowDialogAddArate(item){
+        if(this.store.isauth!=null){
+          this.productrate=item;
+          this.dialog_rate=true;
+        }else{
+          this.snackbar_authentificate=true;
+        }
+      },
       changerpage(a){
         this.pagination.current_page=a;
         this.FetchData();
@@ -573,6 +673,7 @@ export default{
               this.Total_prix();
               this.CoutProduct();
               this.length_panier();
+              this.countRate();
           })
         },
 
@@ -600,6 +701,31 @@ export default{
                }
             }
         },
+        addrate(id,nbr){
+          service_product.Addrate({id:id,nbr_rate:nbr,user_id:this.store.user['id']}).then((res)=>{
+              this.checkrate();
+              this.countRate();
+              this.nbr_rate=0;
+              this.productrate=[];
+          })
+        },
+        countRate(){
+         for(let i=0;i<this.Products.length;i++){
+            service_product.Avgrate(this.Products[i].id).then((res)=>{
+             let index=this.Nombre_rate_for_products.findIndex((v)=>v.id==this.Products[i].id);
+            if(index!=-1){
+              this.Nombre_rate_for_products[index].Avg=res.data==null ? 0 : res.data.data[0];
+            }else{
+              this.Nombre_rate_for_products.push(
+                 {
+                   id:this.Products[i].id,
+                   Avg:res.data==null ? 0 : res.data.data[0]
+                 }
+             );
+            }
+          })
+        }
+        }
     },
     computed:{
         name_category(){
