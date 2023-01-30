@@ -361,6 +361,8 @@ export default{
               this.store_products.ClearProducts();
               this.$confetti.start();
               setTimeout(()=>this.$confetti.stop(),2000);
+              setTimeout(()=>this.$router.push('PanierView'),2500);
+              setTimeout(()=>this.$router.go(),2800);
           })
         },
         checkCommande(){
