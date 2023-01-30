@@ -41,6 +41,19 @@ export default{
 
     GetProudctOptionSpecifiqueCategory(id,search,prix,typeordered,page){
         return axios.get(`product/GetProudctOptionSpecifiqueCategory?id=${id}&${search ? 'search='+search : ''}&prix=${prix}&${typeordered ? 'typeordered='+typeordered : ''}&page=${page}`);
-    }
+    },
+
+    Addrate(inforate){
+        return axios.post('product/addrate',inforate);
+    },
+
+    getrate(){
+        return axios.get('product/getrate');
+    },
+
+    Avgrate(id){
+        return axios.get('product/Avgrate/'+id);
+    },
+
 
 }

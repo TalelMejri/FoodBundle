@@ -59,14 +59,14 @@ export default{
             this.$emit('closeAdd');
         },
         AddNewOption(){
-            service.addOptionSpecifique({id:this.id,name:this.name_new,prix:this.prix_new}).then(()=>{
-                this.$emit('closeAdd');
+            service.addOptionSpecifique({id:this.id,name:this.name_new,prix:this.prix_new}).then((res)=>{
+                this.$emit('closeAdd'); 
             }).catch((error)=>{
                  this.name_error=error.response.data.errors.nameOptionSpecifique
- ? error.response.data.errors.nameOptionSpecifique[0] : '';
+                                    ? error.response.data.errors.nameOptionSpecifique[0] : '';
                  this.prix_error=error.response.data.errors.prixOptionSpecifique
- ? error.response.data.errors.prixOptionSpecifique
-[0] : '';
+                                      ? error.response.data.errors.prixOptionSpecifique
+                                                  [0] : '';
             })
         }
     }
