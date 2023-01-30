@@ -5,6 +5,7 @@ namespace App\Http\Controllers\product;
 use App\Http\Controllers\Controller;
 use App\Models\OptionSpecifique;
 use App\Models\Product;
+use App\Models\Rate;
 use Illuminate\Http\Request;
 
 
@@ -122,6 +123,26 @@ class ProductController extends Controller
             }
 
             return response()->json(['data'=>$product],200);
+    }
+
+
+     public function addrate(Request $request){
+        $rate=new Rate();
+        $rate->user_id=$request->user_id;
+        $rate->product_id=$request->id;
+        $rate->rate=$request->nbr_rate;
+        $rate->save();
+        return response()->json($rate,200);
+     }
+
+     public function Avgrate(int $id){
+        $rate_avg=Rate::where('product_id','=',$id)->avg('rate');
+        return response()->json(['data'=>$rate_avg],200);
+     }
+
+    public function getrate(){
+        $rate=Rate::all();
+        return response()->json($rate,200);
     }
 
 }
