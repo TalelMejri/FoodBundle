@@ -121,7 +121,6 @@ class ProductController extends Controller
                                                            ->where('PrixProduct','>=',$request->prix)
                                                            ->orderby($request->typeordered)->paginate(5);
             }
-
             return response()->json(['data'=>$product],200);
     }
 

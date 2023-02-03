@@ -9,10 +9,16 @@ use Illuminate\Http\Request;
 class ControllerNotification extends Controller
 {
 
-   public function getNotification($id){
-      $notification=Notification::where('user_id',$id)->where('etat',0)->get();
-      return response()->json($notification,200);
-   }
+    public function getNotification($id){
+        $notification=Notification::where('user_id',$id)->where('etat',0)->get();
+        return response()->json($notification,200);
+     }
+
+    public function getNotif(Request $request){
+        // $notification=Notification::where('user_id',$request->user()->id)->where('etat',0)->get();
+        $notification = $request->user()->notifications()->where("etat",0)->get();
+        return response()->json($notification,200);
+     }
 
    public function getAllNotification($id){
     $notification=Notification::where('user_id',$id)->orderBy('etat')->get();

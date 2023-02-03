@@ -283,7 +283,6 @@ export default{
           ],
         })
       })  
-     
       doc.save(`${Math.random()}.pdf`);
       },
       changreetat(a){

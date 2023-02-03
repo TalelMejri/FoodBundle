@@ -589,7 +589,6 @@ export default{
                 Option_for_product.push({name:v.name,prix:v.prix});
              }
           });
-
           let Option_glob_selected=[];
           this.OptionsAdded_Selected.forEach((v)=>{
             Option_glob_selected.push({name:v.nameOption});
@@ -701,6 +700,7 @@ export default{
                }
             }
         },
+
         addrate(id,nbr){
           service_product.Addrate({id:id,nbr_rate:nbr,user_id:this.store.user['id']}).then((res)=>{
               this.checkrate();
@@ -709,6 +709,7 @@ export default{
               this.productrate=[];
           })
         },
+        
         countRate(){
          for(let i=0;i<this.Products.length;i++){
             service_product.Avgrate(this.Products[i].id).then((res)=>{
