@@ -23,6 +23,7 @@
         </v-card>
          <div class="content_menu">
                <v-card elavation="7" style="padding:25px">
+                
                 <h4 class="text-center py-4">List Produits Commandés</h4>
                 <v-text-field
                     v-model="search"
@@ -35,6 +36,7 @@
                 <v-expansion-panels v-if="All_Commande==''" focusable>
                    pas  produit Commandé
                   </v-expansion-panels>
+                  
                 <v-expansion-panels v-else focusable>
                     <v-expansion-panel class="mt-5"
                     v-for="item in All_Commande"
@@ -91,6 +93,7 @@
                               </tbody>
                               </template>
                               </v-simple-table>
+                             
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <v-simple-table>
@@ -134,6 +137,7 @@
                                          >
                                       </v-select> 
                                   </td>
+                                
                                 </tr>
                               </tbody> 
                             </template>  
@@ -207,6 +211,10 @@
    </v-btn>
   </template>
  </v-snackbar>
+
+ <div ref="content">
+
+ </div>
     </div>
 </template>
 
@@ -220,6 +228,8 @@ import service_option from "@/services/GererOption/option";
 import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue";
 import { AuthStore } from "@/store/StoreAuth";
+import html2PDF from 'jspdf-html2canvas';
+import html2canvas from "html2canvas"
 import { ProductStore } from "@/store/StoreProducts";
 export default{
     created(){
@@ -263,7 +273,7 @@ export default{
     },
     methods:{
       GeneratePdf(commande){
-        const doc = new jsPDF({
+        /*const doc = new jsPDF({
           orientation:"portrait",
           unit:"in",
           format:"letter"
@@ -282,8 +292,16 @@ export default{
             [val, name, quantity],
           ],
         })
-      })  
-      doc.save(`${Math.random()}.pdf`);
+      })  */
+  const doc = new jsPDF();
+  const contentHtml = this.$refs.content.innerHTML;
+  doc.html(contentHtml, {
+    collback:function(doc){
+      doc.save("sample.pdf");
+    }
+});
+  
+      //doc.save(`${Math.random()}.pdf`);
       },
       changreetat(a){
         this.etatsidbar=a;
