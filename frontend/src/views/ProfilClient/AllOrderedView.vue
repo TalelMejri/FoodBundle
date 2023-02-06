@@ -56,8 +56,11 @@
                                   <th  class="text-left ">
                                     statu
                                   </th>
-                                  <th  class="text-left ">
-                                      Annuler
+                                  <th v-if="item.statu==1 " class="text-left ">
+                                      Supprimer
+                                  </th>
+                                  <th v-else class="text-left ">
+                                    Annuler
                                   </th>
                                   <th v-if="item.statu==1">
                                       Télecharger Commande  Pdf
@@ -134,10 +137,10 @@
                                       <v-select
                                           :items="option_current"
                                           item-text="nameOption"
+                                          label="Option"
                                          >
                                       </v-select> 
                                   </td>
-                                
                                 </tr>
                               </tbody> 
                             </template>  
@@ -212,9 +215,6 @@
   </template>
  </v-snackbar>
 
- <div ref="content">
-
- </div>
     </div>
 </template>
 
@@ -228,8 +228,8 @@ import service_option from "@/services/GererOption/option";
 import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue";
 import { AuthStore } from "@/store/StoreAuth";
-import html2PDF from 'jspdf-html2canvas';
-import html2canvas from "html2canvas"
+// import html2PDF from 'jspdf-html2canvas';
+// import html2canvas from "html2canvas"
 import { ProductStore } from "@/store/StoreProducts";
 export default{
     created(){
@@ -255,6 +255,9 @@ export default{
             nbr_panier:0,
             commande_selected:[],
             snackbar:false,
+            name_product:'',
+            prix_unit:'',
+            productChecked:[],
             pagination:{
                 curentpage:1,
                 nextpage:0,
@@ -272,37 +275,90 @@ export default{
         }
     },
     methods:{
-      GeneratePdf(commande){
-        /*const doc = new jsPDF({
-          orientation:"portrait",
-          unit:"in",
-          format:"letter"
-       });
-       doc.text('code Commande' +''+(commande.Code_Commande),0.1,0.4);
-       var total_payment="Total  :"+commande.Prix_Total+" Dt ";
-       doc.text(total_payment,7,0.4);
-       autoTable(doc, { html: '#my-table' }) 
-        commande.ligencommandes.forEach((v)=>{
-        var val= v.product_id;
-        var name=v.prix_ligne_commande;
-        var quantity=v.Quantity;
-        autoTable(doc, {
-          head: [['Product Id', 'Prix Total', 'Quantity']],
-          body: [
-            [val, name, quantity],
-          ],
+      async chercherProduct(id){
+        await service_product.findProductByIid(id).then((res)=>{
+           this.productChecked=res.data.data;
+           this.name_product=this.productChecked['nameProduct'];
+           this.prix_unit=this.productChecked['PrixProduct'];
         })
-      })  */
-  const doc = new jsPDF();
-  const contentHtml = this.$refs.content.innerHTML;
-  doc.html(contentHtml, {
-    collback:function(doc){
-      doc.save("sample.pdf");
-    }
-});
-  
-      //doc.save(`${Math.random()}.pdf`);
       },
+      GeneratePdf(commande){
+          const doc = new jsPDF();
+          doc.addImage(require('../../assets/logo.png'),'png', 2, 2, 20, 20);
+          doc.setFontSize(12);
+          doc.setFont("times", "bold");
+          doc.text('Date :',158,10);
+          doc.text('Code Commande :',158,20);
+          doc.setFont("times", "normal");
+          doc.text(commande.created_at.substr(0,10),170,10);
+          doc.text((commande.Code_Commande).toString(),192,20);
+          doc.setFontSize(25);
+          doc.setFont("times", "bold");
+          doc.setTextColor(0, 0, 0);
+          doc.text(45,40, 'BON DE COMMANDE');
+          doc.setFontSize(12);
+          doc.setFont("times", "bold");
+          doc.text('Nom :',12,60);
+          doc.text('Prénom :',12,67);
+          doc.text('Email :',12,74);
+          doc.text('Ville :',150,60);
+          doc.text('Pays :',150,67);
+          doc.text('Numéro Tlf :',150,74);
+          doc.setFont("times", "normal");
+          doc.text(commande.Nom,24,60);
+          doc.text(commande.Prenom,30,67);
+          doc.text(commande.adresse_email,26,74);
+          doc.text(commande.Ville,163,60);
+          doc.text(commande.Pays,163,67);
+          doc.text(commande.Numero_tlf,175,74);
+      
+       commande.ligencommandes.forEach((v)=>{
+        this.chercherProduct(v.product_id);
+        var prix_total_ligne_commande=v.prix_ligne_commande;
+        var quantity=v.Quantity;
+            autoTable(doc, {
+              theme:'striped',
+              headerStyles:{halign:'center'},
+              bodyStyles:{fontStyle:'bold',halign:'center'},
+              margin: { top: 90 },
+              head: [['Name Product','Prix Unit', 'Quantity', 'Prix Total']],
+              body: [
+                [this.name_product,this.prix_unit,quantity,prix_total_ligne_commande],
+              ],
+            })
+      });
+         let finalY = doc.lastAutoTable.finalY
+         doc.autoTable({
+             theme:'plain',
+              startY: finalY+2,
+              tableWidth:55,
+              margin:{left:79},
+              headerStyles:{halign:'center'},
+              bodyStyles:{halign:'center',fontStyle:'bold'},
+              head: [['Total']],
+              body: [ [commande.Prix_Total]],
+        });
+        finalY = doc.lastAutoTable.finalY
+        var writtenNumber = require('written-number');
+        let total=(writtenNumber(commande.Prix_Total, {lang: 'fr'})).toUpperCase();
+        doc.setFont("times", "bold");
+        doc.autoTable({
+              theme:'plain',
+              startY: finalY+2,
+              bodyStyles:{halign:'center',fontStyle:'bold'},
+              body: [ [total+' DINARS']],
+        });
+        doc.text('Nous apprecions votre clinetele',110,doc.internal.pageSize.height - 30,'center');
+        doc.text('si vous-avez des questions sur cette facture,n hesitez pas a nous contacter' ,110, doc.internal.pageSize.height - 20,'center');
+          var pageCount = doc.internal.getNumberOfPages();
+          for(let i = 0; i < pageCount; i++) { 
+            doc.setPage(i); 
+            let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber; 
+            doc.setFontSize(12);
+            doc.text('Page: ' + pageCurrent + '/' + pageCount,110, doc.internal.pageSize.height - 10,'center');
+          }
+        doc.save(`Food${commande.Code_Commande}.pdf`);    
+    },
       changreetat(a){
         this.etatsidbar=a;
       },

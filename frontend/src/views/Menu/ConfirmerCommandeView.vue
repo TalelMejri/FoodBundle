@@ -293,13 +293,13 @@ export default{
                 required,numeric
                },
                Prenom:{
-                  required,min: minLength(6)
+                  required,min: minLength(4)
                },
                Numero:{
                 required,numeric,min:minLength(8),max:maxLength(8)
                },
                Nom:{
-                required
+                required,max:maxLength(8)
                },
                Adresse:{
                 required
