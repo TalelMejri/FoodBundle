@@ -9,7 +9,7 @@ export default{
         return Axios.get('notif/getAllNotification/'+id);
     },
     deleteAllNotif(id){
-        return Axios.get('notif/deleteAllNotif/'+id);
+        return Axios.delete('notif/deleteAllNotif/'+id);
     },
     deleteNotification(id){
         return Axios.delete('notif/deleteNotification/'+id);

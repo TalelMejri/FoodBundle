@@ -32,7 +32,9 @@
                     </div>
                     <v-spacer></v-spacer>
                     <div class="col-lg-3">
-                       <v-icon>mdi-email</v-icon>
+                      <v-btn @click="DeleteAllNotif()">
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
                     </div>
             </v-toolbar-title>
         </v-toolbar>
@@ -200,6 +202,13 @@ export default{
                   this.$router.push('allOrderedProduct');
               })
             },
+            DeleteAllNotif(){
+              service_notif.deleteAllNotif(this.store.user['id']).then((res)=>{
+                  console.log('delete');
+                  this.getNotif();
+                  this.getNotifNotyet();
+              })
+          },
           getnotif(){
               service_notif.getAllNotification(this.store.user['id']).then((res)=>{
                  this.All_notif=res.data;
