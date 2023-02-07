@@ -15,8 +15,8 @@ class ControllerNotification extends Controller
      }
 
     public function getNotif(Request $request){
-        // $notification=Notification::where('user_id',$request->user()->id)->where('etat',0)->get();
-        $notification = $request->user()->notifications()->where("etat",0)->get();
+         $notification=Notification::where('user_id',$request->user()->id)->where('etat',0)->get();
+        //$notification = $request->user()->notifications()->where("etat",0)->get();
         return response()->json($notification,200);
      }
 
@@ -35,9 +35,6 @@ class ControllerNotification extends Controller
      return response()->json(['message'=>"Notification Not found"],404);
    }
  }
-
-
-
    public function deleteNotification($id){
     $notification=Notification::find($id);
     if($notification){
@@ -46,5 +43,10 @@ class ControllerNotification extends Controller
     }else{
         return response()->json(['message'=>"Notification Not found"],404);
     }
+   }
+
+   public function deleteAllNotif($id){
+    $notification=Notification::where('user_id','=',$id)->delete();
+    return response()->json(['data'=>$notification],200); 
    }
 }

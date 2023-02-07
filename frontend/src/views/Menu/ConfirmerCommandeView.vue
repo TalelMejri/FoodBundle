@@ -281,7 +281,7 @@ export default{
     return {
       formdata:{
                adresse_email:{
-                    required,email
+                  required,email
                },
                Ville:{
                 required

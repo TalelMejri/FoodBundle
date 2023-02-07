@@ -33,7 +33,11 @@
 
         <v-container class="mt-5 py-4">
             <v-card elavation="4 mt-5 py-5">
-                <v-sparkline
+              <Bar
+               :data="chartData"
+               :options="chartOptions"
+              />
+              <!-- <v-sparkline
                  class="mt-5 py-5"
                  :fill="fill"
                  :gradient="selectedGradient"
@@ -41,17 +45,21 @@
                  smooth="10"
                  :value="value"
                  auto-draw
-                 ></v-sparkline> 
+                 ></v-sparkline>   -->
              </v-card>
           </v-container>
     </div>
 </template>
 
 <script>
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 const gradients = [
     ['#E86325'],
   ]
-
 import service from "@/services/GererUser/GererUser"
 import service_category from "@/services/GererCategory/category"
 import service_product from "@/services/GererProduct/GererProduct"
@@ -59,7 +67,7 @@ import service_option from "@/services/GererOption/option"
 import service_command from "@/services/GererCommande/Commande"
  export default{
      name:'view',
-     mounted(){
+     mounted(){ 
         service.CoutUser().then((response)=>{
              this.countuser=response.data.data;
         });
@@ -99,13 +107,29 @@ import service_command from "@/services/GererCommande/Commande"
                 {id:3,name:' Option Global',icon:'shaker'},
                 {id:4,name:' Option Specifique',icon:'shaker-outline'},
                 {id:5,name:' Commandes',icon:'truck-delivery'}
-            ]
+            ],
+            chartData: {
+        labels: [ 'January', 'February', 'March'],
+        datasets: [
+          {
+            label: 'User',
+            backgroundColor: '#E84C03',
+            data: [0,1,this.value,25]
+          }
+        ]
+      },
+      chartOptions: {
+        responsive: true
+      }
         }
      },
      computed:{
         value(){
             return [0,1,2,this.countuser]
         }
+     },
+     components:{
+      Bar 
      }
 
  }

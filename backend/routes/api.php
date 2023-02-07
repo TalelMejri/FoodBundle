@@ -26,9 +26,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
-
 Route::group(['prefix'=>'/auth'],function(){
     Route::post('/registerUser',[RegisterUser::class,'RegisterUser']);
     Route::post('/loginUser',[LoginUser::class,'LoginUser']);
@@ -49,6 +46,7 @@ Route::group(['prefix'=>'/notif'],function(){
     Route::get('/getnotif/{id}',[ControllerNotification::class,'getNotification']);
     Route::get('/getAllNotification/{id}',[ControllerNotification::class,'getAllNotification']);
     Route::put('/changeretat/{id}',[ControllerNotification::class,'changeretat']);
+    Route::delete('/deleteAllNotif/{id}',[ControllerNotification::class,'deleteAllNotif']);
     Route::delete('/deleteNotification/{id}',[ControllerNotification::class,'deleteNotification']);
 });
 
