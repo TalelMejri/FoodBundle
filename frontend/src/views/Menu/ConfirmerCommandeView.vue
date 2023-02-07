@@ -268,6 +268,7 @@ import { required, email, minLength,numeric, maxLength } from '@vuelidate/valida
 export default{
     name:'Confirmer',
     created(){
+           this.initDonees();
            this.nbr_panier=this.store_products.Products==null ? '0' :this.store_products.Products.length;
     },
     setup(){
@@ -333,6 +334,14 @@ export default{
         }
     },
     methods:{
+      initDonees(){
+        if(this.store.isauth){
+          this.formdata.Prenom=this.store.user['name'];
+          this.formdata.Nom=this.store.user['lastname'];
+          this.formdata.adresse_email=this.store.user['email'];
+          this.formdata.Numero=this.store.user['numero_tlf'];
+        }
+      },
       testnumber(a){
         for(let i=0;i<a.length;i++){
           if((a.charAt[i]<'0')|| (a.charAt[i]>'9')){

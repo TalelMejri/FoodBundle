@@ -61,7 +61,7 @@
                   <v-spacer></v-spacer>
                   <div class="col-lg-3">
                     <v-btn @click="DeleteAllNotif()">
-                      <v-icon>mdi-email</v-icon>
+                      <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </div>
           </v-toolbar-title>
@@ -213,6 +213,8 @@
           DeleteAllNotif(){
               service_notif.deleteAllNotif(this.store.user['id']).then((res)=>{
                   console.log('delete');
+                  this.getNotif();
+                  this.getNotifNotyet();
               })
           },
              Seenotification(id){
