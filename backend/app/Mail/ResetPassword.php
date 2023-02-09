@@ -12,6 +12,9 @@ use Illuminate\Queue\SerializesModels;
 
 class ResetPassword extends Mailable
 {
+
+
+
     use Queueable, SerializesModels;
 
     /**
@@ -19,11 +22,18 @@ class ResetPassword extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public $code;
+
+    public function __construct($code)
     {
-        //
+        $this->code = $code;
     }
 
+    public function build()
+    {
+        return $this->subject(' رمز إعادة تعيين كلمة المرور ')
+                ->markdown('welcome');
+    }
     /**
      * Get the message envelope.
      *
