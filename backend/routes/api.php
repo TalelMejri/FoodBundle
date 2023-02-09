@@ -7,6 +7,7 @@ use App\Http\Controllers\commande\CommandeController;
 use App\Http\Controllers\notification\ControllerNotification;
 use App\Http\Controllers\Option\OptionController;
 use App\Http\Controllers\product\ProductController;
+use App\Http\Controllers\test;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -108,7 +109,7 @@ Route::group(['prefix'=>'/product'],function(){
     Route::get('/Avgrate/{id}',[ProductController::class,'Avgrate']);
 });
 
-
+Route::post('/test',[test::class,'send']);
 Route::middleware("auth:sanctum")->group(function(){
     Route::get('/getnotif',[ControllerNotification::class,'getNotif']);
 });
