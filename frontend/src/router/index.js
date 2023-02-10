@@ -11,8 +11,10 @@ import ConsulteMenuView from "@/views/Menu/ConsulteMenuView.vue"
 import PanierView from "@/views/Menu/PanierView.vue"
 import ConfirmerCommandeView from "@/views/Menu/ConfirmerCommandeView.vue"
 import CommandeView from "@/views/ProfilAdmin/Commande/CommandeView.vue"
-Vue.use(VueRouter)
+import forgot_password from "@/views/Auth/ResetPassword/ForgotPasswordView.vue"
+import changer_password from "@/views/Auth/ResetPassword/ChangerPasswordView.vue"
 
+Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
@@ -45,11 +47,20 @@ const routes = [
     component: login
   },
   {
+    path: '/forgot_password',
+    name: 'forgot_password',
+    component: forgot_password
+  },
+  {
+    path: '/changer_password',
+    name: 'changer_password',
+    component: changer_password
+  },
+  {
     path: '/signup',
     name: 'signup',
     component: signup
   },
-
   {
     path: '/allOrderedProduct',
     name: 'allOrderedProduct',
