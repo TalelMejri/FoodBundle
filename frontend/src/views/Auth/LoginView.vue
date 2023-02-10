@@ -56,11 +56,14 @@
                                          {{ password_error }}
                                     </small>
                                     <div class="mt-3 text-center">
-                                        <v-btn type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" value="log in">Connexion</v-btn>
+                                        <v-btn type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" value="log in" :loading="load">Connexion</v-btn>
                                         <v-btn @click="refresh()" type="button" class="mt-4 " color="gray" value="log in">Fermer</v-btn>
                                         <div class="text-center mt-3">
                                           Vous êtes nouveau ici ?<router-link to="signup" class="text-decoration-none  mx-2">  <span>S'incrire</span></router-link>
-                                      </div>
+                                        </div>
+                                        <div class="text-center mt-3">
+                                          <router-link to="forgot_password" class="text-decoration-none  mx-2">Mot de passe oublié ?</router-link>
+                                        </div>
                                     </div>
                               </form>
                               <v-snackbar
@@ -160,7 +163,8 @@ import {AuthStore} from "../../store/StoreAuth"
                 message:'',
                 snackbar: false,
                 snackbar_error:false,
-                message_error:''
+                message_error:'',
+                load:false
             }
         },
         created(){
@@ -172,7 +176,9 @@ import {AuthStore} from "../../store/StoreAuth"
         methods:{
            login(){
                 if(this.validate('email') && this.validate('password')){
+                  this.load=true;
                     authService.LoginUser(this.email,this.password).then(()=>{
+                      this.load=false;
                         const auth=AuthStore();
                         if(auth.getisadmin==1){
                             this.$router.push('dashboard');
@@ -182,6 +188,7 @@ import {AuthStore} from "../../store/StoreAuth"
                     }).catch((error)=>{
                           this.snackbar_error=true;
                           this.message_error="Utilisateur non trouvé";
+                          this.load=false;
                     })
                 }
           },

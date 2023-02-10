@@ -119,7 +119,7 @@
                         </small>
                         </div>
                                 <div class="mt-3 text-center ">
-                                    <v-btn type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="Sign Up">S'incrire</v-btn>
+                                    <v-btn :loading="load" type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="Sign Up">S'incrire</v-btn>
                                     <router-link to="/" class="text-decoration-none  mx-2"> <v-btn type="button" class="mt-4 " color="gray" value="close">Fermer</v-btn></router-link>
                                 </div>
                                 <div class="text-center mt-3">
@@ -200,6 +200,7 @@ import SideBar from "../../components/SideBar.vue"
         data(){
           return{
             checkbox: false,
+            load:false,
               name:{
                  value:'',
                  error:''
@@ -239,6 +240,7 @@ import SideBar from "../../components/SideBar.vue"
             this.photo.value =this.$refs.photo.files[0];
           },
           Rgister(){
+            this.load=true;
             service.CreateUser({
                name:this.name.value,
                photo:this.photo.value,
@@ -254,6 +256,7 @@ import SideBar from "../../components/SideBar.vue"
               this.lastname.value="";
               this.numero_tlf.value="";
               this.check.value="";
+              this.load=false;
               this.$router.push({name:"login", query: {content: 'Inscrivez-vous avec succès'}});
             }).catch((error)=>{
               this.name.error=error.response.data.errors.name ? error.response.data.errors.name[0] : '';
@@ -263,6 +266,7 @@ import SideBar from "../../components/SideBar.vue"
               this.lastname.error=error.response.data.errors.lastname ? error.response.data.errors.lastname[0] : '';
               this.numero_tlf.error=error.response.data.errors.numero_tlf ? error.response.data.errors.numero_tlf[0] : '';
               this.check.error=this.check.value==false ? 'check Agree obligatoire' : '' ;
+              this.load=false;
             })
           }
         }
