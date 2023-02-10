@@ -17,7 +17,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-
+    protected $guarded=[];
+    /*
     protected $fillable = [
         'name',
         'email',
@@ -27,6 +28,7 @@ class User extends Authenticatable
         'Photo',
         'Isadmin'
     ];
+    */
 
     public function Favorites(){
         return $this->hasMany(favorite::class);
