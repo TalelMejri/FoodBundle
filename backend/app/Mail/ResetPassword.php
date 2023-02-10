@@ -31,8 +31,8 @@ class ResetPassword extends Mailable
 
     public function build()
     {
-        return $this->subject(' رمز إعادة تعيين كلمة المرور ')
-                ->markdown('welcome');
+        return $this->subject(' Code Reset Password')
+                ->markdown('view-email');
     }
     /**
      * Get the message envelope.
