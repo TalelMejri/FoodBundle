@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Controllers\Auth\ResetPassword;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreChangerPassword;
+use App\Models\User;
+
+
+class ChangerPassword extends Controller
+{
+    public function changer_password(StoreChangerPassword $request){
+
+        $checkCode=User::where('password_token',$request->password_token)->where('email',$request->email)->firstOrFail();
+        if(!$checkCode){
+            return response(['message' => 'E-mail ou code incorrect'], 404);
+        }
+
+        if($checkCode->password_token_send_at > now()->addHour()){
+             $checkCode->password_token=Null;
+             $checkCode->password_token_send_at=Null;
+             $checkCode->save();
+             return response(['message' => 'le code des mots de passe a expiré'], 422);
+        }
+
+        $checkCode->password=bcrypt($request->password);
+        $checkCode->password_token=Null;
+        $checkCode->password_token_send_at=Null;
+        $checkCode->save();
+        return response(['message' =>'votre mot de passe a été changé'], 200);
+    }
+}
