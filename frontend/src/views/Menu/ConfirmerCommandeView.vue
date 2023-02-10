@@ -283,7 +283,7 @@ export default{
       formdata:{
                adresse_email:{
                   required,email
-               },
+               }, 
                Ville:{
                 required
                },
