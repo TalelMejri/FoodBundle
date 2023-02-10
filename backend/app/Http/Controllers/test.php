@@ -2,31 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreResPassword;
 use App\Mail\ResetPassword;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
 class test extends Controller
 {
+    //test send mail
 
-    public function send(Request $request)
+    public function send(StoreResPassword $request)
     {
-
-       /* $data = [
-            'email' => $request->email,
-            'subject' => $request->subject,
-            'bodyMessage' => $request->message
-        ];
-
-        Mail::send('welcome', $data, function($message) use ($data) {
-            $message->to($data['email']);
-            $message->subject($data['subject']);
-        });
-
-        return response()->json(['data'=>"success"],200);*/
-        $data['code'] = mt_rand(100000, 999999);
-        Mail::to($request->email)->send(new ResetPassword($data['code']));
-
+            $data['code'] = mt_rand(100000, 999999);
+            Mail::to($request->email)->send(new ResetPassword($data['code']));
+            return response()->json(['message'=>"Code Envoyer A votre email avec success"],200);
     }
 
 }
