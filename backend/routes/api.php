@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\auth\LoginUser;
 use App\Http\Controllers\Auth\RegisterUser;
+use App\Http\Controllers\Auth\ResetPassword\ChangerPassword;
+use App\Http\Controllers\Auth\ResetPassword\ForgotPassword;
 use App\Http\Controllers\category\CategoryController;
 use App\Http\Controllers\commande\CommandeController;
 use App\Http\Controllers\notification\ControllerNotification;
@@ -109,7 +111,11 @@ Route::group(['prefix'=>'/product'],function(){
     Route::get('/Avgrate/{id}',[ProductController::class,'Avgrate']);
 });
 
-Route::post('/test',[test::class,'send']);
+Route::group(['prefix'=>'/resetPassword'],function(){
+    Route::post('/forgot_password',[ForgotPassword::class,'forgot_password']);
+    Route::post('/changer_password',[ChangerPassword::class,'changer_password']);
+});
+
 Route::middleware("auth:sanctum")->group(function(){
     Route::get('/getnotif',[ControllerNotification::class,'getNotif']);
 });
