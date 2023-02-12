@@ -33,28 +33,18 @@
                                       v-model="email"
                                       name="email"
                                       label="Email"
+                                      :error-messages="email_error"
                                       type="text"
                                       placeholder="Enter Email"
-                                      @click="validate('email')"
-                                      @keyup="validate('email')"
                                     ></v-text-field>
-                                    <small v-if="email_error!=''">
-                                        {{ email_error }}
-                                    </small>
-                                   
                                     <v-text-field
                                       v-model="password"
                                       name="password"
                                       label="Password"
                                       type="password"
+                                      :error-messages="password_error"
                                       placeholder="password"
-                                      @click="validate('password')"
-                                      @keyup="validate('password')"
                                    ></v-text-field>
-
-                                   <small v-if="password_error!=''">
-                                         {{ password_error }}
-                                    </small>
                                     <div class="mt-3 text-center">
                                         <v-btn type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" value="log in" :loading="load">Connexion</v-btn>
                                         <v-btn @click="refresh()" type="button" class="mt-4 " color="gray" value="log in">Fermer</v-btn>
@@ -143,8 +133,8 @@
                  </v-content>
               </v-container>
             </div>
-            </div>
-            </div>
+          </div>
+        </div>
     </div>
 </template>
 
@@ -152,14 +142,31 @@
 import authService from "../../services/auth"
 import SideBar from "../../components/SideBar.vue"
 import {AuthStore} from "../../store/StoreAuth"
+import useVuelidate from '@vuelidate/core'
+import { required, email } from '@vuelidate/validators'
     export default{
         name:"login",
+        setup(){
+            return{
+               v$: useVuelidate() 
+            }
+        },
+        validations(){
+          return{
+            email:{
+              required,
+              email,
+
+            },
+            password:{
+              required
+            }
+          }
+        },
         data(){
             return{
                 password:'',
-                password_error:'',
                 email:'',
-                email_error:'',
                 message:'',
                 snackbar: false,
                 snackbar_error:false,
@@ -175,7 +182,12 @@ import {AuthStore} from "../../store/StoreAuth"
         },
         methods:{
            login(){
-                if(this.validate('email') && this.validate('password')){
+             this.v$.$touch();
+             if (this.v$.$invalid) {
+                this.load = false;
+                return;
+              }
+                // if(this.validate('email') && this.validate('password')){
                   this.load=true;
                     authService.LoginUser(this.email,this.password).then(()=>{
                       this.load=false;
@@ -190,34 +202,47 @@ import {AuthStore} from "../../store/StoreAuth"
                           this.message_error="Utilisateur non trouvé";
                           this.load=false;
                     })
-                }
+                // }
           },
           refresh(){
               this.$router.push('/');
               this.$router.go();
           },
-            validate(input){
-                if(input=='email'){
-                    if(this.email==""){
-                        this.email_error="Email Obligatoire";
-                    }else if( !String(this.email)
-                             .toLowerCase()
-                             .match(
-                             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-                        this.email_error = "Veuillez tapez un email valid";
-                     }else{
-                             this.email_error ="";
-                             return true;
-                     }
-                }else if(input=='password'){
-                    if(this.password==""){
-                        this.password_error="password Obligatoire";
-                    }else {
-                        this.password_error ="";
-                        return true;
-                    }
-                }
-            }
+            // validate(input){
+            //     if(input=='email'){
+            //         if(this.email==""){
+            //             this.email_error="Email Obligatoire";
+            //         }else if( !String(this.email)
+            //                  .toLowerCase()
+            //                  .match(
+            //                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
+            //             this.email_error = "Veuillez tapez un email valid";
+            //          }else{
+            //                  this.email_error ="";
+            //                  return true;
+            //          }
+            //     }else if(input=='password'){
+            //         if(this.password==""){
+            //             this.password_error="password Obligatoire";
+            //         }else {
+            //             this.password_error ="";
+            //             return true;
+            //         }
+            //     }
+            // }
+        },
+        computed:{
+          email_error(){
+            const errors=[];
+             if (!this.v$.email.$dirty) return errors;
+               !this.v$.email.required && errors.push("الرجاء ادخال اسم");
+               !this.v$.email.minLength &&
+                errors.push("الرجاء ادخال اسم بحد اقل 5 حروف");
+                return errors;
+          },
+          password_error(){
+            return "rrrror";
+          }
         },
         components:{
             SideBar

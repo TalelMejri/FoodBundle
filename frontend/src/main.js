@@ -10,6 +10,7 @@ const pinia = createPinia()
 Vue.config.productionTip = false
 
 new Vue({
+
   router,
   store,
   vuetify,

@@ -29,6 +29,11 @@ export default{
         }else{
             store.logout();
         }
-     }  
+     },  
+
+     async ExistEmail(email){
+        const response= await Axios.get('/exist/'+email);
+        return response;
+     }
 
 }

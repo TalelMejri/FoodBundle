@@ -357,12 +357,12 @@ export default{
             this.$router.push('/');
         },
         passCommande(){
-           let Info_User={
-                   name:this.formdata.Nom,prenom:this.formdata.Prenom,
-                   ville:this.formdata.Ville,pays:this.formdata.Pays,
-                   code:this.formdata.Code,email:this.formdata.adresse_email,
-                   tlf:this.formdata.Numero,adresse:this.formdata.Adresse,
-                   userid:this.store.isauth!=null ? this.store.user['id'] : null
+                  let Info_User={
+                      name:this.formdata.Nom,prenom:this.formdata.Prenom,
+                      ville:this.formdata.Ville,pays:this.formdata.Pays,
+                      code:this.formdata.Code,email:this.formdata.adresse_email,
+                      tlf:this.formdata.Numero,adresse:this.formdata.Adresse,
+                      userid:this.store.isauth!=null ? this.store.user['id'] : null
                   };
                   this.code_Commande=Math.floor(Math.random() * 99999);// nom,prenom,adresse
           service_commande.AddCommande({user:Info_User,Product:this.store_products.Products,code_Commande:this.code_Commande}).then((res)=>{

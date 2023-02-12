@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix'=>'/auth'],function(){
     Route::post('/registerUser',[RegisterUser::class,'RegisterUser']);
     Route::post('/loginUser',[LoginUser::class,'LoginUser']);
+    Route::get('/exist/{email}',[LoginUser::class,'exist_email']);
 });
 
 Route::group(['prefix'=>'/commande'],function(){
@@ -116,6 +117,6 @@ Route::group(['prefix'=>'/resetPassword'],function(){
     Route::post('/changer_password',[ChangerPassword::class,'changer_password']);
 });
 
-Route::middleware("auth:sanctum")->group(function(){
-    Route::get('/getnotif',[ControllerNotification::class,'getNotif']);
-});
+// Route::middleware("auth:sanctum")->group(function(){
+//     Route::get('/getnotif',[ControllerNotification::class,'getNotif']);
+// });
