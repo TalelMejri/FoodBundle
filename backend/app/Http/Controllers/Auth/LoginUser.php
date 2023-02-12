@@ -28,9 +28,17 @@ class LoginUser extends Controller
     public function exist_email($email){
         $user=User::where('email',$email)->first();
         if($user){
-            return response()->json(['data'=>$user],201);
-        }else{
-            return response()->json(['message'=>"Not Found"],404);
+            return response()->json([
+                'success'   => false,
+                'message'   => 'User already exists',
+                'data'      => []
+            ], 201);
+        } else {
+            return response()->json([
+                'success'   => true,
+                'message'   => 'User not exists',
+                'data'      => []
+            ]);
         }
     }
 

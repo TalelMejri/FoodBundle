@@ -30,6 +30,7 @@
                               </template>
                             </v-snackbar>
                                     <v-text-field
+                                      @change="v$.touch()"
                                       v-model="email"
                                       name="email"
                                       label="Email"
@@ -143,7 +144,7 @@ import authService from "../../services/auth"
 import SideBar from "../../components/SideBar.vue"
 import {AuthStore} from "../../store/StoreAuth"
 import useVuelidate from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
+import { required, email,minLength } from '@vuelidate/validators'
     export default{
         name:"login",
         setup(){
@@ -156,10 +157,16 @@ import { required, email } from '@vuelidate/validators'
             email:{
               required,
               email,
-
+              exists(value) {
+                if (value === "") {
+                  return true;
+                }
+                  const response = authService.ExistEmail(value);
+                  return response.status != 201 ;
+              },
             },
             password:{
-              required
+              required, minLength: minLength(6)
             }
           }
         },
@@ -234,16 +241,20 @@ import { required, email } from '@vuelidate/validators'
         computed:{
           email_error(){
             const errors=[];
-             if (!this.v$.email.$dirty) return errors;
-               !this.v$.email.required && errors.push("الرجاء ادخال اسم");
-               !this.v$.email.minLength &&
-                errors.push("الرجاء ادخال اسم بحد اقل 5 حروف");
-                return errors;
+            if (!this.v$.email.$dirty) return errors;
+             this.v$.email.required.$invalid && errors.push('email obligatoire');
+             this.v$.email.email.$invalid && errors.push('email invalid');
+             this.v$.email.exists.$invalid && errors.push('email n\'est pas exite');
+             return errors;
           },
           password_error(){
-            return "rrrror";
-          }
-        },
+            const errors=[];
+             if (!this.v$.password.$dirty) return errors;
+                 this.v$.password.required.$invalid && errors.push("Password obligatoire");
+                 this.v$.password.minLength.$invalid && errors.push("Veuillez entrer un mot de passe avec un minimum de 8 caractères");
+                 return errors;
+             }
+          },
         components:{
             SideBar
         }
