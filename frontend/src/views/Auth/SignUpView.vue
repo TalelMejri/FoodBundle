@@ -21,26 +21,21 @@
                               <div class="row">
                                  <div class="col-md-6">
                                   <v-text-field
-                                  :color="name.error!='' ? 'red': ''"
                                   name="Name"
-                                  label="Name"
-                                  :messages="name.error!='' ? name.error : ''"
-                                  :class="name.error!='' ? 'move_input' : ''"
-                                  v-model="name.value"
+                                  label="Nom"
+                                  :error-messages="name_error"
+                                  v-model="name"
                                   type="text"
-                                  
                                   placeholder="Tapez Nom"
                                 ></v-text-field>
                              
                                  </div>
                                  <div class="col-md-6">
                                   <v-text-field
-                                  :color="lastname.error!='' ? 'red': ''"
                                   name="LastName"
-                                  :messages="lastname.error!='' ? lastname.error : ''"
-                                  :class="lastname.error!='' ? 'move_input' : ''"
-                                  label="LastName"
-                                  v-model="lastname.value"
+                                  :error-messages="lastname_error"
+                                  label="Prenom"
+                                  v-model="lastname"
                                   type="text"
                                   placeholder="Tapez Prenom"
                                 ></v-text-field>
@@ -50,57 +45,55 @@
                               <div class="row">
                                 <div class="col-md-12">
                                  <v-text-field
-                                 :messages="email.error!='' ? email.error : ''"
-                                 :class="email.error!='' ? 'move_input' : ''"
-                                 :color="email.error!='' ? 'red': ''"
+                                 :error-messages="email_error"
                                  name="Email"
                                  label="Email"
                                  type="text"
-                                 v-model="email.value"
-                                 placeholder="Enter Email"
+                                 v-model="email"
+                                 placeholder="Entrer Email"
                                ></v-text-field>
+                               <small class="mx-3" style="color:red !important" v-if="email_error_final!=''">
+                                {{ email_error_final}}
+                               </small>
                                 </div>
                              </div>
                              <div class="row">
                               <div class="col-md-12">
                                 <v-text-field
-                                :messages="password.error!='' ? password.error : ''"
-                                 :class="password.error!='' ? 'move_input' : ''"
-                                :color="password.error!='' ? 'red': ''"
+                                 :error-messages="password_error"
                                   name="password"
-                                  label="Password"
+                                  label="Mot de passe"
                                   type="password"
-                                  v-model="password.value"
+                                  v-model="password"
                                   placeholder="Mot de passe"
                                ></v-text-field>
                               </div>
                            </div>
                            <div class="row">
                             <div class="col-md-12">
-                              <input    
-                                                :class="photo.error!='' ? 'move_input ': ''"
-                                                class="form-control"
-                                                 type="file" ref="photo"
-                                                 @change="uploadFile">
-                                                 <small v-if="photo.error!=''">
-                                                  {{ photo.error }}
-                                              </small>
+                              <input   
+                                   class="form-control"
+                                   :error-messages="photo_error"
+                                   type="file" ref="photo"
+                                   @change="uploadFile">
+                                 
                             </div>
+                            <small class="mx-3" style="color:red !important" v-if="photo_error!=''">
+                                {{ photo_error[0] }}
+                             </small>
                             
                             <div class="col-md-12">
                              <v-text-field
                              name="N° Phone"
-                             :messages="numero_tlf.error!='' ? numero_tlf.error : ''"
-                             :class="numero_tlf.error!='' ? 'move_input' : ''"
-                             :color="numero_tlf.error!='' ? 'red': ''" 
                              label="N° Télephone"
-                             v-model="numero_tlf.value"
+                             :error-messages="numero_tlf_error"
+                             v-model="numero_tlf"
                              type="text"
                              placeholder="+216"
                            ></v-text-field>
                             </div>
                          </div>
-                        <v-checkbox v-model="check.value" >
+                        <v-checkbox :error-messages="check_error" v-model="check" >
                           <template v-slot:label>
                             <div>
                            je suis d'accord avec le
@@ -114,9 +107,6 @@
                       
                         </v-checkbox> 
                         <div>
-                          <small  v-if="check.error!=''">
-                            {{ check.error }}
-                        </small>
                         </div>
                                 <div class="mt-3 text-center ">
                                     <v-btn :loading="load" type="submit" class="mt-4 " style="color:#fff !important" color="#E84C03" value="Sign Up">S'incrire</v-btn>
@@ -195,40 +185,79 @@
 <script>
 import service from "../../services/auth";
 import SideBar from "../../components/SideBar.vue"
+import axios from "axios";
+import { required,minLength,maxLength,numeric,email } from 'vuelidate/lib/validators'
     export default{
         name:"signup",
+        validations:{
+             photo:{
+                required,
+                typeFile(val){
+                   const regex = new RegExp('\.(gif|jpe?g|svg|png)$');
+                   return regex.test(val.type);
+                }
+             },
+             name:{
+              required,
+              minLength:minLength(4),
+              maxLength:maxLength(9)
+             },
+             check:{
+               required
+             },
+             email:{
+              email,
+              required,
+              async exists(value) {
+                if (value === "") {
+                  return true;
+                }
+                  const response=await axios.get('auth/exist/'+value);
+                  return response.status != 201 || value == "";
+              },
+             },
+             password:{
+              required,
+              minLength:minLength(6),
+              maxLength:maxLength(12),
+              containsUppercase: function(value) {
+                  return /[A-Z]/.test(value);
+              },
+              containsLowercase: function(value) {
+                  return /[a-z]/.test(value);
+              },
+              containsNumber: function(value) {
+                  return /[0-9]/.test(value);
+              },
+              containsSpecial: function(value) {
+                  return /[#?!@$%^&*-]/.test(value);
+              }
+             },
+             lastname:{
+              required,
+              minLength:minLength(4),
+              maxLength:maxLength(9)
+            },
+             numero_tlf:{
+              required,
+              numeric,
+              minLength:minLength(8),
+              maxLength:maxLength(8)
+             },
+         
+        },
         data(){
           return{
-            checkbox: false,
-            load:false,
-              name:{
-                 value:'',
-                 error:''
-              },
-              check:{
-                 value:0,
-                 error:''
-             },
-              email:{
-                 value:'',
-                 error:''
-              },
-              password:{
-                 value:'',
-                 error:''
-              },
-              lastname:{
-                 value:'',
-                 error:''
-              },
-              numero_tlf:{
-                 value:'',
-                 error:''
-              },
-              photo:{
-                 value:'',
-                 error:''
-              },
+             checkbox: false,
+             load:false,
+             name:'',
+             check:'',
+             email:'',
+             email_error_final:'',
+             password:'',
+             lastname:'',
+             numero_tlf:'',
+             photo:''
           }
         },
         components:{
@@ -237,42 +266,107 @@ import SideBar from "../../components/SideBar.vue"
         methods:{
           uploadFile(){
             //this.photo.value =e.target.files[0];
-            this.photo.value =this.$refs.photo.files[0];
+            this.photo =this.$refs.photo.files[0];
           },
           Rgister(){
+            this.$v.$touch();
+             if (this.$v.$invalid) {
+                this.load = false;
+                return;
+              }
             this.load=true;
             service.CreateUser({
-               name:this.name.value,
-               photo:this.photo.value,
-               email:this.email.value,
-               password:this.password.value,
-               lastname:this.lastname.value,
-               numero_tlf:this.numero_tlf.value
+               name:this.name,
+               photo:this.photo,
+               email:this.email,
+               password:this.password,
+               lastname:this.lastname,
+               numero_tlf:this.numero_tlf
             }).then((response)=>{
-              this.name.value="";
-              this.photo.value="";
-              this.email.value="";
-              this.password.value="";
-              this.lastname.value="";
-              this.numero_tlf.value="";
-              this.check.value="";
+              this.name="";
+              this.photo="";
+              this.email="";
+              this.password="";
+              this.lastname="";
+              this.numero_tlf="";
+              this.check="";
               this.load=false;
               this.$router.push({name:"login", query: {content: 'Inscrivez-vous avec succès'}});
             }).catch((error)=>{
-              this.name.error=error.response.data.errors.name ? error.response.data.errors.name[0] : '';
-              this.photo.error=error.response.data.errors.Photo ? error.response.data.errors.Photo[0] : '';
-              this.email.error=error.response.data.errors.email ? error.response.data.errors.email[0] : '';
-              this.password.error=error.response.data.errors.password ? error.response.data.errors.password[0] : '';
-              this.lastname.error=error.response.data.errors.lastname ? error.response.data.errors.lastname[0] : '';
-              this.numero_tlf.error=error.response.data.errors.numero_tlf ? error.response.data.errors.numero_tlf[0] : '';
-              this.check.error=this.check.value==false ? 'check Agree obligatoire' : '' ;
+              // this.name.error=error.response.data.errors.name ? error.response.data.errors.name[0] : '';
+              // this.photo.error=error.response.data.errors.Photo ? error.response.data.errors.Photo[0] : '';
+              // this.email_error_final=error.response.data.errors.email ? error.response.data.errors.email[0] : '';
+              // this.password.error=error.response.data.errors.password ? error.response.data.errors.password[0] : '';
+              // this.lastname.error=error.response.data.errors.lastname ? error.response.data.errors.lastname[0] : '';
+              // this.numero_tlf.error=error.response.data.errors.numero_tlf ? error.response.data.errors.numero_tlf[0] : '';
+              // this.check.error=this.check.value==false ? 'check Agree obligatoire' : '' ;
               this.load=false;
             })
+          }
+        },
+        computed:{
+          photo_error(){
+            const errors=[];
+            if (!this.$v.photo.$dirty) return errors;
+             !this.$v.photo.required && errors.push('image obligatoire');
+             !this.$v.photo.typeFile && errors.push('image doit étre de type ( jpg,jpeg,png,svg,gif) ');
+             return errors;
+          },
+          name_error(){
+            const errors=[];
+            if (!this.$v.name.$dirty) return errors;
+             !this.$v.name.required && errors.push('Nom obligatoire');
+             !this.$v.name.maxLength && errors.push('Veuillez entrer Nom avec un maximum de 9 caractères');
+             !this.$v.name.minLength && errors.push('Veuillez entrer Nom avec un minimum de 4 caractères');
+             return errors;
+          },
+          lastname_error(){
+            const errors=[];
+             if (!this.$v.lastname.$dirty) return errors;
+             !this.$v.lastname.required && errors.push('Prenom obligatoire');
+             !this.$v.lastname.maxLength && errors.push('Veuillez entrer Prenom avec un maximum de 9 caractères');
+             !this.$v.lastname.minLength && errors.push('Veuillez entrer Prenom avec un minimum de 4 caractères');
+             return errors;
+          },
+         email_error(){
+            const errors=[];
+             if (!this.$v.email.$dirty) return errors;
+             !this.$v.email.required && errors.push('email obligatoire');
+             !this.$v.email.email && errors.push('email invalid');
+             !this.$v.email.exists && errors.push('email est exite');
+             return errors;
+         },
+            password_error(){
+            const errors=[];
+             if (!this.$v.password.$dirty) return errors;
+             !this.$v.password.required && errors.push('un mot de passe obligatoire');
+             !this.$v.password.maxLength && errors.push('Veuillez entrer un mot de passe avec un maximum de 12 caractères');
+             !this.$v.password.minLength && errors.push('Veuillez entrer un mot de passe avec un minimum de 6 caractères');
+             !this.$v.password.containsUppercase && errors.push('le mot de passe doit contenir des majuscules');
+             !this.$v.password.containsLowercase && errors.push('le mot de passe doit contenir des minuscule');
+             !this.$v.password.containsNumber && errors.push('le mot de passe doit contenir des numbers');
+             !this.$v.password.containsSpecial && errors.push('le mot de passe doit contenir d\'un caractére spécial');
+             return errors;
+            },
+
+          numero_tlf_error(){
+             const errors=[];
+             if (!this.$v.numero_tlf.$dirty) return errors;
+             !this.$v.numero_tlf.required && errors.push('numero obligatoire');
+             !this.$v.numero_tlf.maxLength && errors.push('Veuillez entrer numero avec un maximum de 8 number');
+             !this.$v.numero_tlf.minLength && errors.push('Veuillez entrer numero avec un minimum de 8 number');
+             !this.$v.numero_tlf.numeric && errors.push('numero tlf doit etre entier');
+             return errors;
+          },
+          check_error(){
+              const errors=[];
+             if (!this.$v.check.$dirty) return errors;
+                !this.$v.check.required && errors.push('check obligatoire');
+             return errors;
           }
         }
     }
 </script>
-
 
 <style>
 .popup-below {

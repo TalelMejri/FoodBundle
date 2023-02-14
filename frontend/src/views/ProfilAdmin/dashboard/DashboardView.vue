@@ -201,6 +201,7 @@
             return{
                 etatsidbar:false,
                 show_all:true,
+                snackbar:false,
                 admin_dashboard:true,
                 snackbar:false,
                 ViewCurrent:'state',

@@ -14,49 +14,51 @@
                              <v-card-text>
                              <form  @submit.prevent="changer_password()">
                                     <v-text-field
-                                      v-model="email.value"
+                                      v-model="email"
+                                      :error-messages="email_error"
                                       name="email"
                                       label="Email"
                                       type="text"
-                                      placeholder="Enter Email"
+                                      placeholder="Entrer Email"
                                     ></v-text-field>
-                                    <small color="red" v-if="email.error!=''">
-                                        {{ email.error }}
+                                    <small style="color:red" v-if="email__error!=''">
+                                      {{ email__error }}
                                    </small>
+                                  
                                     <v-text-field
-                                    v-model="password.value"
+                                    v-model="password"
+                                    :error-messages="password_error"
                                     name="password"
-                                    label="Password"
+                                    label="Mot de passe"
                                     type="password"
-                                    placeholder="Enter Password"
+                                    placeholder="Entrer Mot de passe"
                                   ></v-text-field>
-                                  <small color="red" v-if="password.error!=''">
-                                    {{ password.error }}
-                                  </small>
+                                 
                                   <v-text-field
                                         name="Confirme"
+                                        :error-messages="confirme_error"
                                         label="Confirme Password"
                                         type="password"
-                                        v-model="v$.confirme.$model"
-                                        placeholder="Enter Confirme Password"
+                                        v-model="confirme"
+                                        placeholder="Entrer Confirme Mot de passe"
                                   ></v-text-field>
-                                  <div class="input-errors" v-for="(error, index) of v$.confirme.$errors" :key="index">
-                                    <div class="error">{{ error.$message }}</div>
-                                </div>
+                                 
                                   <div class="ma-auto" style="max-width: 260px">
                                     <p>Code </p>
                                     <v-otp-input
-                                      v-model="code.value"
+                                      v-model="code"
+                                       :error-messages="code_error"
                                         type="number"
                                         length="6"
                                         color="#E84C03"
                                     ></v-otp-input>
-                                    <small color="red" v-if="code.error!=''">
-                                        {{ code.error }}
-                                      </small>
+                                    <small style="color:red" v-if="code_error!=''">
+                                       {{ code_error[0] }}
+                                    </small>
                                   </div>
                                     <div class="mt-3 text-center">
-                                           <v-btn   :disabled="v$.confirme.$invalid" :loading="load" type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" >
+                                      <!-- :disabled="v$.confirm" -->
+                                           <v-btn :loading="load" type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" >
                                               Changer
                                             </v-btn>
                                         <v-btn @click="refresh()" type="button" class="mt-4 " color="gray" value="log in">Fermer</v-btn>
@@ -145,63 +147,77 @@
 </template>
 
 <script>
-import useVuelidate from '@vuelidate/core'
-import { required, sameAs, minLength } from '@vuelidate/validators'
+import { required, sameAs,minLength,numeric,email } from 'vuelidate/lib/validators'
 import service_reset_password from "@/services/ResetPassword/reset_password.js"
+import axios from "axios";
 import SideBar from "@/components/SideBar.vue"
     export default{
         name:"changer_password",
-        setup(){
-        return{
-           v$: useVuelidate() 
-        }
-    },
-        validations() {
-         return {
+        validations: {
+            email:{
+              required,
+              email,
+              async exists(value) {
+                if (value === "") {
+                  return true;
+                }
+                  const response=await axios.get('auth/exist/'+value);
+                  return response.status == 201 || value == "";
+              },
+            },
+            password:{
+              required,minLength:minLength(6)
+            },
             confirme :{
                 required,
-                sameAs: sameAs(this.password.value),
-             }  
-        }
+                sameAs: sameAs('password'),
+             },
+             code:{
+              required,
+              numeric,
+              async exist(val){
+                if (val === "") {
+                  return true;
+                }
+                  const response=await axios.get('resetPassword/exist_code/'+val);
+                  return response.status == 201 || val == "";
+              }
+             }
     },
         data(){
             return{
-             email:{
-                value:'',
-                error:''
-             },
-             password:{
-                value:'',
-                error:''
-             },
-             code:{
-                value:'',
-                error:''
-             },
+             email:'',
+             password:'',
+             code:'',
              confirme:'',
+             code__error:'',
+             email__error:'',
              message_success:'',
              snackbar:false,
              load:false
             }
         },
-        created(){
-                
-        },
         methods:{
             changer_password(){
+              this.$v.$touch();
+              if (this.$v.$invalid) {
+                this.load = false;
+                return;
+              }
                 this.load=true;
-                service_reset_password.ChangerPassword({email:this.email.value,password:this.password.value,password_token:this.code.value}).then((res)=>{
+                service_reset_password.ChangerPassword({email:this.email,password:this.password,password_token:this.code}).then((res)=>{
                    this.message_success=res.data.message;
-                   this.code.error='';
-                   this.password.error='';
-                   this.email.error='';
+                   this.$router.push('/login');
+                   /*this.code='';
+                   this.password='';
+                   this.email='';*/
                    this.snackbar=true;
                    this.load=false;
                 }).catch((error)=>{
                     this.load=false;
-                    this.code.error=error.response.data.errors.password_token ? error.response.data.errors.password_token[0] : '';
-                    this.password.error=error.response.data.errors.password ? error.response.data.errors.password[0] : '';
-                    this.email.error=error.response.data.errors.email ? error.response.data.errors.email[0] : '';
+                    //this.code__error=error.response.data.errors.password_token ? error.response.data.errors.password_token[0] : '';
+                    // this.password.error=error.response.data.errors.password ? error.response.data.errors.password[0] : '';
+                    //this.email__error=error.response.data.errors.email ? error.response.data.errors.email[0] : '';
                 })
             },
             refresh(){
@@ -211,6 +227,38 @@ import SideBar from "@/components/SideBar.vue"
         },
         components:{
             SideBar
+        },
+        computed:{
+           email_error(){
+            const errors=[];
+            if(!this.$v.email.$dirty) return errors;
+            !this.$v.email.required && errors.push('email obligatoire');
+            !this.$v.email.email && errors.push('email invalid');
+            !this.$v.email.exists && errors.push('email n\'est pas exite');
+            return errors;
+           },
+           password_error(){
+            const errors=[];
+            if(!this.$v.password.$dirty) return errors;
+            !this.$v.password.required && errors.push('mot de passe obligatoire');
+            !this.$v.password.minLength && errors.push('Veuillez entrer un mot de passe avec un minimum de 8 caractères');
+            return errors;
+           },
+           confirme_error(){
+            const errors=[];
+            if(!this.$v.confirme.$dirty) return errors;
+            !this.$v.confirme.required && errors.push('confirme mot de passe obligatoire');
+            !this.$v.confirme.sameAs && errors.push('confirme mot de passe doit étre identique que le mot de passe');
+            return errors;
+           },
+           code_error(){
+            const errors=[];
+            if(!this.$v.code.$dirty) return errors;
+            !this.$v.code.required && errors.push('code obligatoire');
+            !this.$v.code.numeric && errors.push('doit étre entier');
+            !this.$v.code.exist && errors.push('code incorrect');
+            return errors;
+           }
         }
     }
 </script>

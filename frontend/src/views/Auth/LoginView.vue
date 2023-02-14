@@ -30,7 +30,7 @@
                               </template>
                             </v-snackbar>
                                     <v-text-field
-                                      @change="v$.touch()"
+                                     @change="$v.$touch()"
                                       v-model="email"
                                       name="email"
                                       label="Email"
@@ -41,7 +41,7 @@
                                     <v-text-field
                                       v-model="password"
                                       name="password"
-                                      label="Password"
+                                      label="Mot de passe"
                                       type="password"
                                       :error-messages="password_error"
                                       placeholder="password"
@@ -140,35 +140,28 @@
 </template>
 
 <script>
+import axios from "axios";
 import authService from "../../services/auth"
 import SideBar from "../../components/SideBar.vue"
 import {AuthStore} from "../../store/StoreAuth"
-import useVuelidate from '@vuelidate/core'
-import { required, email,minLength } from '@vuelidate/validators'
+import { required, email,minLength } from 'vuelidate/lib/validators'
     export default{
         name:"login",
-        setup(){
-            return{
-               v$: useVuelidate() 
-            }
-        },
-        validations(){
-          return{
+        validations:{
             email:{
               required,
               email,
-              exists(value) {
+              async exists(value) {
                 if (value === "") {
                   return true;
                 }
-                  const response = authService.ExistEmail(value);
-                  return response.status != 201 ;
+                  const response=await axios.get('auth/exist/'+value);
+                  return response.status == 201 || value == "";
               },
             },
             password:{
               required, minLength: minLength(6)
             }
-          }
         },
         data(){
             return{
@@ -189,8 +182,8 @@ import { required, email,minLength } from '@vuelidate/validators'
         },
         methods:{
            login(){
-             this.v$.$touch();
-             if (this.v$.$invalid) {
+             this.$v.$touch();
+             if (this.$v.$invalid) {
                 this.load = false;
                 return;
               }
@@ -241,17 +234,17 @@ import { required, email,minLength } from '@vuelidate/validators'
         computed:{
           email_error(){
             const errors=[];
-            if (!this.v$.email.$dirty) return errors;
-             this.v$.email.required.$invalid && errors.push('email obligatoire');
-             this.v$.email.email.$invalid && errors.push('email invalid');
-             this.v$.email.exists.$invalid && errors.push('email n\'est pas exite');
+            if (!this.$v.email.$dirty) return errors;
+             !this.$v.email.required && errors.push('email obligatoire');
+             !this.$v.email.email && errors.push('email invalid');
+             !this.$v.email.exists && errors.push('email n\'est pas exite');
              return errors;
           },
           password_error(){
             const errors=[];
-             if (!this.v$.password.$dirty) return errors;
-                 this.v$.password.required.$invalid && errors.push("Password obligatoire");
-                 this.v$.password.minLength.$invalid && errors.push("Veuillez entrer un mot de passe avec un minimum de 8 caractères");
+             if (!this.$v.password.$dirty) return errors;
+                 !this.$v.password.required  && errors.push("Password obligatoire");
+                 !this.$v.password.minLength && errors.push("Veuillez entrer un mot de passe avec un minimum de 8 caractères");
                  return errors;
              }
           },

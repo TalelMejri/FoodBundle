@@ -256,6 +256,7 @@ export default{
             search:'',
             namec:'',
             types:[],
+            snackbar:false,
             addproduct:false,
             pagination:{
               next_page:0,

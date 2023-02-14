@@ -9,20 +9,21 @@
                        <v-flex xs12 sm8 md4>
                           <v-card class="elevation-12">
                              <v-toolbar dark color="#E84C03">
-                                <v-toolbar-title >Forgot Password</v-toolbar-title>
+                                <v-toolbar-title >Mot de passe oublié</v-toolbar-title>
                              </v-toolbar>
                              <v-card-text>
                              <form  @submit.prevent="CheckEmail()">
                                     <v-text-field
-                                      v-model="email.value"
+                                      v-model="email"
+                                      :error-messages="email_error"
                                       name="email"
                                       label="Email"
                                       type="text"
                                       placeholder="Enter Email"
                                     ></v-text-field>
-                                    <small color="red" v-if="email.error!=''">
+                                    <!-- <small color="red" v-if="email.error!=''">
                                          {{ email.error }}
-                                    </small>
+                                    </small> -->
                                     <div class="mt-3 text-center">
                                            <v-btn :loading="load" type="submit" class="mt-4 mx-2" style="color:#fff !important" color="#E84C03" value="log in">
                                               Confirmer
@@ -47,7 +48,7 @@
                      v-bind="attrs"
                      @click="snackbar = false"
                    >
-                     Close
+                     fermer
                    </v-btn>
                  </template>
                </v-snackbar>
@@ -114,34 +115,50 @@
 
 <script>
 import service_reset_password from "@/services/ResetPassword/reset_password.js"
+import axios from "axios";
 import SideBar from "@/components/SideBar.vue"
+import { required, email } from 'vuelidate/lib/validators'
     export default{
         name:"forgot_password",
+         validations:{
+             email:{
+               required,
+               email,
+               async exists(value) {
+                if (value === "") {
+                  return true;
+                }
+                  const response=await axios.get('auth/exist/'+value);
+                  return response.status == 201 || value == "";
+              },
+         
+          }
+        },
+      
         data(){
             return{
-             email:{
-                value:'',
-                error:''
-             },
+             email:'',
              message_success:'',
              snackbar:false,
              load:false
             }
         },
-        created(){
-                
-        },
         methods:{
             CheckEmail(){
-                this.load=true;
-                service_reset_password.ForgotPassword({email:this.email.value}).then((res)=>{
+              this.load=true;
+              this.$v.$touch();
+             if (this.$v.$invalid) {
+                this.load = false;
+                return;
+              }
+                service_reset_password.ForgotPassword({email:this.email}).then((res)=>{
                    this.message_success=res.data.message;
                    this.snackbar=true;
                    this.load=false;
-                   this.email.error='';
+                  // this.email.error='';
                 }).catch((error)=>{
                     this.load=false;
-                    this.email.error=error.response.data.errors.email ? error.response.data.errors.email[0] : '';
+                    //this.email.error=error.response.data.errors.email ? error.response.data.errors.email[0] : '';
                 })
             },
             refresh(){
@@ -149,9 +166,20 @@ import SideBar from "@/components/SideBar.vue"
               this.$router.go();
           },
         },
+        computed:{
+            email_error(){
+               const errors=[];
+               if(!this.$v.email.$dirty) return errors;
+               !this.$v.email.required && errors.push('email obligatoire');
+               !this.$v.email.email && errors.push('email invalid');
+               !this.$v.email.exists && errors.push('email n\'est pas exite');
+               return errors; 
+            }
+        },
         components:{
             SideBar
-        }
+        },
+
     }
 </script>
 
