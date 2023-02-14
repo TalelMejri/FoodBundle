@@ -115,6 +115,7 @@ Route::group(['prefix'=>'/product'],function(){
 Route::group(['prefix'=>'/resetPassword'],function(){
     Route::post('/forgot_password',[ForgotPassword::class,'forgot_password']);
     Route::post('/changer_password',[ChangerPassword::class,'changer_password']);
+    Route::get('/exist_code/{code}',[ChangerPassword::class,'exist_code']);
 });
 
 // Route::middleware("auth:sanctum")->group(function(){
