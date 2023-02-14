@@ -72,6 +72,9 @@
           <div class="ma-5 pa-5" id="menu">
             <v-container >
                 <h2 class="text-center mb-5">Notre Menu</h2>
+                <div  class="row">
+
+                </div>
                <div class="row">
                 <v-hover v-for="menu in All_Menu" :key="menu.id"  v-slot="{ hover }">
                 <div class="col-lg-4">

@@ -10,14 +10,14 @@
               <router-link style="text-decoration:none;padding:0" to="/">
                 <a href="#home">
                   <v-icon   class="icon">mdi-home</v-icon>
-                  <span  class="nav-item">Domicile</span>
+                  <span  class="nav-item">Accueil</span>
                 </a>
             </router-link>
           </li>
           <li v-else>
             <a href="#home">
               <v-icon   class="icon">mdi-home</v-icon>
-              <span  class="nav-item"> Domicile</span>
+              <span  class="nav-item"> Accueil</span>
             </a>
           </li>
           <li>
