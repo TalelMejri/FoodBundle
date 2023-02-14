@@ -14,14 +14,13 @@
                       <div class="col-md-6">
                         <v-text-field
                          name="Name"
-                         v-model="v$.formdata.name_food.$model"
+                         :error-messages="name_error"
+                         v-model="formdata.name_food"
                          label="Name Food"
                          type="text"
                          placeholder="Enter Name"
                       ></v-text-field>
-                      <div class="input-errors" v-for="(error, index) of v$.formdata.name_food.$errors" :key="index">
-                        <div class="error">{{ error.$message }}</div>
-                    </div>
+                     
                     </div>
               <div class="col-md-6">
                    <v-select
@@ -29,7 +28,8 @@
                       @change="chercherId"
                       item-text="name"
                       item-value="id"
-                      v-model="select_id"
+                      :error-messages="category_error"
+                      v-model="formdata.select_id"
                       label="Category"
                   ></v-select>
               </div>
@@ -39,18 +39,18 @@
                 <v-text-field
                     name="Prix"
                     label="Prix Food"
-                    v-model="v$.formdata.prix_food.$model"
+                    :error-messages="prix_produit_error"
+                    v-model="formdata.prix_food"
                     type="text"
                     placeholder="Enter Prix"
                  ></v-text-field>
-                 <div class="input-errors" v-for="(error, index) of v$.formdata.prix_food.$errors" :key="index">
-                  <div class="error">{{ error.$message }}</div>
-              </div>
+                 
             </div>
           <div class="col-md-6">
              <v-text-field
                  name="file"
                  id="file"
+                 :error-messages="file_error"
                  label="File Product"
                  @change="base64()"
                  type="file"
@@ -103,8 +103,9 @@
           <div class="mx-5 px-5">
             <v-text-field
             name="prix"
-            label="prix "
+            label="prix"
             type="text"
+            :error-messages="prix_error"
             v-model="prix"
             placeholder="Enter Prix"
           ></v-text-field>
@@ -139,7 +140,8 @@
          </div>
         </div>
         <div class="text-center mt-5 ">
-            <v-btn :disabled="v$.formdata.$invalid" type="submit" style="color:#fff !important" color="#E84C03" class="mx-2">
+          <!-- :disabled="v$.formdata.$invalid" -->
+            <v-btn  type="submit" style="color:#fff !important" color="#E84C03" class="mx-2">
                 Ajouter Produit
            </v-btn>
            <v-btn @click="close_add()"  style="color:#000 !important" color="gray">
@@ -153,8 +155,7 @@
 </template>
 
 <script>
-import useVuelidate from '@vuelidate/core'
-import { required,numeric } from '@vuelidate/validators'
+import { required,numeric }   from 'vuelidate/lib/validators'
 import service from "@/services/GererProduct/GererProduct";
 import service_option from "@/services/GererOption/option"
 import service_category from "@/services/GererCategory/category"
@@ -166,22 +167,28 @@ export default{
             }
         })
     },
-    setup(){
-        return{
-           v$: useVuelidate() 
-        }
-    },
-    validations(){
-       return{
+    validations:{
         formdata:{
-        name_food:{
-          required
-        },
-        prix_food:{
-          required,numeric
-        },
-      }
-       }
+          name_food:{
+             required
+         },
+         prix_food:{
+             required,
+             numeric
+         },
+         select_id:{
+             required,
+         },
+          file_food:{
+                required,
+                typeFile(val){
+                   const tab_ext_dispo=['jpg','gif','png','svg','jpeg'];
+                   const extention=val.split(';')[0].split('/')[1];
+                   return tab_ext_dispo.find((v)=>v==extention) ? true : false ;
+                }
+             },
+      },
+      prix:required
     },
     data(){
         return{ 
@@ -196,10 +203,12 @@ export default{
          formdata:{
           name_food:'',
           prix_food:'',
+          select_id:'',
+          file_food:'',
          },
-         select_id:0,
          id_category:0,
-         file_food:'',
+         load:false,
+         //file_food:'',
          dialog:false,
          current_item:'',
          snackbar:false
@@ -217,15 +226,15 @@ export default{
             }
         },
         base64(){
-            const filee = document.querySelector("#file").files[0];
+            const file = document.querySelector("#file").files[0];
             const reader = new FileReader();
             reader.onloadend = () => {
-             this.file_food = reader.result;
+             this.formdata.file_food = reader.result;
            };
-           reader.readAsDataURL(filee);
+           reader.readAsDataURL(file);
         },
         chercherId(){
-          service_option.getOptionByIdCategory({id:this.select_id}).then((response)=>{
+          service_option.getOptionByIdCategory({id:this.formdata.select_id}).then((response)=>{
                 this.Option_food=response.data.data;
            })
         },
@@ -235,26 +244,66 @@ export default{
                 this.prix=0;
           },
         Add_Product(){
+             this.$v.$touch();
+             if (this.$v.$invalid) {
+                this.load = false;
+                return;
+              }
+              this.load=true;
                service.Add_Product({
                  'name_product':this.formdata.name_food,
-                 'file':this.file_food,
+                 'file':this.formdata.file_food,
                  'options':this.items,
-                 'idCategory':this.select_id,
+                 'idCategory':this.formdata.select_id,
                  'prixFood':this.formdata.prix_food
                }).then((res)=>{
                 this.formdata.name_food="";
-                this.file_food="";
+                this.formdata.file_food="";
                 this.items=[];
-                this.select_id=0;
+                this.formdata.select_id='';
                 this.total_Prix=0;
+                this.load=false;
                 this.$emit("retourn_consulte");
                }).catch((error)=>{
                   console.log("error");
+                  this.load=false;
                })
         }
     },
-
     computed:{
+        name_error(){
+            const errors=[];
+              if (!this.$v.formdata.name_food.$dirty) return errors;
+                !this.$v.formdata.name_food.required && errors.push('name obligatoire');
+                return errors;
+            },
+            category_error(){
+              const errors=[];
+              if (!this.$v.formdata.select_id.$dirty) return errors;
+                !this.$v.formdata.select_id.required && errors.push('Categorie obligatoire');
+                return errors;
+            },
+            prix_produit_error(){
+              const errors=[];
+              if (!this.$v.formdata.prix_food.$dirty) return errors;
+                !this.$v.formdata.prix_food.required && errors.push('Prix obligatoire');
+                !this.$v.formdata.prix_food.numeric && errors.push('Prix doit etre numerique');
+                return errors;
+            },
+            file_error(){
+              const errors=[];
+            if (!this.$v.formdata.file_food.$dirty) return errors;
+                  !this.$v.formdata.file_food.required && errors.push('image obligatoire');
+                   !this.$v.formdata.file_food.typeFile && errors.push('image doit étre de type ( jpg,jpeg,png,svg,gif) ');
+             return errors;
+            },
+            prix_error(){
+                const errors=[];
+                if (!this.$v.prix.$dirty) return errors;
+                   !this.$v.prix.required && errors.push('prix obligatoire');
+                   !this.$v.prix.numeric && errors.push('prix doit etre numerique ');
+                return errors;
+            }
         /*total_Prix(){
             let total=0;
             for(let i=0;i<this.Option_food.length;i++){

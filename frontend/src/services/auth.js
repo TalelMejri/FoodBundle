@@ -31,9 +31,8 @@ export default{
         }
      },  
 
-     async ExistEmail(email){
-        const response= await Axios.get('auth/exist/'+email);
-        return response;
+     ExistEmail(email){
+        return  Axios.get('auth/exist/'+email);
      }
 
 }
