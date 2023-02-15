@@ -89,5 +89,21 @@ class CategoryController extends Controller
         }
       }
 
+      public function exist_name($name){
+        $categoery=Category::where('name',$name)->first();
+        if($categoery){
+            return response()->json([
+                'success'   => false,
+                'message'   => 'name already exists',
+                'data'      => []
+            ], 201);
+        } else {
+            return response()->json([
+                'success'   => true,
+                'message'   => 'name not exists',
+                'data'      => []
+            ]);
+        }
+    }
 
 }
