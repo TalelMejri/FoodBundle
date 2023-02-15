@@ -142,6 +142,7 @@
                                    <v-card-actions class="justify-end">
                                      <v-btn 
                                        text
+                                       :loading="load"
                                        @click="deleteProduct(item_selected.id)"
                                      >Supprimer</v-btn>
                                      <v-btn
@@ -211,6 +212,21 @@
                      </v-btn>
                   </div>
                   <v-snackbar
+                  v-model="snackbar_update"
+                >
+                   Modifier avec succès
+                  <template v-slot:action="{ attrs }">
+                    <v-btn
+                      color="indigo"
+                      text
+                      v-bind="attrs"
+                      @click="snackbar_update = false"
+                    >
+                      Fermer
+                    </v-btn>
+                  </template>
+                </v-snackbar>
+                  <v-snackbar
                   v-model="snackbar"
                 >
                 Supprimer avec succès
@@ -225,6 +241,22 @@
                     </v-btn>
                   </template>
                 </v-snackbar>
+
+                <v-snackbar
+                v-model="snackbar_add_option"
+              >
+              Option ajouté avec succès
+                <template v-slot:action="{ attrs }">
+                  <v-btn
+                    color="indigo"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar_add_option = false"
+                  >
+                    Fermer
+                  </v-btn>
+                </template>
+              </v-snackbar>
          </v-card>
         </div>
     </div>
@@ -269,8 +301,11 @@ export default{
             id_current:0,
             SelectedDeleteOption:[],
             Products:[],
+            load:false,
             option_selected:[],
+            snackbar_add_option:false,
             dialogOptionedit:false,
+            snackbar_update:false,
             name_edit:'',
             UpdateProduct:false,
             addOption:false,
@@ -287,11 +322,16 @@ export default{
         this.dialog=true;
       },
       deleteProduct(id){
+        this.load=true;
         service.deleteProduct(id).then(()=>{
+            this.load=false;
             this.item_selected=[];
             this.dialog=true;
             this.snackbar=true;
             this.FetchData();
+        }).catch((error)=>{
+          console.log(error);
+          this.load=false;
         })
       },
       editIndiceDialog(initIndice){
@@ -333,6 +373,7 @@ export default{
 
       retourn_consulte_from_update(){
         this.UpdateProduct=false;
+        this.snackbar_update=true;
         this.FetchData();
       },
       retourn_consulte(){
@@ -341,6 +382,7 @@ export default{
       },
       closeAdd(){
           this.addOption=false;
+          this.snackbar_add_option=true;
           this.FetchData();
       },
       FetchData(){

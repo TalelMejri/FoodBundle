@@ -21,7 +21,7 @@
       </div>
         <div v-else>
           <v-card elavation="7" style="padding:25px">
-          <h4 class="text-center py-4">List Categories</h4>
+          <h4 class="text-center py-4">List des Categories</h4>
                 <div class="row gap-4 p-5 mt-3">
                     <div class="col-lg-3 mx-2 text-center">
                       <v-text-field
@@ -87,7 +87,7 @@
             </tbody>
           <tbody v-else-if="categories==''">
             <tr >
-              <td colspan="6" class="text-center">No data available</td>
+              <td colspan="6" class="text-center">Pas de données disponibles</td>
             </tr>
           </tbody>
           <tbody v-else>
@@ -153,19 +153,20 @@
                  <v-toolbar
                    color="danger"
                    dark
-                 >Delete Category</v-toolbar>
+                 >Supprimer Categorie</v-toolbar>
                  <v-card-text>
                    <div class="text-h2 pa-12">{{item_selected.name}}</div>
                  </v-card-text>
                  <v-card-actions class="justify-end">
                    <v-btn 
                      text
+                     :loading="load"
                      @click="deleteCat(item_selected.id)"
-                   >Delete</v-btn>
+                   >Supprimer</v-btn>
                    <v-btn
                    text
                    @click="dialog=false"
-                 >close</v-btn>
+                 >fermer</v-btn>
                  </v-card-actions>
                </v-card>
              </template>
@@ -173,7 +174,7 @@
         <v-snackbar
             v-model="snackbar"
         >
-         Delete Completed With Success
+        Supprimer avec succès
         <template v-slot:action="{ attrs }">
          <v-btn
            color="pink"
@@ -181,7 +182,7 @@
               v-bind="attrs"
               @click="snackbar = false"
          >
-           Close
+           Fermer
           </v-btn>
          </template>
         </v-snackbar>
@@ -222,6 +223,7 @@ export default{
         per_page:0,
       },
       AddCategory:false,
+      load:false,
       UpdateCategory:false,
       dialog:false,
       loader:true,
@@ -239,10 +241,6 @@ export default{
       MoveToOptionWithId(id){
         this.idForCategory=id;
         this.addOption=true;
-      },
-      deleteOption(a){
-        this.SelectedDeleteOption=a;
-        this.dialogOptiondelete=true;
       },
       editIndiceDialog(initIndice){
         this.option_selected=initIndice;
@@ -268,17 +266,11 @@ export default{
         })
       },
       deleteCat(id){
+        this.load=true;
         service_category.deleteCategory(id).then(()=>{
+            this.load=false;
             this.FetchData();
             this.dialog=false;
-            this.snackbar=true;
-        })
-      },
-      deleteOp(id){
-        service.deleteOption(id).then(()=>{
-            this.FetchData();
-            this.SelectedDeleteOption=[];
-            this.dialogOptiondelete=false;
             this.snackbar=true;
         })
       },

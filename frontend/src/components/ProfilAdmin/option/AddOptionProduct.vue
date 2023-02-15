@@ -10,22 +10,25 @@
                <form @submit.prevent="AddNewOption()">
                  <div class="mx-5 px-5">
                   <v-text-field
-                  v-model="name_new"
+                  v-model="formdata.name"
+                  :error-messages="name_error"
                   :counter="8"
                   label="Name"
                 ></v-text-field>
-                <small v-if="name_error!=''">{{name_error}}</small>
+               
                 <v-text-field
-                v-model="prix_new"
+                v-model="formdata.prix"
                 :counter="5"
+                :error-messages="prix_error"
                 label="Prix"
               ></v-text-field>
-              <small v-if="prix_error!=''">{{prix_error}}</small>
+             
                  </div>
                <v-divider></v-divider>
               <v-card-actions class="justify-end">
                 <v-btn type="submit"
                   text
+                  :loading="load"
                  >Ajouter</v-btn>
                 <v-btn
                 text
@@ -39,19 +42,31 @@
     </div>
 </template>
 <script>
-
+import { required,numeric }   from 'vuelidate/lib/validators'
 import service from "@/services/GererOption/option"
 export default{
     name:'add',
     props:{
         id:Number
     },
+    validations:{
+        formdata:{
+          name:{
+             required
+         },
+         prix:{
+             required,
+             numeric
+         },
+      }
+    },
     data(){
         return{
-            prix_new:'',
-            name_new:'',
-            name_error:'',
-            prix_error:''
+          formdata:{
+            prix:'',
+            name:'',
+          },
+          load:false
         }
     },
     methods:{
@@ -59,16 +74,39 @@ export default{
             this.$emit('closeAdd');
         },
         AddNewOption(){
-            service.addOptionSpecifique({id:this.id,name:this.name_new,prix:this.prix_new}).then((res)=>{
-                this.$emit('closeAdd'); 
+             this.$v.formdata.$touch();
+             if (this.$v.formdata.$invalid) {
+                this.load = false;
+                return;
+              }
+              this.load = true;
+            service.addOptionSpecifique({id:this.id,name:this.formdata.name,prix:this.formdata.prix}).then((res)=>{
+               this.load = false;  
+               this.$emit('closeAdd'); 
             }).catch((error)=>{
-                 this.name_error=error.response.data.errors.nameOptionSpecifique
+                  this.load = false;
+                 /*this.name_error=error.response.data.errors.nameOptionSpecifique
                                     ? error.response.data.errors.nameOptionSpecifique[0] : '';
                  this.prix_error=error.response.data.errors.prixOptionSpecifique
                                       ? error.response.data.errors.prixOptionSpecifique
-                                                  [0] : '';
+                                                  [0] : '';*/
             })
         }
+    },
+    computed:{
+            name_error(){
+            const errors=[];
+              if (!this.$v.formdata.name.$dirty) return errors;
+                !this.$v.formdata.name.required && errors.push('name obligatoire');
+                return errors;
+            },
+            prix_error(){
+              const errors=[];
+              if (!this.$v.formdata.prix.$dirty) return errors;
+                !this.$v.formdata.prix.required && errors.push('prix obligatoire');
+                !this.$v.formdata.prix.numeric && errors.push('doit étre numerique');
+                return errors;
+            }
     }
 }
 </script>

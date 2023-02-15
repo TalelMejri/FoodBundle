@@ -75,13 +75,12 @@
                                    class="form-control"
                                    :error-messages="photo_error"
                                    type="file" ref="photo"
-                                   @change="uploadFile">
-                                 
+                                   @change="uploadFile"
+                              >   
                             </div>
-                            <small class="mx-3" style="color:red !important" v-if="photo_error!=''">
+                             <small class="mx-3" style="color:red !important" v-if="photo_error!=''">
                                 {{ photo_error[0] }}
                              </small>
-                            
                             <div class="col-md-12">
                              <v-text-field
                              name="N° Phone"

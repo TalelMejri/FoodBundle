@@ -14,19 +14,19 @@
                     <div class="col-md-12">
                      <v-text-field
                         name="Name"
-                        v-model="name"
+                        v-model="formdata.name"
+                        :error-messages="name_error"
                         label="Name "
                         type="text"
                         placeholder="Enter Name"
                       ></v-text-field>
-                      <small v-if="name_error!=''">
-                        {{ name_error }}
-                      </small>
+                    
                    </div>
               <div class="col-md-12">
                 <v-combobox
-                    v-model="select"
+                    v-model="formdata.select"
                     :items="items"
+                    :error-messages="select_error"
                     @change="fixIndice()"
                     item-text="name"
                     item-value="name"
@@ -35,14 +35,9 @@
                     outlined
                     dense
                  ></v-combobox>
-                 <small v-if="option_error!=''">
-                  {{ option_error }}
-                </small>
-           
            </div>
            </div>
            <div class="col-lg-12">
-
             <input    
                 ref="file_identity"
                 type="file"
@@ -50,13 +45,14 @@
                 class="form-control"
                 @change="createBase64Image"
              >
-          <small v-if="file_error!=''">
-            {{ file_error }}
-          </small>
+         
 
          </div>
-        <div class="text-center mt-5 float-end">
-            <v-btn class="mx-2" type="submit" style="color:#fff !important" color="#E84C03">
+         <small v-if="file_error!=''">
+          {{ file_error[0] }}
+        </small>
+        <div class="text-center mt-5 ">
+            <v-btn :loading="load" class="mx-2" type="submit" style="color:#fff !important" color="#E84C03">
                 Ajouter Categorie
            </v-btn>
            <v-btn @click="cancel()"  color="gray">
@@ -85,26 +81,46 @@
 </template>
 
 <script>
+import { required,numeric }   from 'vuelidate/lib/validators'
 import service from "@/services/GererCategory/category";
 export default{
   name:"addCategory",
     props:{
       addcat:Boolean
     },
+    validations:{
+        formdata:{
+          name:{
+             required
+         },
+         select:{
+             required,
+             numeric
+         },
+         file:{
+              required,
+                typeFile(val){
+                   const tab_ext_dispo=['jpg','gif','png','svg','jpeg'];
+                   const extention=val.split(';')[0].split('/')[1];
+                   return tab_ext_dispo.find((v)=>v==extention) ? true : false ;
+                }
+         },
+        }
+      },
     data(){
         return{ 
+          load:false,
+          formdata:{
+            name:'',
             select: [],
-            name_error:'',
-            file_error:'',
-            option_error:'',
+            file:'',
+          },
             current_item:0,
             dialog:false,
             items:[],
             snackbar:false,
-            file:'',
             categories:[],
             final_items:[],
-            name:'',
             selectedImage:''
         }
     },
@@ -117,17 +133,16 @@ export default{
             const reader = new FileReader();
             let rawImg = this;
             reader.onloadend = () => {
-             rawImg.file = reader.result;
-              console.log(rawImg.file);
+             rawImg.formdata.file = reader.result;
            };
            reader.readAsDataURL(filee);
       },
         fixIndice(){
-            this.current_item=this.select.length-1;
-            let index=this.items.findIndex((v)=>v.name==this.select[this.current_item]);
-            console.log(index +''+this.select[this.current_item]);
+            this.current_item=this.formdata.select.length-1;
+            let index=this.items.findIndex((v)=>v.name==this.formdata.select[this.current_item]);
+           // console.log(index +''+this.select[this.current_item]);
             if(index==-1){
-              this.items.push({name:this.select[this.current_item]});
+              this.items.push({name:this.formdata.select[this.current_item]});
             }
         },
           handleImage(e) {
@@ -135,37 +150,63 @@ export default{
               this.createBase64Image(selectedImage);
           },
         AddCategory(){
+             this.$v.$touch();
+             if (this.$v.$invalid) {
+                this.load = false;
+                return;
+              }
+          this.load=true;
           let i=0;
           let j=0;
-          while(j<this.select.length){
-            if(this.items[i]['name']!=this.select[j]){
+          while(j<this.formdata.select.length){
+            if(this.items[i]['name']!=this.formdata.select[j]){
                 i++;
             }else{
               this.final_items.push((this.items[i]));
               j++;
             }
           }
-          
             service.addCategory({
-                'name':this.name,
-                'file':this.file,
+                'name':this.formdata.name,
+                'file':this.formdata.file,
                 'option':this.final_items
             }).then(()=>{
                  this.snackbar=true;
                  this.final_items=[];
                  this.items=[];
-                 this.select=[];
-                 this.name="";
-                 this.file="";
+                 this.load=true;
+                 this.formdata.select=[];
+                 this.formdata.name="";
+                 this.formdata.file="";
                  this.cancel();
             }).catch((error)=>{
-              this.name_error=error.response.data.errors.name ? error.response.data.errors.name[0] : '';
-              this.file_error=error.response.data.errors.PhtotoCatg ? error.response.data.errors.PhtotoCatg[0] : '';
-              this.option_error=error.response.data.errors.option ? error.response.data.errors.option[0] : '';
+              this.load=false;
+              // this.name_error=error.response.data.errors.name ? error.response.data.errors.name[0] : '';
+              // this.file_error=error.response.data.errors.PhtotoCatg ? error.response.data.errors.PhtotoCatg[0] : '';
+              // this.option_error=error.response.data.errors.option ? error.response.data.errors.option[0] : '';
             })
         }
     },
     computed:{
+            name_error(){
+              const errors=[];
+              if (!this.$v.formdata.name.$dirty) return errors;
+                !this.$v.formdata.name.required && errors.push('name obligatoire');
+                return errors;
+            },
+            select_error(){
+              const errors=[];
+              if (!this.$v.formdata.select.$dirty) return errors;
+                !this.$v.formdata.select.required && errors.push('Option obligatoire');
+                return errors;
+            },
+            file_error(){
+              const errors=[];
+            if (!this.$v.formdata.file.$dirty) return errors;
+                  !this.$v.formdata.file.required && errors.push('image obligatoire');
+                   !this.$v.formdata.file.typeFile && errors.push('image doit étre de type ( jpg,jpeg,png,svg,gif) ');
+             return errors;
+            },
        /*Option_food(){
          if(this.select_type_food=='Pizza'){
              return [

@@ -179,16 +179,16 @@ export default{
          select_id:{
              required,
          },
-          file_food:{
+         file_food:{
                 required,
                 typeFile(val){
                    const tab_ext_dispo=['jpg','gif','png','svg','jpeg'];
                    const extention=val.split(';')[0].split('/')[1];
                    return tab_ext_dispo.find((v)=>v==extention) ? true : false ;
                 }
-             },
+          },
       },
-      prix:required
+      prix:{required,numeric}
     },
     data(){
         return{ 
@@ -199,7 +199,7 @@ export default{
          select: [],
          items:[],
          Option_food_option:[],
-         prix:0,
+         prix:'',
          formdata:{
           name_food:'',
           prix_food:'',
@@ -239,13 +239,18 @@ export default{
            })
         },
         addprix(){
+             this.$v.prix.$touch();
+             if (this.$v.prix.$invalid) {
+                this.dialog=true;
+                return;
+              }
                 this.items.push({name:this.select[this.current_item],prix:parseFloat(this.prix)});
                 this.dialog=false;
                 this.prix=0;
           },
         Add_Product(){
-             this.$v.$touch();
-             if (this.$v.$invalid) {
+             this.$v.formdata.$touch();
+             if (this.$v.formdata.$invalid) {
                 this.load = false;
                 return;
               }
@@ -271,7 +276,7 @@ export default{
         }
     },
     computed:{
-        name_error(){
+          name_error(){
             const errors=[];
               if (!this.$v.formdata.name_food.$dirty) return errors;
                 !this.$v.formdata.name_food.required && errors.push('name obligatoire');
