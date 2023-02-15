@@ -25,7 +25,7 @@
                  >Ajouter</v-btn>
                 <v-btn
                 color="gray"
-                @click="closeAdd()"
+                @click="closeAdd('fermer')"
               >Fermer</v-btn>
               </v-card-actions>
               </form>
@@ -55,8 +55,8 @@ export default{
         }
     },
     methods:{
-        closeAdd(){
-            this.$emit('closeAdd');
+        closeAdd(check){
+            this.$emit('closeAdd',check);
         },
         AddNewOption(){
             this.$v.name.$touch();
@@ -67,7 +67,7 @@ export default{
               this.load=true;
             service.addOption({id:this.id,nameOption:this.name}).then(()=>{
                 this.load=false;
-                this.$emit('closeAdd');
+                this.$emit('closeAdd','added_option');
             }).catch((error)=>{
                 this.load=false;
                  //this.name_error=error.response.data.errors.nameOption ? error.response.data.errors.nameOption[0] : '';

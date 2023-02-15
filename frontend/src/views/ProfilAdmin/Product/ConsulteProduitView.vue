@@ -226,6 +226,23 @@
                     </v-btn>
                   </template>
                 </v-snackbar>
+
+                <v-snackbar
+                v-model="snackbar_add"
+              >
+                 Produit ajouté avec succès
+                <template v-slot:action="{ attrs }">
+                  <v-btn
+                    color="indigo"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar_add = false"
+                  >
+                    Fermer
+                  </v-btn>
+                </template>
+              </v-snackbar>
+
                   <v-snackbar
                   v-model="snackbar"
                 >
@@ -242,7 +259,7 @@
                   </template>
                 </v-snackbar>
 
-                <v-snackbar
+                <v-snackbar  
                 v-model="snackbar_add_option"
               >
               Option ajouté avec succès
@@ -289,6 +306,7 @@ export default{
             namec:'',
             types:[],
             snackbar:false,
+            snackbar_add:false,
             addproduct:false,
             pagination:{
               next_page:0,
@@ -370,19 +388,26 @@ export default{
         this.pagination.current_page=a;
         this.FetchData();
       },
-
-      retourn_consulte_from_update(){
+      retourn_consulte_from_update(check){
+        console.log(check);
         this.UpdateProduct=false;
-        this.snackbar_update=true;
+        if(check=='updated'){
+          this.snackbar_update=true;
+        }
         this.FetchData();
       },
-      retourn_consulte(){
+      retourn_consulte(check){
         this.addproduct=false;
         this.FetchData();
+        if(check=="added"){
+          this.snackbar_add=true;
+        }
       },
-      closeAdd(){
+      closeAdd(check){
           this.addOption=false;
-          this.snackbar_add_option=true;
+          if(check=="add"){
+            this.snackbar_add_option=true;
+          }
           this.FetchData();
       },
       FetchData(){
@@ -407,6 +432,7 @@ export default{
 </script>
 
 <style scoped>
+
 th{
     color: #000 !important;
     font-weight: 600 !important;

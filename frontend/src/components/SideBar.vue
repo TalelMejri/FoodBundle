@@ -2,7 +2,7 @@
       <nav :id="border_radius=='no' ? 'fix_border_radius' : ''"    :class="etatsidbar==false ? 'close' : '' ">
         <ul v-if="!admin_dashboard">
           <li >
-               <div href="#"  :class="etatsidbar==true ? 'close' : '' " class="logo">
+               <div href="#"  :class="etatsidbar ? 'close' : '' " class="logo">
                  <img src="../assets/logo.png" alt="">
                </div>
           </li>
@@ -42,7 +42,7 @@
 
         <ul v-else >
             <li class="mb-5">
-                 <div href="#"  :class="etatsidbar==true ? 'close' : '' " class="logo">
+                 <div href="#"  :class="etatsidbar ? 'close' : '' " class="logo">
                      <img src="../assets/logo.png" alt="">
                  </div>
             </li>

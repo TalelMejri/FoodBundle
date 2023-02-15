@@ -34,10 +34,10 @@
                                      </small>   
                         </div>
                         <div class="text-center mt-2 py-2">
-                            <v-btn type="submit" class="mx-2 mb-2" color="yellow">
+                            <v-btn :loading="load" type="submit" class="mx-2 mb-2" color="yellow">
                                 Modifier
                             </v-btn>
-                            <v-btn  @click="close_update()">
+                            <v-btn  @click="close_update('fermer')">
                                Fermer
                            </v-btn>
                        </div>
@@ -75,6 +75,7 @@ export default{
     data(){
         return{
             category:[],
+            load:false,
             formdata:{
                 name:'',
                 file_category:'',
@@ -88,8 +89,8 @@ export default{
     },
     name:'updatecat',
     methods:{
-        close_update(){
-            this.$emit('close_update');
+        close_update(check){
+            this.$emit('close_update',check);
         },
         createBase64Image() {
             const filee = document.querySelector("#identity").files[0];
@@ -107,13 +108,16 @@ export default{
                 this.load = false;
                 return;
               }
+              this.load = true;
          service.UpdateCategory(this.id,{
                     name:this.formdata.name,
                     file:this.formdata.file_category,
                     avatarupload:this.avatarupload
                 }).then(()=>{
-             this.$emit('close_update');
+                    this.load = false;
+             this.$emit('close_update','updated');
          }).catch((error)=>{
+            this.load = false;
             console.log('error');
          })
       }

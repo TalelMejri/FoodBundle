@@ -1,7 +1,7 @@
 <template> 
       <div class="all"> 
         <preloader></preloader>   
-       <div class="sidebar_position">    
+         <div class="sidebar_position">    
             <SideBar :etatsidbar="etatsidbar" @changreetat="changreetat"></SideBar>
         </div>
         <div  class="content"  :class=" etatsidbar==true ? 'close ' : '' "> 
@@ -135,6 +135,7 @@
                                         {{ email_error }}
                                     </small>
                                <v-snackbar
+                                   class="snackbar"
                                   v-model="snackbar"
                                 >
                                  {{ text }}
@@ -270,7 +271,6 @@
 </script>
 
 <style>
-
 .login{
   color: #fff !important;
   background: #E84C03 !important;
@@ -328,7 +328,7 @@ small{
 
 .sidebar_position{
   position: fixed;
-  z-index: 9;
+  z-index: 2 !important;
 }
 
 .btn{

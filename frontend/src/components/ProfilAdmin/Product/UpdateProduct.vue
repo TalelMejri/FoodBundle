@@ -54,10 +54,10 @@
                             </div>
                         </div>
                         <div class="mt-3">
-                                 <v-btn type="submit" class="mx-2" color="yellow">
+                                 <v-btn :loading="load" type="submit" class="mx-2" color="yellow">
                                         Modifier
                                  </v-btn>
-                                 <v-btn @click="close()">
+                                 <v-btn @click="close('close')">
                                         Fermer
                                  </v-btn>
                         </div>
@@ -115,6 +115,7 @@ import service from "@/services/GererProduct/GererProduct"
      
      data(){
         return{
+            load:false,
             formdata:{
                     name_food:'',
                     prix_food:'',
@@ -130,8 +131,8 @@ import service from "@/services/GererProduct/GererProduct"
         id:Number,
      },
      methods:{
-        close(){
-            this.$emit("retourn_consulte_from_update");
+        close(check){
+            this.$emit("retourn_consulte_from_update",check);
         },
         base64(){
             const filee = document.querySelector("#file").files[0];
@@ -148,13 +149,15 @@ import service from "@/services/GererProduct/GererProduct"
                 this.load = false;
                 return;
               }
+              this.load = true;
             service.UpdateProduct(this.id,{
                 id:this.formdata.id_category,
                 prix:this.formdata.prix_food,
                 name:this.formdata.name_food,
                 file:this.formdata.file_food
             }).then(()=>{
-                 this.close();
+                 this.load = false;
+                 this.close('updated');
             }).catch(()=>{
                  console.log("error");
             })

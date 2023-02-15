@@ -45,17 +45,15 @@
                 class="form-control"
                 @change="createBase64Image"
              >
-         
-
          </div>
          <small v-if="file_error!=''">
-          {{ file_error[0] }}
+              {{ file_error[0] }}
         </small>
         <div class="text-center mt-5 ">
             <v-btn :loading="load" class="mx-2" type="submit" style="color:#fff !important" color="#E84C03">
                 Ajouter Categorie
            </v-btn>
-           <v-btn @click="cancel()"  color="gray">
+           <v-btn @click="cancel('fermer')"  color="gray">
                 Fermer
            </v-btn>
         </div>
@@ -81,7 +79,8 @@
 </template>
 
 <script>
-import { required,numeric }   from 'vuelidate/lib/validators'
+import axios from "axios";
+import { required } from 'vuelidate/lib/validators'
 import service from "@/services/GererCategory/category";
 export default{
   name:"addCategory",
@@ -91,11 +90,17 @@ export default{
     validations:{
         formdata:{
           name:{
-             required
+             required,
+             async exist(value){
+              if(value === ""){
+                 return true;
+               }
+               const response=await axios.get('category/exist_name/'+value);
+               return response.status!=201 || value == "" ;
+             }
          },
          select:{
-             required,
-             numeric
+             required
          },
          file:{
               required,
@@ -125,8 +130,8 @@ export default{
         }
     },
     methods:{
-      cancel(){
-        this.$emit('retour_consult');
+      cancel(check){
+        this.$emit('retour_consult',check);
       },
       createBase64Image(image) {
             const filee = document.querySelector("#identity").files[0];
@@ -155,7 +160,6 @@ export default{
                 this.load = false;
                 return;
               }
-          this.load=true;
           let i=0;
           let j=0;
           while(j<this.formdata.select.length){
@@ -166,6 +170,7 @@ export default{
               j++;
             }
           }
+          this.load=true;
             service.addCategory({
                 'name':this.formdata.name,
                 'file':this.formdata.file,
@@ -174,11 +179,11 @@ export default{
                  this.snackbar=true;
                  this.final_items=[];
                  this.items=[];
-                 this.load=true;
+                 this.load=false;
                  this.formdata.select=[];
                  this.formdata.name="";
                  this.formdata.file="";
-                 this.cancel();
+                 this.cancel('added');
             }).catch((error)=>{
               this.load=false;
               // this.name_error=error.response.data.errors.name ? error.response.data.errors.name[0] : '';
@@ -192,6 +197,7 @@ export default{
               const errors=[];
               if (!this.$v.formdata.name.$dirty) return errors;
                 !this.$v.formdata.name.required && errors.push('name obligatoire');
+                !this.$v.formdata.name.exist && errors.push('name exite déja');
                 return errors;
             },
             select_error(){

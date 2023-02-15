@@ -28,7 +28,7 @@
                           v-model="search"
                           @keyup="FetchData()"
                           append-icon="mdi-magnify"
-                          label="Search"
+                          label="Rechercher"
                           single-line
                           hide-details
                      ></v-text-field>  
@@ -51,7 +51,7 @@
                                 <v-icon>mdi-food-fork-drink</v-icon>
                               </v-btn>
                             </template>
-                            <span>Add Category</span>
+                            <span>Ajouter Categorie</span>
                           </v-tooltip>
                     </div>
                         </div> 
@@ -171,6 +171,54 @@
                </v-card>
              </template>
            </v-dialog> 
+
+           <v-snackbar
+           v-model="snackbar_add_category"
+         >
+            Categorie ajouté avec succès
+           <template v-slot:action="{ attrs }">
+             <v-btn
+               color="indigo"
+               text
+               v-bind="attrs"
+               @click="snackbar_add_category = false"
+             >
+               Fermer
+             </v-btn>
+           </template>
+         </v-snackbar>
+
+           <v-snackbar
+           v-model="snackbar_add_option"
+         >
+            option ajouté avec succès
+           <template v-slot:action="{ attrs }">
+             <v-btn
+               color="indigo"
+               text
+               v-bind="attrs"
+               @click="snackbar_add_option = false"
+             >
+               Fermer
+             </v-btn>
+           </template>
+         </v-snackbar>
+
+           <v-snackbar
+           v-model="snackbar_update"
+         >
+            Modifier avec succès
+           <template v-slot:action="{ attrs }">
+             <v-btn
+               color="indigo"
+               text
+               v-bind="attrs"
+               @click="snackbar_update = false"
+             >
+               Fermer
+             </v-btn>
+           </template>
+         </v-snackbar>
         <v-snackbar
             v-model="snackbar"
         >
@@ -206,11 +254,14 @@ export default{
     return{
       search: '',
       dialogOption:false,
+      snackbar_update:false,
       name_edit:'',
       prix_edit:'',
       categories:[],
       item_selected:[],
       option_selected:[],
+      snackbar_add_option:false,
+      snackbar_add_category:false,
       SelectedDeleteOption:[],
       snackbar:false,
       addOption:false,
@@ -260,11 +311,6 @@ export default{
           this.selectIdCategory=id;
           this.UpdateCategory=true;
       },
-      updateOption(){
-        service.UpdateOption(this.option_selected.id,{name:this.name_edit,prix:this.prix_edit}).then(()=>{
-          this.option_selected=[];
-        })
-      },
       deleteCat(id){
         this.load=true;
         service_category.deleteCategory(id).then(()=>{
@@ -284,16 +330,25 @@ export default{
             this.loader=false;
         })
       },
-      retour_consult(){
+      retour_consult(check){
         this.FetchData();
         this.AddCategory=false;
+        if(check=="added"){
+          this.snackbar_add_category=true;
+        }
       },
-      closeAdd(){
+      closeAdd(check){
         this.FetchData();
+        if(check=='added_option'){
+          this.snackbar_add_option=true;
+        }
         this.addOption=false;
       },
-      close_update(){
+      close_update(check){
         this.FetchData();
+        if(check=='updated'){
+          this.snackbar_update=true;
+        }
         this.UpdateCategory=false;
       }
       },

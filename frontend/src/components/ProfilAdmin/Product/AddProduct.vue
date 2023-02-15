@@ -141,10 +141,10 @@
         </div>
         <div class="text-center mt-5 ">
           <!-- :disabled="v$.formdata.$invalid" -->
-            <v-btn  type="submit" style="color:#fff !important" color="#E84C03" class="mx-2">
+            <v-btn :loading="load"  type="submit" style="color:#fff !important" color="#E84C03" class="mx-2">
                 Ajouter Produit
            </v-btn>
-           <v-btn @click="close_add()"  style="color:#000 !important" color="gray">
+           <v-btn @click="close_add('fermer')"  style="color:#000 !important" color="gray">
                 Fermer
             </v-btn>
         </div>
@@ -195,6 +195,7 @@ export default{
          select_type_food:'',
          select_option_food:'',
          types:[],
+         load:false,
          Option_food:[],
          select: [],
          items:[],
@@ -207,7 +208,6 @@ export default{
           file_food:'',
          },
          id_category:0,
-         load:false,
          //file_food:'',
          dialog:false,
          current_item:'',
@@ -215,8 +215,8 @@ export default{
         }
     },
     methods:{
-      close_add(){
-        this.$emit("retourn_consulte");
+      close_add(check){
+        this.$emit("retourn_consulte",check);
       },
         fixIndice(){
             this.current_item=this.select.length-1;
@@ -268,7 +268,7 @@ export default{
                 this.formdata.select_id='';
                 this.total_Prix=0;
                 this.load=false;
-                this.$emit("retourn_consulte");
+                this.$emit("retourn_consulte",'added');
                }).catch((error)=>{
                   console.log("error");
                   this.load=false;

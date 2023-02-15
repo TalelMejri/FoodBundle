@@ -9,16 +9,15 @@
               <v-card-text>
                <form @submit.prevent="AddNewOption()">
                  <div class="mx-5 px-5">
+
                   <v-text-field
-                  v-model="formdata.name"
-                  :error-messages="name_error"
-                  :counter="8"
-                  label="Name"
+                    v-model="formdata.name"
+                    :error-messages="name_error"
+                    label="Name"
                 ></v-text-field>
                
                 <v-text-field
                 v-model="formdata.prix"
-                :counter="5"
                 :error-messages="prix_error"
                 label="Prix"
               ></v-text-field>
@@ -32,7 +31,7 @@
                  >Ajouter</v-btn>
                 <v-btn
                 text
-                @click="closeAdd()"
+                @click="closeAdd('fermer')"
               >Fermer</v-btn>
               </v-card-actions>
               </form>
@@ -70,8 +69,8 @@ export default{
         }
     },
     methods:{
-        closeAdd(){
-            this.$emit('closeAdd');
+        closeAdd(check){
+            this.$emit('closeAdd',check);
         },
         AddNewOption(){
              this.$v.formdata.$touch();
@@ -82,7 +81,7 @@ export default{
               this.load = true;
             service.addOptionSpecifique({id:this.id,name:this.formdata.name,prix:this.formdata.prix}).then((res)=>{
                this.load = false;  
-               this.$emit('closeAdd'); 
+               this.$emit('closeAdd','add'); 
             }).catch((error)=>{
                   this.load = false;
                  /*this.name_error=error.response.data.errors.nameOptionSpecifique
