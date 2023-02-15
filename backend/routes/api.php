@@ -77,6 +77,7 @@ Route::group(['prefix'=>"/category"],function(){
     Route::POST('/UpdateCategory/{id}',[CategoryController::class,'UpdateCategory']);
     Route::get('/findCategoryByIid/{id}',[CategoryController::class,'findCategoryByIid']);
     Route::get('/CountCategory',[CategoryController::class,'CountCategory']);
+    Route::get('/exist_name/{name}',[CategoryController::class,'exist_name']);
     Route::get('/GetOptionForCategorie',[CategoryController::class,'GetOptionForCategorie']);
 });
 
