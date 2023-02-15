@@ -40,6 +40,7 @@ Route::group(['prefix'=>'/commande'],function(){
     Route::get('/AllCommande',[CommandeController::class,'AllCommande']);
     Route::get('/CommandeForUser',[CommandeController::class,'CommandeForUser']);
     Route::get('/AllCommandeAccpted',[CommandeController::class,'AllCommandeAccpted']);
+    Route::get('/AllCommandeRejeter',[CommandeController::class,'AllCommandeRejeter']);
     Route::delete('/deleteCommande/{id}',[CommandeController::class,'deleteCommande']);
     Route::delete('/rejeterCommande',[CommandeController::class,'rejeterCommande']);
     Route::put('/AccepterCommande',[CommandeController::class,'AccepterCommande']);

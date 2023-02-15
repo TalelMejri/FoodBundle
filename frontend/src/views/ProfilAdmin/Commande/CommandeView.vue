@@ -13,7 +13,15 @@
             hide-details
         ></v-text-field>
             <v-row max-width="700" class="mt-2 mb-2">
-            <v-card class="mt-5"  style="padding:25px 15px;margin:0 auto" v-if="AllCommande==''">
+              <v-card class="mt-5"  style="padding:25px 15px;margin:0 auto" v-if="loader_demander==false">
+                <v-progress-circular
+                :width="3"
+                color="red"
+                class="mt-5"
+                indeterminate
+              ></v-progress-circular>
+            </v-card>
+            <v-card class="mt-5"  style="padding:25px 15px;margin:0 auto" v-else-if="AllCommande==''">
                     Pas de  Commande Demander
             </v-card>
             <v-card v-else v-for="commande in AllCommande" :key="commande" class="mx-5 mb-2" style="padding:15px;" max-width="300">
@@ -24,15 +32,16 @@
                  </div>
                  <v-container>
                  <v-row class="mt-2 justify-center">
-                        <v-btn @click="AccepterCommande(commande.id,commande.user_id)" class="mx-2 mb-1" style="color:blue" text outlined>Approve</v-btn>
-                        <v-btn type="button" @click="initRegeter(commande)" text outlined style="color:red">Remove</v-btn>
+                        <v-btn @click="AccepterCommande(commande.id,commande.user_id)" class="mx-2 mb-1" style="color:blue" text outlined>Accepter</v-btn>
+                        <v-btn type="button" @click="initRegeter(commande)" text outlined style="color:red">Rejeter</v-btn>
                  </v-row>
                 </v-container>
             </v-card>
         </v-row>
+
         <div class="justify-center mt-3">
           <v-btn  class="mx-2" :disabled="pagination.prevpage==null" @click="changerPage(pagination.curentpage-1)">
-              prev
+              <v-icon>mdi-chevron-left</v-icon>    
           </v-btn>
           <v-btn v-for="num in (Math.ceil(pagination.per_page ? pagination.total/pagination.per_page : 1))"
               :key="num"
@@ -42,10 +51,13 @@
                 {{num}}
           </v-btn>
           <v-btn class="mx-2" :disabled="pagination.nextpage==null" @click="changerPage(pagination.curentpage+1)">
-                suivant
+            <v-icon> mdi-chevron-right</v-icon> 
           </v-btn>
        </div>
         </v-container>
+
+
+
     <v-dialog  v-if="commande_selected!=''"
         transition="dialog-bottom-transition"
         max-width="500"
@@ -64,13 +76,13 @@
                   <thead>
                     <tr>
                       <th  class="text-left ">
-                         Food
+                         Image
                       </th>
                       <th  class="text-left ">
-                         Prix
+                         Prix Unite
                       </th>
                       <th  class="text-left ">
-                          Qte
+                          Quantité
                       </th>
                       <th  class="text-left ">
                           Prix Total
@@ -97,6 +109,7 @@
                           <v-select
                               :items="option_current"
                               item-text="nameOption"
+                              label="Option"
                              >
                           </v-select> 
                       </td>
@@ -145,9 +158,50 @@
          </v-card>
        </template>
      </v-dialog> 
+
+
      <div class="mt-5 py-5">
-        <h4 class="text-center">Commande Accepter</h4>
-        <div class="mt-5">
+          <div  class="d-flex" v-if="commande_current == 'accepter'">
+            <h4 class=" py-4">Commande Accepter</h4>
+            <v-spacer></v-spacer>
+            <span class="">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                  @click="changerView('rejeter')"
+                  class="mb-5"
+                  v-bind="attrs"
+                  v-on="on"
+                  text
+                  >
+                    <v-icon color="red">mdi-cancel</v-icon>
+                  </v-btn>
+                </template>
+                <span>Rejeter</span>
+              </v-tooltip>
+            </span>
+          </div>
+          <div class="d-flex" v-else>
+            <h4 class=" py-4">Commande Rejeter</h4>
+            <v-spacer></v-spacer>
+            <span class="">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    @click="changerView('accepter')"
+                    class="mb-5"
+                    v-bind="attrs"
+                    v-on="on"
+                    text
+                  >
+                    <v-icon color="green">mdi-check-circle-outline</v-icon>
+                  </v-btn>
+                </template>
+                <span>Accepter</span>
+              </v-tooltip>
+            </span>
+          </div>
+        <div class="mt-5" v-if="commande_current=='accepter'">
             <v-card elavation="7" style="padding:25px">
              <v-text-field
                  v-model="search"
@@ -157,7 +211,15 @@
                  single-line
                  hide-details
              ></v-text-field>
-             <v-expansion-panels v-if="AllCommandeAccpted==''" focusable>
+             <v-expansion-panels v-if="loader==false" focusable>
+              <v-progress-circular
+                     :width="3"
+                     color="red"
+                     class="mt-5"
+                     indeterminate
+                   ></v-progress-circular>
+          </v-expansion-panels>
+             <v-expansion-panels v-else-if="AllCommandeAccpted==''" focusable>
                 pas de donneés
              </v-expansion-panels>
              <v-expansion-panels v-else focusable>
@@ -202,19 +264,19 @@
                          <template v-slot:default>
                            <thead>
                              <tr>
-                               <th  class="text-left ">
-                                  Food
+                               <th  class="text-left">
+                                  Image
                                </th>
-                               <th  class="text-left ">
+                               <th  class="text-left">
                                   Prix
                                </th>
-                               <th  class="text-left ">
+                               <th  class="text-left">
                                    Quantité
                                </th>
-                               <th  class="text-left ">
+                               <th  class="text-left">
                                    Prix Total
                                </th>
-                               <th  class="text-left ">
+                               <th  class="text-left">
                                    Option
                                </th>
                              </tr>
@@ -249,7 +311,7 @@
                </v-expansion-panels>
                <div class="justify-center mt-3">
                 <v-btn  class="mx-2" :disabled="paginatione.prevpage==null" @click="changerPagee(paginatione.curentpage-1)">
-                    prev
+                     <v-icon>mdi-chevron-left</v-icon> 
                 </v-btn>
                 <v-btn v-for="num in (Math.ceil(paginatione.per_page ? paginatione.total/paginatione.per_page : 1))"
                     :key="num"
@@ -259,11 +321,137 @@
                       {{num}}
                 </v-btn>
                 <v-btn class="mx-2" :disabled="paginatione.nextpage==null" @click="changerPagee(paginatione.curentpage+1)">
-                      suivant
+                   <v-icon>mdi-chevron-right</v-icon> 
                 </v-btn>
              </div>
        </v-card>
      </div>
+
+     <div class="mt-5" v-else>
+      <v-card elavation="7" style="padding:25px">
+       <v-text-field
+           v-model="search"
+           @keyup="fetchAllCommandeRejeter()"
+           append-icon="mdi-magnify"
+           label="Rechercher"
+           single-line
+           hide-details
+       ></v-text-field>
+       <v-expansion-panels v-if="loader==false" focusable>
+                   <v-progress-circular
+                          :width="3"
+                          color="red"
+                          class="mt-5"
+                          indeterminate
+                        ></v-progress-circular>
+     </v-expansion-panels>
+       <v-expansion-panels v-else-if="AllCommande_rejeter==''" focusable>
+          pas de donneés
+       </v-expansion-panels>
+       <v-expansion-panels v-else focusable>
+           <v-expansion-panel class="mt-5"
+           v-for="item in AllCommande_rejeter"
+                  :key="item.id"
+             >
+             <v-expansion-panel-header >
+               <v-simple-table>
+                   <template v-slot:default>
+                     <thead>
+                       <tr>
+                         <th  class="text-left ">
+                           Code Commande
+                         </th>
+                         <th  class="text-left ">
+                           Prix Total
+                         </th>
+                         <th  class="text-left ">
+                             Operation
+                         </th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                           <td>
+                               {{ item.Code_Commande }}
+                           </td>
+                           <td>
+                               {{ item.Prix_Total }}
+                           </td>
+                           <td>
+                                <v-btn text @click="initcommande(item)">
+                                    <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                           </td>
+                     </tbody>
+                     </template>
+                     </v-simple-table>
+             </v-expansion-panel-header>
+             <v-expansion-panel-content>
+               <v-simple-table>
+                   <template v-slot:default>
+                     <thead>
+                       <tr>
+                         <th  class="text-left">
+                            Image
+                         </th>
+                         <th  class="text-left">
+                            Prix
+                         </th>
+                         <th  class="text-left">
+                             Quantité
+                         </th>
+                         <th  class="text-left">
+                             Prix Total
+                         </th>
+                         <th  class="text-left">
+                             Option
+                         </th>
+                       </tr>
+                     </thead>
+                      <tbody>
+                       <tr v-for="i in item.ligencommandes" :key="i.id">
+                         <p style="display: none;"> {{index = All_product.find((v)=>v.id=i.product_id)}} </p>
+                         <td><img width="80px" height="80px" :src="index.PhotoProduct" alt=""></td>
+                         <td>{{index.PrixProduct}}</td>
+                         <td>{{i.Quantity}}</td>
+                         <td>{{i.prix_ligne_commande}}</td>
+                         <div style="display: none;">
+                           {{ option_current=[] }}
+                           <div v-for="option in All_option" :key="option.id">
+                               {{ option.lign_commande_id==i.id ? option_current.push({nameOption:option.nameOption}) : '' }}
+                           </div>
+                         </div>
+                         <td>
+                             <v-select
+                                 :items="option_current"
+                                 item-text="nameOption"
+                                 label="Option"
+                                >
+                             </v-select> 
+                         </td>
+                       </tr>
+                     </tbody> 
+                   </template>  
+                 </v-simple-table>
+             </v-expansion-panel-content>
+           </v-expansion-panel>
+         </v-expansion-panels>
+         <div class="justify-center mt-3">
+          <v-btn  class="mx-2" :disabled="paginatione.prevpage==null" @click="changerPagee(paginatione.curentpage-1)">
+               <v-icon>mdi-chevron-left</v-icon> 
+          </v-btn>
+          <v-btn v-for="num in (Math.ceil(paginatione.per_page ? paginatione.total/paginatione.per_page : 1))"
+              :key="num"
+              color="primary"
+              @click="changerPagee(num)"
+              :disabled="paginatione.curentpage==num">
+                {{num}}
+          </v-btn>
+          <v-btn class="mx-2" :disabled="paginatione.nextpage==null" @click="changerPagee(paginatione.curentpage+1)">
+             <v-icon>mdi-chevron-right</v-icon> 
+          </v-btn>
+       </div>
+ </v-card>
+</div>
      
      <v-dialog  v-if="commande_selected_rejeter!=''"
      transition="dialog-bottom-transition"
@@ -350,8 +538,13 @@ export default{
     created(){
         this.changerPage(1);
         this.changerPagee(1);
+        if (this.commande_current == "accepter") {
+          this.fetchAllcommandeAccepter();
+        } else {
+          this.fetchAllCommandeRejeter();
+       }
         this.fetchAllcommandeDemaander();
-        this.fetchAllcommandeAccepter();
+     
         service_product.getProducts().then((res)=>{
               this.All_product=res.data;
            });
@@ -363,6 +556,7 @@ export default{
         return{
             AllCommande:[],
             AllCommandeAccpted:[],
+            commande_current:'accepter',
             commande_selected_deleted:[],
             search:'',
             commande_selected:[],
@@ -381,15 +575,28 @@ export default{
                 per_page:0,
             },
             commande_selected_rejeter:[],
+            AllCommande_rejeter:[],
             dialog_rejeter:false,
             All_option:[],
             dialog_deleted:false,
             All_product:[],
             search_demander:'',
             snackbar:false,
+            loader:false,
+            loader_demander:false,
         }
     },
     methods:{
+      changerView(curent) {
+        this.search='';
+        this.loader=false;
+        this.commande_current = curent;
+      if (this.commande_current == "accepter") {
+        this.fetchAllcommandeAccepter();
+      } else {
+        this.fetchAllCommandeRejeter();
+      }
+    },
         initRegeter(item){
             this.commande_selected_rejeter=item;
             this.dialog_rejeter=true;
@@ -427,6 +634,7 @@ export default{
         fetchAllcommandeDemaander(){
             service_commande.AllCommande(this.search_demander,this.pagination.curentpage).then((res)=>{
                  this.AllCommande=res.data.data;
+                 this.loader_demander=true;
                  this.pagination.curentpage=res.data.current_page;
             this.pagination.prevpage=res.data.prev_page_url?.split("=")[1];
             this.pagination.nextpage=res.data.next_page_url?.split("=")[1];
@@ -434,6 +642,7 @@ export default{
             this.pagination.total=res.data.total;
             })
         },
+      
         changerPage(num){
         this.pagination.curentpage=num;
         this.fetchAllcommandeDemaander();
@@ -445,6 +654,18 @@ export default{
         fetchAllcommandeAccepter(){
             service_commande.AllCommandeAccpted(this.search,this.paginatione.curentpage).then((res)=>{
                  this.AllCommandeAccpted=res.data.data;
+                 this.loader=true;
+                 this.paginatione.curentpage=res.data.current_page;
+            this.paginatione.prevpage=res.data.prev_page_url?.split("=")[1];
+            this.paginatione.nextpage=res.data.next_page_url?.split("=")[1];
+            this.paginatione.per_page=res.data.per_page;
+            this.paginatione.total=res.data.total;
+            })
+        },
+        fetchAllCommandeRejeter(){
+            service_commande.AllCommandeRejeter(this.search,this.paginatione.curentpage).then((res)=>{
+                 this.AllCommande_rejeter=res.data.data;
+                 this.loader=true;
                  this.paginatione.curentpage=res.data.current_page;
             this.paginatione.prevpage=res.data.prev_page_url?.split("=")[1];
             this.paginatione.nextpage=res.data.next_page_url?.split("=")[1];

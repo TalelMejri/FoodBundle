@@ -18,6 +18,9 @@ export default{
      AllCommandeAccpted(code,page){
       return axios.get(`commande/AllCommandeAccpted?${code ? 'code='+code : ''}&page=${page}`);
     },
+    AllCommandeRejeter(code,page){
+       return axios.get(`commande/AllCommandeRejeter?${code ? 'code='+code : ''}&page=${page}`);
+    },
     rejeterCommande(idcommande,iduser,code){
       return axios.delete(`commande/rejeterCommande?${iduser!=null ? 'iduser='+iduser : ''}&idcommande=${idcommande}&code=${code}`);
     },

@@ -73,7 +73,7 @@
           @change="fetchData_sepecifique()"
           item-value="id"
           v-model="id_product_selected"
-          label="product"
+          label="Produit"
         ></v-select>
       </div>
     
@@ -161,6 +161,7 @@
                  <v-card-actions class="justify-end">
                    <v-btn
                      text
+                     :loading="load"
                      @click="deleteOption(option_selected_delete.id)"
                    >Supprimer</v-btn>
                    <v-btn
@@ -205,6 +206,7 @@
                           name="name"
                           label="name"
                           type="text"
+                          :error-messages="name_error"
                           v-model="name"
                           placeholder="Enter Name"
                         ></v-text-field>
@@ -213,6 +215,7 @@
                      <v-card-actions class="justify-end">
                        <v-btn type="submit"
                          text
+                         :loading="load"
                         >Modifier</v-btn>
                        <v-btn
                        text
@@ -269,8 +272,9 @@
                  <v-card-actions class="justify-end">
                    <v-btn
                      text
+                     :loading="load"
                      @click="deleteOption(option_selected_delete.id)"
-                   >Supprimer</v-btn>
+                   >Supprimer </v-btn>
                    <v-btn
                    text
                    @click="option_selected_delete=[]"
@@ -311,6 +315,7 @@
                           <v-text-field
                           name="name"
                           label="name"
+                          :error-messages="name_error"
                           type="text"
                           v-model="name"
                           placeholder="Enter Name"
@@ -320,6 +325,7 @@
                           name="prix"
                           label="prix "
                           type="text"
+                          :error-messages="prix_error"
                           v-model="prix"
                           placeholder="Enter Prix"
                         ></v-text-field>
@@ -328,6 +334,7 @@
                      <v-card-actions class="justify-end">
                        <v-btn type="submit"
                          text
+                         :loading="load"
                         >Modifier</v-btn>
                        <v-btn
                        text
@@ -405,8 +412,18 @@
 import service_category from "@/services/GererCategory/category"
 import service_product from "@/services/GererProduct/GererProduct"
 import service_option from "@/services/GererOption/option"
+import { required,numeric} from 'vuelidate/lib/validators'
 export default{
     name:'option',
+    validations:{
+      name:{
+        required
+      },
+      prix:{
+        required,
+        numeric
+      }
+    },
     created(){
         if(this.list=='global'){
             this.fetchData_global();
@@ -445,6 +462,7 @@ export default{
             option_selected:[],
             option_selected_delete:[],
             loader:false,
+            load:false,
             snackbar_edit:false,
             snackbar:false
         }
@@ -453,20 +471,23 @@ export default{
       init(){
             this.option_selected_delete=[];
             this.dialogdelete=false;
-            this.snackbar=true;
       },
       deleteOption(id){
+        this.load=true;
         if(this.list=='global'){
           service_option.deleteOption(id).then(()=>{
+            this.load=false;
             this.init();
             this.fetchData_global();
           })
         }else{
           service_option.deleteOptionSpecifique(id).then(()=>{
+            this.load=false;
             this.init();
             this.fetchData_sepecifique();
           })
         }
+        this.snackbar=true;
       },
       initedit(){
           this.option_selected=[];
@@ -475,13 +496,27 @@ export default{
       },
       updateOption(){
         if(this.list=='global'){
+             this.$v.name.$touch();
+             if (this.$v.name.$invalid) {
+                this.load = false;
+                return;
+              }
+              this.load = true;
           service_option.UpdateOption(this.option_selected.id,{name:this.name}).then((r)=>{
             this.initedit();
             this.fetchData_global();
          })
         }else{
+             this.$v.name.$touch();
+             this.$v.prix.$touch();
+             if (this.$v.name.$invalid && this.$v.prix.$invalid ) {
+                this.load = false;
+                return;
+              }
+              this.load=true;
          service_option.UpdateOptionSpecifique(this.option_selected.id,{name:this.name,prix:this.prix}).then((r)=>{
             this.initedit();
+            this.load=false;
             this.fetchData_sepecifique();
          })
         }
@@ -549,6 +584,21 @@ export default{
             this.loader=true;
         })
        }
+    },
+    computed:{
+          name_error(){
+              const errors=[];
+              if (!this.$v.name.$dirty) return errors;
+                !this.$v.name.required && errors.push('name obligatoire');
+                return errors;
+            },
+            prix_error(){
+              const errors=[];
+              if (!this.$v.prix.$dirty) return errors;
+                !this.$v.prix.required && errors.push('prix obligatoire');
+                !this.$v.prix.numeric && errors.push('name doit etre numerique');
+                return errors;
+            },
     }
 }
 </script>

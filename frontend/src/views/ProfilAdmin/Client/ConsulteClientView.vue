@@ -26,7 +26,7 @@
                 v-on="on"
                 @click="dialog = true"
               >
-                  delete
+                  mdi-delete
               </v-icon>
             </template>
             <template v-slot:default="dialog">
@@ -34,20 +34,21 @@
                 <v-toolbar
                   color="red"
                   style="color:#fff"
-                >Confirmed Delete</v-toolbar>
+                >Supprimer Client</v-toolbar>
                 <v-card-text>
-                  <div class="text-h4 pa-12">Do You Want Delete {{ item['name'] }} </div>
+                  <div class="text-h4 pa-12">Voulez-vous supprimer {{ item['name'] }} </div>
                 </v-card-text>
                 <v-card-actions class="justify-end">
                   <v-btn
                     text
                     @click="dialog.value = false"
-                  >Close</v-btn>
+                  >Fermer</v-btn>
                   <v-btn
                   text
                   color="red"
+                  :loading="loader_delete"
                   @click="deleteItem(item)"
-                >Confirmed</v-btn>
+                >Supprimer</v-btn>
                 </v-card-actions>
               </v-card>
             </template>
@@ -85,7 +86,7 @@
         <v-snackbar
           v-model="snackbar"
         >
-         Delete Completed With Success
+        Supprimer avec succès
         <template v-slot:action="{ attrs }">
          <v-btn
            color="pink"
@@ -93,7 +94,7 @@
               v-bind="attrs"
               @click="snackbar = false"
          >
-           Close
+           Fermer
           </v-btn>
          </template>
         </v-snackbar>
@@ -121,6 +122,7 @@ export default{
       dialog:false,
       dialogDelete: false,
       load:false,
+      loader_delete:false,
       headers: [
         { text: 'id',value:'id'},
         { text: 'name',value:'name' },
@@ -145,7 +147,9 @@ export default{
         },
        
         deleteItem(item){
+          this.loader_delete=true;
             service.deleteUser(item.id).then(()=>{
+                this.loader_delete=false;
                 this.dialog=false;
                 this.snackbar=true;
                 this.Alluser();

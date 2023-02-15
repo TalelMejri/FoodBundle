@@ -130,6 +130,20 @@ class CommandeController extends Controller
 
     }
 
+    public function AllCommandeRejeter(Request $request){
+        if($request->code){
+            $commandes=Commande::with('ligencommandes')
+                                ->where('Code_commande','like','%'.$request->code.'%')
+                                ->where('statu','=',2)
+                                ->paginate(3);
+        }else{
+            $commandes=Commande::with('ligencommandes')
+                                 ->where('statu','=',2)
+                                ->paginate(3);
+        }
+        return response()->json($commandes,200);
+    }
+
     public function rejeterCommande(Request $request){
        $commade=Commande::find($request->idcommande);
         if($commade){
