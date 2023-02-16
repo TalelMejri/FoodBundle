@@ -22,6 +22,7 @@ export default{
           data.append('lastname',user.lastname);
           data.append('email',user.email);
           data.append('photo',user.photo);
+          data.append('tlf',user.tlf);
           data.append('avatarupload',user.avatarupload);
           const config={
                headers:{
@@ -54,6 +55,13 @@ export default{
 
      getAllProductLiekd(id,page){
           return Axios.get(`user/getAllProductLiekd/${+id}&page=${page}`);
+     },
+
+     same_password(password){
+          return Axios.get('user/samePassword/'+password);
+     },
+     changer_motdepasse(password){
+          return Axios.put('user/changerPassword/'+password);
      }
 
 }

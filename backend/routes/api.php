@@ -109,6 +109,8 @@ Route::middleware("auth:sanctum")->group(function(){
 
     Route::group(['prefix'=>'/user'],function(){
         Route::Post('/Updateuser',[UserController::class,'update']);
+        Route::put('/changerPassword/{password}',[UserController::class,'changerPassword']);
+        Route::get('/samePassword/{password}',[UserController::class,'samePassword']);
         Route::get('/countLiked',[UserController::class,'countLiked']);
         Route::get('/GetAllLikedProduct',[UserController::class,'GetAllLikedProduct']);
         Route::get('/getAllProductLiekd',[UserController::class,'getAllProductLiekd']);
