@@ -2,14 +2,14 @@ import "@/plugins/axios";
 import Axios from "axios";
 
 export default{
-    getNotification(id){
-        return Axios.get('notif/getnotif/'+id);
+    getNotification(){
+        return Axios.get('notif/getnotif');
     },
-    getAllNotification(id){
-        return Axios.get('notif/getAllNotification/'+id);
+    getAllNotification(){
+        return Axios.get('notif/getAllNotification');
     },
-    deleteAllNotif(id){
-        return Axios.delete('notif/deleteAllNotif/'+id);
+    deleteAllNotif(){
+        return Axios.delete('notif/deleteAllNotif');
     },
     deleteNotification(id){
         return Axios.delete('notif/deleteNotification/'+id);
