@@ -5,11 +5,12 @@ import router from './router'
 import store from './store/StoreAuth'
 import Vuelidate from "./plugins/Vuelidate";
 import { createPinia, PiniaVuePlugin } from 'pinia'
+import {interceptors} from '../src/global/interceptors.js'
 import vuetify from './plugins/vuetify'
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
 Vue.config.productionTip = false
-
+interceptors();
 new Vue({
   Vuelidate,
   router,
