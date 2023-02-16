@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 class ControllerNotification extends Controller
 {
 
-    public function getNotification($id){
-        $notification=Notification::where('user_id',$id)->where('etat',0)->get();
+    public function getNotification(request $request){
+        $notification=Notification::where('user_id',$request->user()->id)->where('etat',0)->get();
         return response()->json($notification,200);
      }
 
@@ -20,8 +20,8 @@ class ControllerNotification extends Controller
         return response()->json($notification,200);
      }
 
-   public function getAllNotification($id){
-    $notification=Notification::where('user_id',$id)->orderBy('etat')->get();
+   public function getAllNotification(Request $request){
+    $notification=Notification::where('user_id',$request->user()->id)->orderBy('etat')->get();
     return response()->json($notification,200);
  }
 
@@ -47,6 +47,6 @@ class ControllerNotification extends Controller
 
    public function deleteAllNotif($id){
     $notification=Notification::where('user_id','=',$id)->delete();
-    return response()->json(['data'=>$notification],200); 
+    return response()->json(['data'=>$notification],200);
    }
 }
