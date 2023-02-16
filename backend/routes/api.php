@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -47,27 +46,13 @@ Route::group(['prefix'=>'/commande'],function(){
     Route::get('/countCommande',[CommandeController::class,'countCommande']);
 });
 
-Route::group(['prefix'=>'/notif'],function(){
-    Route::get('/getnotif/{id}',[ControllerNotification::class,'getNotification']);
-    Route::get('/getAllNotification/{id}',[ControllerNotification::class,'getAllNotification']);
-    Route::put('/changeretat/{id}',[ControllerNotification::class,'changeretat']);
-    Route::delete('/deleteAllNotif/{id}',[ControllerNotification::class,'deleteAllNotif']);
-    Route::delete('/deleteNotification/{id}',[ControllerNotification::class,'deleteNotification']);
-});
-
-
-
 Route::group(['prefix'=>'/user'],function(){
     Route::get('/countUser',[UserController::class,'coutUser']);
-    Route::get('/getuser',[UserController::class,'index']);
     Route::delete('/deleteUser/{id}',[UserController::class,'destroy']);
+    Route::get('/getuser',[UserController::class,'index']);
     Route::delete('/deleteFavorite',[UserController::class,'deleteFavorite']);
-    Route::Post('/Updateuser/{id}',[UserController::class,'update']);
     Route::Post('/AddLiked',[UserController::class,'AddLiked']);
-    Route::get('/countLiked/{id}',[UserController::class,'countLiked']);
-    Route::get('/GetAllLikedProduct/{id}',[UserController::class,'GetAllLikedProduct']);
     Route::get('/checkLiked',[UserController::class,'checkLiked']);
-    Route::get('/getAllProductLiekd/{id}',[UserController::class,'getAllProductLiekd']);
 });
 
 Route::group(['prefix'=>"/category"],function(){
@@ -120,6 +105,21 @@ Route::group(['prefix'=>'/resetPassword'],function(){
     Route::get('/exist_code/{code}',[ChangerPassword::class,'exist_code']);
 });
 
-// Route::middleware("auth:sanctum")->group(function(){
-//     Route::get('/getnotif',[ControllerNotification::class,'getNotif']);
-// });
+Route::middleware("auth:sanctum")->group(function(){
+
+    Route::group(['prefix'=>'/user'],function(){
+        Route::Post('/Updateuser',[UserController::class,'update']);
+        Route::get('/countLiked',[UserController::class,'countLiked']);
+        Route::get('/GetAllLikedProduct',[UserController::class,'GetAllLikedProduct']);
+        Route::get('/getAllProductLiekd',[UserController::class,'getAllProductLiekd']);
+    });
+
+    Route::group(['prefix'=>'/notif'],function(){
+        Route::get('/getnotif',[ControllerNotification::class,'getNotification']);
+        Route::get('/getAllNotification',[ControllerNotification::class,'getAllNotification']);
+        Route::put('/changeretat/{id}',[ControllerNotification::class,'changeretat']);
+        Route::delete('/deleteAllNotif',[ControllerNotification::class,'deleteAllNotif']);
+        Route::delete('/deleteNotification/{id}',[ControllerNotification::class,'deleteNotification']);
+    });
+
+});

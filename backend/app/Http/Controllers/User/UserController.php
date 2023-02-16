@@ -59,10 +59,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-
-            $user=User::find($id);
+            $user=User::find($request->user()->id);
             if($user){
             if($request->avatarupload==1){
                 $image=Storage::disk('public')->put('users',$request->file('photo'));
@@ -132,8 +131,8 @@ class UserController extends Controller
             return response()->json($favoriete,200);
     }
 
-    public function GetAllLikedProduct($id){
-        $favoriete=favorite::where('user_id','=',$id)->get();
+    public function GetAllLikedProduct(request $request){
+        $favoriete=favorite::where('user_id','=',$request->user()->id)->get();
         return response()->json($favoriete,200);
     }
 
@@ -142,8 +141,8 @@ class UserController extends Controller
         return  response()->json(['data'=>$count],200);
     }
 
-    public function getAllProductLiekd($id){
-        $allProductLiked=favorite::with('product')->where('user_id',$id)->paginate(2);
+    public function getAllProductLiekd(request $request){
+        $allProductLiked=favorite::with('product')->where('user_id',$request->user()->id)->paginate(2);
         return response()->json($allProductLiked,200);
     }
 
