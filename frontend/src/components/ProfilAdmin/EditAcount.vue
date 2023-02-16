@@ -75,7 +75,6 @@ export default{
         this.lastname=this.store.user['lastname'];
         this.email= this.store.user['email'];
         this.photo=this.store.user['Photo'];
-        this.iduser=this.store.user['id'];
        },
     setup(){
         const store=AuthStore();
@@ -102,7 +101,8 @@ export default{
         },
         EditUser(){
 
-            service_user.UpdateUser(this.iduser,{
+            service_user.UpdateUser(
+               {
                  name:this.name,
                  lastname:this.lastname,
                  photo:this.file,
