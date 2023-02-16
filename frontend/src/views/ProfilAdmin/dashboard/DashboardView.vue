@@ -212,7 +212,8 @@
         },
         methods:{
           DeleteAllNotif(){
-              service_notif.deleteAllNotif(this.store.user['id']).then((res)=>{
+            //this.store.user['id']
+              service_notif.deleteAllNotif().then((res)=>{
                   console.log('delete');
                   this.getNotif();
                   this.getNotifNotyet();
@@ -226,12 +227,12 @@
               })
             },
              getNotifNotyet(){
-              service_notif.getNotification(this.store.user['id']).then((res)=>{
+              service_notif.getNotification().then((res)=>{
                  this.All_notif_yet=res.data;
               })
             },
              getNotif(){
-              service_notif.getAllNotification(this.store.user['id']).then((res)=>{
+              service_notif.getAllNotification().then((res)=>{
                  this.All_notif=res.data;
               })
             },

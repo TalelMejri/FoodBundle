@@ -624,7 +624,11 @@ export default{
            this.commande_selected_deleted=[];
            this.dialog_deleted=false;
            this.snackbar=true;
-           this.fetchAllcommandeAccepter();
+             if (this.commande_current == "accepter") {
+        this.fetchAllcommandeAccepter();
+      } else {
+        this.fetchAllCommandeRejeter();
+      }
         })
       },
         initIndice(item){
