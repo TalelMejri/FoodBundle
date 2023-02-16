@@ -7,6 +7,7 @@ use App\Models\favorite;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -70,6 +71,7 @@ class UserController extends Controller
                         'name'=>$request->name,
                         'lastname'=>$request->lastname,
                         'email'=>$request->email,
+                        'numero_tlf'=>$request->tlf,
                         'Photo'=>'/storage/'.$image
                     ]
                 );
@@ -79,6 +81,7 @@ class UserController extends Controller
                     [
                         'name'=>$request->name,
                         'lastname'=>$request->lastname,
+                        'numero_tlf'=>$request->tlf,
                         'email'=>$request->email,
                     ]
                 );
@@ -145,5 +148,33 @@ class UserController extends Controller
         $allProductLiked=favorite::with('product')->where('user_id',$request->user()->id)->paginate(2);
         return response()->json($allProductLiked,200);
     }
+
+    public function samePassword(Request $request,$password){
+        $user=User::where('id',$request->user()->id)->first();
+        $verified=Hash::check($password, $user->password);
+        if($verified){
+            return response()->json([
+                'success'   => false,
+                'message'   => 'password  exists',
+                'data'      => []
+            ], 201);
+        } else {
+            return response()->json([
+                'success'   => true,
+                'message'   => 'password not exists',
+                'data'      => []
+            ]);
+        }
+    }
+
+public function changerPassword(Request $request,$password){
+     $user=User::find($request->user()->id);
+     $user->update(
+         [
+          'password'=>bcrypt($password)
+         ]
+    );
+    return response()->json(['message'=>"password changed"],200);
+}
 
 }
