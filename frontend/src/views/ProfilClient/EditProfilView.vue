@@ -10,7 +10,7 @@
 
 <script>
 import FooterVueVue from '@/components/home_page/FooterVue.vue';
-import EditAcountVue from '@/components/ProfilAdmin/EditAcount.vue';
+import EditAcountVue from '@/components/ModifierAccount/EditAcount.vue';
 export default{
     created(){
        // this.id=this.$route.params.id;

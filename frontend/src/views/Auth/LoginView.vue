@@ -39,11 +39,13 @@
                                       placeholder="Enter Email"
                                     ></v-text-field>
                                     <v-text-field
+                                      :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                                       v-model="password"
                                       name="password"
                                       label="Mot de passe"
-                                      type="password"
+                                      :type="show ? 'text' : 'password'"
                                       :error-messages="password_error"
+                                      @click:append="show = !show"
                                       placeholder="password"
                                    ></v-text-field>
                                     <div class="mt-3 text-center">
@@ -171,7 +173,8 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
                 snackbar: false,
                 snackbar_error:false,
                 message_error:'',
-                load:false
+                load:false,
+                show:false
             }
         },
         created(){

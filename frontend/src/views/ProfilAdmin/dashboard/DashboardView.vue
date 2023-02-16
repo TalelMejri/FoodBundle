@@ -179,7 +179,7 @@
     import ConsulteOptionView from "@/views/ProfilAdmin/Option/ConsulteOptionView.vue";
     import SatistiqueView from "@/views/ProfilAdmin/dashboard/SatistiqueView.vue"
     import SideBar from "@/components/SideBar.vue"
-    import EditAcountVue from "@/components/ProfilAdmin/EditAcount.vue";
+    import EditAcountVue from "@/components/ModifierAccount/EditAcount.vue";
     import CategoryView from "@/views/ProfilAdmin/Category/ConsulteCategoryView.vue"
     import clientView from "@/views/ProfilAdmin/Client/ConsulteClientView.vue"
     import CommandeView from "@/views/ProfilAdmin/Commande/CommandeView.vue";
