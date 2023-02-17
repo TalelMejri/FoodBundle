@@ -4,6 +4,7 @@ use App\Http\Controllers\auth\LoginUser;
 use App\Http\Controllers\Auth\RegisterUser;
 use App\Http\Controllers\Auth\ResetPassword\ChangerPassword;
 use App\Http\Controllers\Auth\ResetPassword\ForgotPassword;
+use App\Http\Controllers\auth\Verifyemail\VerificationEmail;
 use App\Http\Controllers\category\CategoryController;
 use App\Http\Controllers\commande\CommandeController;
 use App\Http\Controllers\notification\ControllerNotification;
@@ -105,6 +106,11 @@ Route::group(['prefix'=>'/resetPassword'],function(){
     Route::get('/exist_code/{code}',[ChangerPassword::class,'exist_code']);
 });
 
+Route::group(['prefix'=>"/email"],function(){
+    Route::get('/verify/{email}', [VerificationEmail::class, 'verify_email']);
+    Route::get('/renvoyer/{email}', [VerificationEmail::class, 'renvoyer']);
+});
+
 Route::middleware("auth:sanctum")->group(function(){
 
     Route::group(['prefix'=>'/user'],function(){
@@ -125,3 +131,6 @@ Route::middleware("auth:sanctum")->group(function(){
     });
 
 });
+
+
+
