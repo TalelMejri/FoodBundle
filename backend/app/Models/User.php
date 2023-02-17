@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\auth\notifications;
+use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,6 +32,11 @@ class User extends Authenticatable
         'Isadmin'
     ];
     */
+
+    public function sendEmailVerify()
+    {
+        $this->notify(new notifications());
+    }
 
     public function Favorites(){
         return $this->hasMany(favorite::class);

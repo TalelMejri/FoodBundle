@@ -12,11 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ResetPassword extends Mailable
 {
-
-
-
     use Queueable, SerializesModels;
-
     /**
      * Create a new message instance.
      *
