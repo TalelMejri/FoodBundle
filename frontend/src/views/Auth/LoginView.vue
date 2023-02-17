@@ -27,6 +27,14 @@
                                 >
                                   Fermer
                                 </v-btn>
+                                <v-btn
+                                color="#000"
+                                text
+                                @click="dialog=true"
+                                v-if="renvoyer"
+                              >
+                                Renvoyer
+                              </v-btn>
                               </template>
                             </v-snackbar>
                                     <v-text-field
@@ -73,12 +81,54 @@
                                 >
                                   Fermer
                                 </v-btn>
+                           
                               </template>
                             </v-snackbar>
                              </v-card-text>
                           </v-card>
                        </v-flex>
                     </v-layout>
+                    <v-dialog  
+                    transition="dialog-bottom-transition"
+                    max-width="600"
+                    v-model="dialog"
+                  >
+                   <template >
+                    <form @submit.prevent="renvoyerEmail()">
+                     <v-card>
+                       <v-toolbar
+                         color="danger"
+                         dark
+                       >Renvoyer Lien de Vérification</v-toolbar>
+                       <v-card-text>
+                      
+                         <div class="text-h2 pa-12">
+                          <v-text-field
+                          v-model="email_verified"
+                          :error-messages="email_error_verified"
+                          name="email"
+                          label="Email"
+                          type="text"
+                          placeholder="Enter Email"
+                        ></v-text-field>
+                         </div>
+                       
+                       </v-card-text>
+                       <v-card-actions class="justify-end">
+                         <v-btn 
+                           text
+                           :loading="load"
+                           type="submit"
+                         >Renvoyer</v-btn>
+                         <v-btn
+                         text
+                         @click="dialog=false"
+                       >fermer</v-btn>
+                       </v-card-actions>
+                     </v-card>
+                    </form>
+                   </template>
+                 </v-dialog> 
                  </v-container>
                 </div>
              <div>
@@ -161,6 +211,17 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
                   return response.status == 201 || value == "";
               },
             },
+            email_verified:{
+              required,
+              email,
+              async exists(value) {
+                if (value === "") {
+                  return true;
+                }
+                  const response=await axios.get('auth/exist/'+value);
+                  return response.status == 201 || value == "";
+              },
+            },
             password:{
               required, minLength: minLength(6)
             }
@@ -168,25 +229,59 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
         data(){
             return{
                 password:'',
+                dialog:false,
                 email:'',
+                renvoyer:false,
+                check:'',
                 message:'',
                 snackbar: false,
                 snackbar_error:false,
                 message_error:'',
                 load:false,
-                show:false
+                show:false,
+                email_verified:''
             }
         },
         created(){
+          if(this.$route.query.url!='undefined'){
+             this.verifyEmail();
+          }
           if(typeof(this.$route.query.content)!='undefined'){
              this.message = this.$route.query.content;
              this.snackbar=true;
           }
         },
         methods:{
+          verifyEmail() {
+            axios.get('email/verify/'+this.$route.query.url).then((response) => {
+                this.message=response.data.data;
+                this.snackbar=true;
+            })
+           .catch((error) => {
+               console.log(error.response.data);
+              })
+       
+          },
+          renvoyerEmail(){
+            this.$v.email_verified.$touch();
+             if (this.$v.email_verified.$invalid) {
+                this.load = false;
+                return;
+              }
+              this.load = true;
+              axios.get('email/renvoyer/'+this.email_verified).then((res)=>{
+                 this.load=false;
+                 this.renvoyer=false;
+                 this.dialog=false;
+                 this.message=res.data.data;
+              }).catch((error)=>{
+                 this.message=error.respose.data.data;
+              })
+          },
            login(){
-             this.$v.$touch();
-             if (this.$v.$invalid) {
+             this.$v.email.$touch();
+             this.$v.password.$touch();
+             if (this.$v.email.$invalid && this.$v.password.$invalid) {
                 this.load = false;
                 return;
               }
@@ -202,7 +297,12 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
                         }
                     }).catch((error)=>{
                           this.snackbar_error=true;
-                          this.message_error="Utilisateur non trouvé";
+                          this.message_error=error.response.data.data;
+                          this.check=error.response.data.status;
+                          console.log(this.check);
+                          if(this.check=='email'){
+                             this.renvoyer=true;
+                          }
                           this.load=false;
                     })
                 // }
@@ -241,6 +341,14 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
              !this.$v.email.required && errors.push('email obligatoire');
              !this.$v.email.email && errors.push('email invalid');
              !this.$v.email.exists && errors.push('email n\'est pas exite');
+             return errors;
+          },
+          email_error_verified(){
+            const errors=[];
+            if (!this.$v.email_verified.$dirty) return errors;
+             !this.$v.email_verified.required && errors.push('email verified obligatoire');
+             !this.$v.email_verified.email && errors.push('email invalid');
+             !this.$v.email_verified.exists && errors.push('email n\'est pas exite');
              return errors;
           },
           password_error(){
