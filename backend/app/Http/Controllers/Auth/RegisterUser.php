@@ -13,6 +13,7 @@ class RegisterUser extends Controller
         $file_name = time() . '_' . $request->Photo->getClientOriginalName();
         $image = $request->file('Photo')->storeAs('users', $file_name, 'public');
         //$image=Storage::disk('public')->put('users',$request->file('Photo'));
+
         $user=User::create([
             'name'=>$request->name,
             'email'=>$request->email,
@@ -20,9 +21,10 @@ class RegisterUser extends Controller
             'lastname'=>$request->lastname,
             'numero_tlf'=>$request->numero_tlf,
             'Photo'=>'/storage/' . $image,
-            'Isadmin'=>true
+            'Isadmin'=>false,
             ]
         );
+        $user->sendEmailVerify();
         return response()->json(['data'=>$user], 200);
     }
 }
