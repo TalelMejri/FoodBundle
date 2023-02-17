@@ -173,6 +173,22 @@
                 </v-btn>
               </template>
             </v-snackbar>
+
+            <v-snackbar
+            v-model="snackbar_password"
+              scroll>
+                {{message_pass}}
+            <template v-slot:action="{ attrs }">
+              <v-btn
+                color="indigo"
+                text
+                v-bind="attrs"
+                @click="snackbar_password = false"
+              >
+                Fermer
+              </v-btn>
+            </template>
+          </v-snackbar>
             </v-container>
           </div>
           <ServiceVue></ServiceVue>
@@ -203,6 +219,10 @@
              this.message = this.$route.query.content;
              this.snackbar_edit=true;
       };
+      if(typeof(this.$route.query.motdepasses)!='undefined'){
+             this.message_pass= this.$route.motdepasses.content;
+             this.snackbar_password=true;
+      };
       service_category.getAllCategorie().then((res)=>{
          this.All_Menu=res.data[0];
       })
@@ -213,6 +233,7 @@
           snackbar_edit:false,
           model:[],
           nbr_panier:0,
+          snackbar_password:false,
           All_Menu:[],
                 items:[
                    {id:0,name:'all Ordered Product',icon:'home',link:'allOrderedProduct'},
@@ -223,6 +244,7 @@
           message:'',
           email:'',
           email_error:'',
+          message_pass:'',
           snackbar: false,
           snackbar_notif:false,
           text: `Merci de nous envoyer votre mail un de nos agents

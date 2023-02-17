@@ -335,7 +335,7 @@ export default{
                  this.load=false;
                 // this.store.login(this.store.user['token'],res.data.data,this.store.getisadmin);
                  if(this.direction=='home'){
-                    this.$router.push({name:"home", query: {content: 'Mot de passe changé avec succès'}});
+                    this.$router.push({name:"home", motdepasse: {content: 'Mot de passe changé avec succès'}});
                  }else{
                     this.load = false;
                     this.$emit('returnstate');
