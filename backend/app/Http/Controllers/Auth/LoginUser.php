@@ -13,6 +13,9 @@ class LoginUser extends Controller
     public function LoginUser(Request $request){
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user=Auth::user();
+            if (!$user->hasVerifiedEmail()) {
+                return response()->json(['data'=>"votre email n'est pas vérifié",'status'=>"email"],401);
+            }
             $token=$user->createToken('api_token')->plainTextToken;
             $respnose=[
                 'token'=>$token,
@@ -21,7 +24,7 @@ class LoginUser extends Controller
             ];
             return response()->json(['data'=>$respnose],200);
         }else{
-            return response()->json(['data'=>"User Not Found"],401);
+            return response()->json(['data'=>"Utilisateur non trouvé",'status'=>"user"],401);
         }
     }
 
