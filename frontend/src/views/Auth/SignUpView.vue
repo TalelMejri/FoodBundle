@@ -62,8 +62,10 @@
                                 <v-text-field
                                  :error-messages="password_error"
                                   name="password"
+                                  :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                                  :type="show ? 'text' : 'password'"
+                                  @click:append="show = !show"
                                   label="Mot de passe"
-                                  type="password"
                                   v-model="password"
                                   placeholder="Mot de passe"
                                ></v-text-field>
@@ -256,7 +258,8 @@ import { required,minLength,maxLength,numeric,email } from 'vuelidate/lib/valida
              password:'',
              lastname:'',
              numero_tlf:'',
-             photo:''
+             photo:'',
+             show:false
           }
         },
         components:{
