@@ -30,6 +30,11 @@ class VerificationEmail extends Controller
         return response()->json(["data" => "lien de vérification envoé avec succès"], 200);
     }
 
+    public function sendmailChanger( $email){
+        $user = User::where('email', $email)->first();
+        $user->sendEmailChangerEmail();
+    }
+
     public function updated(request $request){
         $user = User::where('email', $request->email)->first();
         if($user){

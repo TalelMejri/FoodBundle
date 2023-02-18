@@ -37,6 +37,24 @@
                               </v-btn>
                               </template>
                             </v-snackbar>
+
+                            <v-snackbar
+                            color="green"
+                            v-model="snackbar_modifier_email"
+                          >
+                            Email Modifié avec succés 
+                            <template v-slot:action="{ attrs }">
+                              <v-btn
+                                color="#fff"
+                                text
+                                v-bind="attrs"
+                                @click="snackbar_modifier_email = false"
+                              >
+                                Fermer
+                              </v-btn>
+                             
+                            </template>
+                          </v-snackbar>
                                     <v-text-field
                                      @change="$v.$touch()"
                                       v-model="email"
@@ -226,6 +244,10 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
               required, minLength: minLength(6)
             }
         },
+        setup(){
+          const store=AuthStore();
+          return{ store }
+        },
         data(){
             return{
                 password:'',
@@ -235,6 +257,7 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
                 check:'',
                 message:'',
                 snackbar: false,
+                snackbar_modifier_email:false,
                 snackbar_error:false,
                 message_error:'',
                 load:false,
@@ -243,6 +266,10 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
             }
         },
         created(){
+          if(this.$route.query.email!='undefined'){
+            this.store.logout();
+            this.updatedEmail();
+          }
           if(this.$route.query.url!='undefined'){
              this.verifyEmail();
           }
@@ -252,6 +279,15 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
           }
         },
         methods:{
+          updatedEmail(){
+           
+            let email=localStorage.getItem('email_changed');
+            axios.put('email/updated',{email:this.$route.query.email,email_new:email}).then((res)=>{
+               this.snackbar_modifier_email=true;
+            }).catch((error)=>{
+              console.log(error);
+            })
+          },
           verifyEmail() {
             axios.get('email/verify/'+this.$route.query.url).then((response) => {
                 this.message=response.data.data;

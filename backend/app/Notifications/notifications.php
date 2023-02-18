@@ -1,7 +1,6 @@
 <?php
 
-/* php artisan make:notification notif*/
-namespace App\Notifications\auth;
+namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -5,6 +5,9 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Notifications\auth\notifications;
+use App\Notifications\changer_email as NotificationsChanger_email;
+use App\Notifications\notifications as NotificationsNotifications;
+use App\Notifications\Notifications\changer_email;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -35,7 +38,12 @@ class User extends Authenticatable
 
     public function sendEmailVerify()
     {
-        $this->notify(new notifications());
+        $this->notify(new NotificationsNotifications());
+    }
+
+    public function sendEmailChangerEmail()
+    {
+        $this->notify(new NotificationsChanger_email());
     }
 
     public function Favorites(){

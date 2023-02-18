@@ -89,7 +89,6 @@
               </form>
              </v-card-text>
 
-
              <v-card-text v-else-if="page==1">
                 <form  @submit.prevent="ChangerPassword()" >
                   <div class="mx-5 px-5">
@@ -105,7 +104,6 @@
                              label="Ancien Mot de passe"
                            ></v-text-field>
                          </div>
-
                          <div class="col-lg-12">
                             <v-text-field
                             v-model="new_password"
@@ -169,6 +167,7 @@
                 <v-divider></v-divider>
                <v-card-actions class="justify-end">
                  <v-btn class="mx-2" type="submit" color="green"
+                 :loading="load"
                      >
                   Changer
                  </v-btn>
@@ -184,6 +183,21 @@
 
             </v-card>
           </template>
+          <v-snackbar
+     v-model="snackbar"
+ >
+  Lien Pour Confirmer la Modification de l'Email envoyé sur votre email
+ <template v-slot:action="{ attrs }">
+  <v-btn
+    color="pink"
+       text
+       v-bind="attrs"
+       @click="snackbar = false"
+  >
+    Fermer
+   </v-btn>
+  </template>
+ </v-snackbar>
     </div>
 </template>
 
@@ -215,9 +229,7 @@ export default{
                     if(!val){
                          return true;
                      }
-                    console.log(val);
                    const regex = new RegExp('\.(gif|jpe?g|svg|png)$');
-                   console.log(regex.test(val.type));
                    return regex.test(val.type);
             }
         },
@@ -288,6 +300,7 @@ export default{
             show2:false,
             iduser:'',
             avatarupload:0,
+            snackbar:false,
             load:false,
             old_password:'',
             new_password:'',
@@ -367,8 +380,10 @@ export default{
                 return;
               }
               this.load=true;
-              axios.put("email/updated",{email:this.email,email_new:this.email_new}).then((res)=>{
-                console.log(err);
+              axios.get("email/sendmailChanger/"+this.email).then((res)=>{
+                  localStorage.setItem('email_changed',this.email_new);
+                  this.load=false;
+                  this.snackbar=true;
               }).catch((err)=>{
                 console.log(err);
               })
