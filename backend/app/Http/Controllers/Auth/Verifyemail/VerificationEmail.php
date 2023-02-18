@@ -29,4 +29,19 @@ class VerificationEmail extends Controller
         $user->sendEmailVerify();
         return response()->json(["data" => "lien de vérification envoé avec succès"], 200);
     }
+
+    public function updated(request $request){
+        $user = User::where('email', $request->email)->first();
+        if($user){
+            $user->update([
+                'email'=>$request->email_new,
+                'email_verified_at'=>Null
+            ]);
+           $user->sendEmailVerify();
+           return response()->json(["data" =>$user], 200);
+        }else{
+            return response()->json(["data" => "User Not Found"], 404);
+        }
+    }
+
 }

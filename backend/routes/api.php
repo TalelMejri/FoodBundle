@@ -109,10 +109,10 @@ Route::group(['prefix'=>'/resetPassword'],function(){
 Route::group(['prefix'=>"/email"],function(){
     Route::get('/verify/{email}', [VerificationEmail::class, 'verify_email']);
     Route::get('/renvoyer/{email}', [VerificationEmail::class, 'renvoyer']);
+    Route::put('/updated', [VerificationEmail::class, 'updated']);
 });
 
 Route::middleware("auth:sanctum")->group(function(){
-
     Route::group(['prefix'=>'/user'],function(){
         Route::Post('/Updateuser',[UserController::class,'update']);
         Route::put('/changerPassword/{password}',[UserController::class,'changerPassword']);

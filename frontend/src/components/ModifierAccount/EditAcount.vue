@@ -147,15 +147,23 @@
               </v-card-text>
 
               <v-card-text v-else>
-                <form  @submit.prevent="ChangerPassword()" >
+                <form  @submit.prevent="ChangerEmail()" >
                   <div class="mx-5 px-5">
-                     <div class="row">
-                         <div class="col-lg-6">
+                     <div class="row col-lg-6">
+                         <div class="col-lg-12">
                              <v-text-field
-                             v-model="email"
-                             label="email"
+                               readonly
+                               v-model="email"
+                               label="email Current"
                            ></v-text-field>
                          </div>
+                         <div class="col-lg-12">
+                          <v-text-field
+                            v-model="email_new"
+                            :error-messages="email_new_error"
+                            label="Nouvelle Email"
+                        ></v-text-field>
+                      </div>
                      </div>
                   </div>
                 <v-divider></v-divider>
@@ -182,7 +190,8 @@
 <script>
 import service_user from "@/services/GererUser/GererUser"
 import {AuthStore} from "@/store/StoreAuth"
-import { required ,numeric, minLength ,maxLength,sameAs}   from 'vuelidate/lib/validators'
+import axios from "axios"
+import {required,numeric,minLength,maxLength,sameAs,email} from 'vuelidate/lib/validators'
 export default{
     name:'edit',
     props:{
@@ -225,6 +234,9 @@ export default{
                   return response.status == 201 || value == "";
               },
         },
+        email_new:{
+          email,required
+        },
         new_password:{
             required,
               minLength:minLength(6),
@@ -263,6 +275,7 @@ export default{
     data(){
         return{
             file:'',
+            email_new:'',
             password:'',
             page:0,
             name:'',
@@ -315,8 +328,10 @@ export default{
                     this.load = false;
                     this.$emit('returnstate');
                  }
-               /*console.log(response.data.data);
-                 console.log(this.store.user);*/
+                /*
+                  console.log(response.data.data);
+                  console.log(this.store.user);
+                */
             }).catch((error)=>{
                 this.load = false;
                 console.log("error");
@@ -333,7 +348,6 @@ export default{
               this.load = true;
               service_user.changer_motdepasse(this.new_password).then((res)=>{
                  this.load=false;
-                // this.store.login(this.store.user['token'],res.data.data,this.store.getisadmin);
                  if(this.direction=='home'){
                     this.$router.push({name:"home", motdepasse: {content: 'Mot de passe changé avec succès'}});
                  }else{
@@ -344,6 +358,19 @@ export default{
               }).catch((error)=>{
                  this.load = false;
                  console.log(error);
+              })
+        },
+        ChangerEmail(){
+             this.$v.email_new.$touch();
+             if (this.$v.email_new.$invalid) {
+                this.load = false;
+                return;
+              }
+              this.load=true;
+              axios.put("email/updated",{email:this.email,email_new:this.email_new}).then((res)=>{
+                console.log(err);
+              }).catch((err)=>{
+                console.log(err);
               })
         }
     },
@@ -366,6 +393,13 @@ export default{
                 !this.$v.file.typeFile && errors.push('image doit étre de type ( jpg,jpeg,png,svg,gif) ');
                 return errors;
             },
+            email_new_error(){
+                const errors=[];
+                if ( !this.$v.email_new.$dirty) return errors;
+                !this.$v.email_new.email && errors.push('email invalid');
+                !this.$v.email_new.required && errors.push('email obligatoire');
+                return errors;
+            },
             numero_tlf_error(){
              const errors=[];
              if (!this.$v.numero_tlf.$dirty) return errors;
@@ -375,24 +409,24 @@ export default{
              !this.$v.numero_tlf.numeric && errors.push('numero tlf doit etre entier');
              return errors;
           },
-          password_error(){
+            password_error(){
              const errors=[];
              if (!this.$v.old_password.$dirty) return errors;
               !this.$v.old_password.required && errors.push('Mot de passe obligatoire');
               !this.$v.old_password.sameas && errors.push('Mot de passe incorrect');
               return errors;
           },
-          new_password_error(){
-            const errors=[];
-             if (!this.$v.new_password.$dirty) return errors;
-             !this.$v.new_password.required && errors.push('un mot de passe obligatoire');
-             !this.$v.new_password.maxLength && errors.push('Veuillez entrer un mot de passe avec un maximum de 12 caractères');
-             !this.$v.new_password.minLength && errors.push('Veuillez entrer un mot de passe avec un minimum de 6 caractères');
-             !this.$v.new_password.containsUppercase && errors.push('le mot de passe doit contenir des majuscules');
-             !this.$v.new_password.containsLowercase && errors.push('le mot de passe doit contenir des minuscule');
-             !this.$v.new_password.containsNumber && errors.push('le mot de passe doit contenir des numbers');
-             !this.$v.new_password.containsSpecial && errors.push('le mot de passe doit contenir d\'un caractére spécial');
-             return errors;
+            new_password_error(){
+             const errors=[];
+               if (!this.$v.new_password.$dirty) return errors;
+                !this.$v.new_password.required && errors.push('un mot de passe obligatoire');
+                !this.$v.new_password.maxLength && errors.push('Veuillez entrer un mot de passe avec un maximum de 12 caractères');
+                !this.$v.new_password.minLength && errors.push('Veuillez entrer un mot de passe avec un minimum de 6 caractères');
+                !this.$v.new_password.containsUppercase && errors.push('le mot de passe doit contenir des majuscules');
+                !this.$v.new_password.containsLowercase && errors.push('le mot de passe doit contenir des minuscule');
+                !this.$v.new_password.containsNumber && errors.push('le mot de passe doit contenir des numbers');
+                !this.$v.new_password.containsSpecial && errors.push('le mot de passe doit contenir d\'un caractére spécial');
+                return errors;
           },
           confirm_password_error(){
             const errors=[];
