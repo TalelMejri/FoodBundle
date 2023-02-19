@@ -283,7 +283,7 @@
                            </thead>
                             <tbody>
                              <tr v-for="i in item.ligencommandes" :key="i.id">
-                               <p style="display: none;"> {{index = All_product.find((v)=>v.id=i.product_id)}} </p>
+                               <p style="display: none;"> {{index = All_product.find((v)=>v.id==i.product_id)}} </p>
                                <td><img width="80px" height="80px" :src="index.PhotoProduct" alt=""></td>
                                <td>{{index.PrixProduct}}</td>
                                <td>{{i.Quantity}}</td>
@@ -409,9 +409,11 @@
                      </thead>
                       <tbody>
                        <tr v-for="i in item.ligencommandes" :key="i.id">
-                         <p style="display: none;"> {{index = All_product.find((v)=>v.id=i.product_id)}} </p>
-                         <td><img width="80px" height="80px" :src="index.PhotoProduct" alt=""></td>
-                         <td>{{index.PrixProduct}}</td>
+                         <p style="display: none;"> {{index = All_product.find((v)=>v.id==i.product_id)}} </p>
+                        
+                         <td><img width="80px" height="80px" :src="index.PhotoProduct" alt="">
+                          </td>
+                         <td>{{index.PrixProduct}} TND</td>
                          <td>{{i.Quantity}}</td>
                          <td>{{i.prix_ligne_commande}}</td>
                          <div style="display: none;">
@@ -640,17 +642,17 @@ export default{
                  this.AllCommande=res.data.data;
                  this.loader_demander=true;
                  this.pagination.curentpage=res.data.current_page;
-            this.pagination.prevpage=res.data.prev_page_url?.split("=")[1];
-            this.pagination.nextpage=res.data.next_page_url?.split("=")[1];
-            this.pagination.per_page=res.data.per_page;
-            this.pagination.total=res.data.total;
+                 this.pagination.prevpage=res.data.prev_page_url?.split("=")[1];
+                 this.pagination.nextpage=res.data.next_page_url?.split("=")[1];
+                 this.pagination.per_page=res.data.per_page;
+                 this.pagination.total=res.data.total;
             })
         },
       
         changerPage(num){
-        this.pagination.curentpage=num;
-        this.fetchAllcommandeDemaander();
-      },
+            this.pagination.curentpage=num;
+            this.fetchAllcommandeDemaander();
+        },
       changerPagee(num){
         this.paginatione.curentpage=num;
         this.fetchAllcommandeAccepter();
@@ -660,10 +662,10 @@ export default{
                  this.AllCommandeAccpted=res.data.data;
                  this.loader=true;
                  this.paginatione.curentpage=res.data.current_page;
-            this.paginatione.prevpage=res.data.prev_page_url?.split("=")[1];
-            this.paginatione.nextpage=res.data.next_page_url?.split("=")[1];
-            this.paginatione.per_page=res.data.per_page;
-            this.paginatione.total=res.data.total;
+                 this.paginatione.prevpage=res.data.prev_page_url?.split("=")[1];
+                 this.paginatione.nextpage=res.data.next_page_url?.split("=")[1];
+                 this.paginatione.per_page=res.data.per_page;
+                 this.paginatione.total=res.data.total;
             })
         },
         fetchAllCommandeRejeter(){
