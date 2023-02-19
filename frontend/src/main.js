@@ -9,15 +9,20 @@ import { createPinia, PiniaVuePlugin } from 'pinia'
 import {interceptors} from '../src/global/interceptors.js'
 import vuetify from './plugins/vuetify'
 Vue.use(PiniaVuePlugin)
-const pinia = createPinia()
+export const pinia = createPinia()
 Vue.config.productionTip = false
 interceptors();
 
 new Vue({
   Vuelidate,
+  pinia,
   router,
   store,
   vuetify,
-  pinia,
   render: h => h(App)
 }).$mount('#app')
+
+
+
+
+

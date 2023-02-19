@@ -123,7 +123,7 @@
                   width="100%"
                   height="100%"
                   id="gmap_canvas"
-                  src="https://goo.gl/maps/SyTKfHup9udHcvm3A"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3192.553661586821!2d10.202726050589783!3d36.85316427983931!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd3554f5850f41%3A0x713351d08620e327!2sDigital%20Bundle!5e0!3m2!1sfr!2stn!4v1676803268285!5m2!1sfr!2stn"
                   frameborder="0"
                   scrolling="no"
                   marginheight="0"
