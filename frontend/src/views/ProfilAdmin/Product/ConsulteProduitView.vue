@@ -108,7 +108,7 @@
                           <td v-if="types.find((v)=>v.id==item.id_category) ? index=types.find((v)=>v.id==item.id_category) :'' ">
                               {{ index.name }} 
                           </td>
-                          <td>{{ item.PrixProduct }}</td>
+                          <td>{{ item.PrixProduct }} TND</td>
                              <td>
                              <v-tooltip c bottom>
                               <template v-slot:activator="{ on, attrs }">

@@ -3,7 +3,7 @@
         <div class="ma-5 pa-5 " >
             <v-container >
                 <div class="row">
-                    <div class="col-lg-4" v-for="service in services" :key="service.id">
+                    <div  class="col-lg-4" v-for="(service,index) in services" :key="service.id" data-aos="fade-right" :data-aos-delay="index*20">
                  <v-card
                     elevation="2"
                     >

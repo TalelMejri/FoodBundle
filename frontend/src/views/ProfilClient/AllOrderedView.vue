@@ -33,7 +33,13 @@
                     single-line
                     hide-details
                 ></v-text-field>
-                <v-expansion-panels v-if="All_Commande==''" focusable>
+                <v-expansion-panels class="mt-3" v-if="load==false" focusable>
+                      <v-progress-circular
+                         indeterminate
+                         color="red"
+                      ></v-progress-circular>
+                 </v-expansion-panels>
+                <v-expansion-panels v-else-if="All_Commande==''" focusable>
                    pas  produit Commandé
                   </v-expansion-panels>
                   
@@ -266,6 +272,7 @@ export default{
                 per_page:0,
             },
             loader:false,
+            load:false,
             search:'',
             All_option:[],
             All_Commande:[],
@@ -368,6 +375,7 @@ export default{
       },
       fetchdata(){
         service_commande.CommandeForUser(this.store.user['id'],this.search,this.pagination.curentpage).then((res)=>{
+            this.load=true;
             this.All_Commande=res.data.data;
             this.pagination.curentpage=res.data.current_page;
             this.pagination.prevpage=res.data.prev_page_url?.split("=")[1];

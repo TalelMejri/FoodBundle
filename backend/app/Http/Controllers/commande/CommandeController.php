@@ -8,6 +8,7 @@ use App\Models\LignCommande;
 use App\Models\LignCommandeOption;
 use App\Models\LigneCommandeOption;
 use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -57,8 +58,9 @@ class CommandeController extends Controller
             }
         }
 
+        $user=User::where('Isadmin',1)->first();
         $notification=new Notification();
-        $notification->user_id=1;
+        $notification->user_id=$user->id;
         $notification->commande_id=$commade->id;
         $notification->message="Commande Avec Code : ".$request->code_Commande. "Addeed ";
         $notification->save();

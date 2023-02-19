@@ -26,7 +26,6 @@
                 <v-combobox
                     v-model="formdata.select"
                     :items="items"
-                    :error-messages="select_error"
                     @change="fixIndice()"
                     item-text="name"
                     item-value="name"
@@ -98,9 +97,6 @@ export default{
                const response=await axios.get('category/exist_name/'+value);
                return response.status!=201 || value == "" ;
              }
-         },
-         select:{
-             required
          },
          file:{
               required,
@@ -198,12 +194,6 @@ export default{
               if (!this.$v.formdata.name.$dirty) return errors;
                 !this.$v.formdata.name.required && errors.push('name obligatoire');
                 !this.$v.formdata.name.exist && errors.push('name exite déja');
-                return errors;
-            },
-            select_error(){
-              const errors=[];
-              if (!this.$v.formdata.select.$dirty) return errors;
-                !this.$v.formdata.select.required && errors.push('Option obligatoire');
                 return errors;
             },
             file_error(){

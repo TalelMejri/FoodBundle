@@ -51,9 +51,6 @@ Route::group(['prefix'=>'/user'],function(){
     Route::get('/countUser',[UserController::class,'coutUser']);
     Route::delete('/deleteUser/{id}',[UserController::class,'destroy']);
     Route::get('/getuser',[UserController::class,'index']);
-    Route::delete('/deleteFavorite',[UserController::class,'deleteFavorite']);
-    Route::Post('/AddLiked',[UserController::class,'AddLiked']);
-    Route::get('/checkLiked',[UserController::class,'checkLiked']);
 });
 
 Route::group(['prefix'=>"/category"],function(){
@@ -114,13 +111,17 @@ Route::group(['prefix'=>"/email"],function(){
 });
 
 Route::middleware("auth:sanctum")->group(function(){
+
     Route::group(['prefix'=>'/user'],function(){
         Route::Post('/Updateuser',[UserController::class,'update']);
         Route::put('/changerPassword/{password}',[UserController::class,'changerPassword']);
         Route::get('/samePassword/{password}',[UserController::class,'samePassword']);
-        Route::get('/countLiked',[UserController::class,'countLiked']);
-        Route::get('/GetAllLikedProduct',[UserController::class,'GetAllLikedProduct']);
-        Route::get('/getAllProductLiekd',[UserController::class,'getAllProductLiekd']);
+        Route::get('/countLiked/{id}',[UserController::class,'countLiked']);
+        Route::Post('/AddLiked/{id}',[UserController::class,'AddLiked']);
+        Route::get('/checkLiked/{id}',[UserController::class,'checkLiked']);
+        Route::delete('/deleteFavorite/{id}',[UserController::class,'deleteFavorite']);
+        Route::get('/GetAllLikedProduct/{id}',[UserController::class,'GetAllLikedProduct']);
+        Route::get('/getAllProductLiekd/{id}',[UserController::class,'getAllProductLiekd']);
     });
 
     Route::group(['prefix'=>'/notif'],function(){
@@ -129,6 +130,12 @@ Route::middleware("auth:sanctum")->group(function(){
         Route::put('/changeretat/{id}',[ControllerNotification::class,'changeretat']);
         Route::delete('/deleteAllNotif',[ControllerNotification::class,'deleteAllNotif']);
         Route::delete('/deleteNotification/{id}',[ControllerNotification::class,'deleteNotification']);
+    });
+
+    Route::group(['prefix'=>'/product'],function(){
+        Route::post('/addrate',[ProductController::class,'addrate']);
+        Route::get('/getrate',[ProductController::class,'getrate']);
+        Route::get('/Avgrate/{id}',[ProductController::class,'Avgrate']);
     });
 
 });

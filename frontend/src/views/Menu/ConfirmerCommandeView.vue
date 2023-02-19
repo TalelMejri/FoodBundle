@@ -56,87 +56,81 @@
                     class="mb-5"
                     color="#FFF9EB"
                 >
-                 <form @submit.prevent="onSubmit">
+                 <form @submit.prevent="onSubmit()">
                     <div class="row">
                         <div class="col-lg-6">
                             <v-text-field 
-                                  v-model="v$.formdata.adresse_email.$model"
+                                  v-model="formdata.adresse_email"
+                                  :error-messages="adresse_email_error"
                                   type="text" 
                                   label="adresse email">
                             </v-text-field>
-                            <div class="input-errors" v-for="(error, index) of v$.formdata.adresse_email.$errors" :key="index">
-                              <div class="error">{{ error.$message }}</div>
-                            </div>
+                           
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                             v-model="v$.formdata.Ville.$model"
+                             v-model="formdata.Ville"
+                             :error-messages="ville_error"
                               type="text" label="Ville">
                             </v-text-field>
-                             <div class="input-errors" v-for="(error, index) of v$.formdata.Ville.$errors" :key="index">
-                                <div class="error">{{ error.$message }}</div>
-                            </div>
                         </div>
                         <div class="col-lg-6">
-                            <v-text-field
-                            v-model="v$.formdata.Pays.$model"
-                             type="text" label="Pays">
-                            </v-text-field>
-                            <div class="input-errors" v-for="(error, index) of v$.formdata.Pays.$errors" :key="index">
-                              <div class="error">{{ error.$message }}</div>
-                          </div>
+                          <v-select
+                          :items="region"
+                          label="Pays"
+                          class="mt-3"
+                          v-model="formdata.Pays"
+                          :error-messages="pays_error"
+                          outlined
+                        ></v-select>
+                            
                         </div>
                         <div class="col-lg-6">
                             <v-text-field 
-                            v-model="v$.formdata.Code.$model"
+                            v-model="formdata.Code"
+                            :error-messages="Code_error"
                             type="text" label="Code postale">
                             </v-text-field>
-                            <div class="input-errors" v-for="(error, index) of v$.formdata.Code.$errors" :key="index">
-                              <div class="error">{{ error.$message }}</div>
-                          </div>
+                            
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            v-model="v$.formdata.Prenom.$model"
+                            v-model="formdata.Prenom"
+                            :error-messages="prenom_error"
                              type="text" label="Prenom">
                             </v-text-field>
-                            <div class="input-errors" v-for="(error, index) of v$.formdata.Prenom.$errors" :key="index">
-                              <div class="error">{{ error.$message }}</div>
-                            </div>
+                           
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            v-model="v$.formdata.Numero.$model"
+                            v-model="formdata.Numero"
+                            :error-messages="numero_error"
                              type="text" label="Numero tlf">
                             </v-text-field>
-                            <div class="input-errors" v-for="(error, index) of v$.formdata.Numero.$errors" :key="index">
-                              <div class="error">{{ error.$message }}</div>
-                            </div>
+                           
                         </div>
                         <div class="col-lg-6">
                             <v-text-field 
-                            v-model="v$.formdata.Nom.$model"
+                            v-model="formdata.Nom"
+                            :error-messages="Nom_error"
                              type="text" label="Nom">
                             </v-text-field>
-                            <div class="input-errors" v-for="(error, index) of v$.formdata.Nom.$errors" :key="index">
-                              <div class="error">{{ error.$message }}</div>
-                          </div>
+                           
                         </div>
                         <div class="col-lg-6">
                             <v-text-field
-                            v-model="v$.formdata.Adresse.$model"
+                            v-model="formdata.Adresse"
+                            :error-messages="Adresse_error"
                              type="text" label="Adresse">
                             </v-text-field>
-                            <div class="input-errors" v-for="(error, index) of v$.formdata.Adresse.$errors" :key="index">
-                              <div class="error">{{ error.$message }}</div>
-                          </div>
+                       
                         </div>
                     </div>
                     <div class="text-center">
                     <v-btn
-                    :disabled="v$.formdata.$invalid"
                     color="#E84C03"
                     class="mx-2 mb-2"
+                    type="submit"
                       @click="e1 = 2 "
                     >
                       continuer
@@ -163,7 +157,7 @@
                  </div>
             </v-card>
             <div class="text-center">
-            <v-btn @click="passCommande()" class="mx-5 mb-2" color="#000" style="color:#fff !important">
+            <v-btn :loading="load" @click="passCommande()" class="mx-5 mb-2" color="#000" style="color:#fff !important">
                 Valider Commande
             </v-btn>
                 <v-btn @click="e1=1">
@@ -263,8 +257,7 @@ import FooterVue from "@/components/home_page/FooterVue.vue";
 import InfoClient from "@/components/Client/InfoClient.vue"
 import { AuthStore } from "@/store/StoreAuth";
 import { ProductStore } from "@/store/StoreProducts";
-import useVuelidate from '@vuelidate/core'
-import { required, email, minLength,numeric, maxLength } from '@vuelidate/validators'
+import { required, email, minLength,numeric, maxLength } from 'vuelidate/lib/validators'
 export default{
     name:'Confirmer',
     created(){
@@ -275,11 +268,11 @@ export default{
         const store=AuthStore();
         const store_products=ProductStore();
         return{
-            store,store_products,v$: useVuelidate() 
+            store,store_products 
         }
     },
-    validations() {
-    return {
+    validations: {
+  
       formdata:{
                adresse_email:{
                   required,email
@@ -294,23 +287,30 @@ export default{
                 required,numeric
                },
                Prenom:{
-                  required,min: minLength(4)
+                  required,
+                  min: minLength(4),
+                  max:maxLength(9)
                },
                Numero:{
-                required,numeric,min:minLength(8),max:maxLength(8)
+                required,
+                numeric,
+                min:minLength(8),
+                max:maxLength(8)
                },
                Nom:{
-                required,max:maxLength(8)
+                required,
+                min:minLength(4),
+                max:maxLength(8)
                },
                Adresse:{
                 required
                },
         },
-    }
-  },
+     },
     data(){
         return{
             valid: false,
+            load:false,
             formdata:{
                adresse_email:'',
                Ville:'',
@@ -325,6 +325,32 @@ export default{
             nbr_panier:0,
             snackbar_notif:false,
             search:'',
+            region:[
+              "Ariane",
+              "Béja",
+              "Bizerte",
+              "Ben Arous",
+              "Tataouine",
+              "tozeur",
+              "Tunisie",
+              "Jendouba",
+              "Zaghouan",
+              "Siliana",
+              "Sousse",
+              "Sidi Bouzid",
+              "Sfax",
+              "gabes",
+              "gbili",
+              "Kasserine",
+              "Gafsa",
+              "Kairouan",
+              "El Kef",
+              "Médenine",
+              "Monastir",
+              "Manouba",
+              "Mahdia",
+              "Nabeul",
+            ],
             product_selected:[],
             dialog_delete:false,
             snackbar_auth:false,
@@ -356,7 +382,15 @@ export default{
         retourn(){
             this.$router.push('/');
         },
+        onSubmit(){
+          this.$v.formdata.$touch();
+          if(this.$v.formdata.$invalid){
+             this.e1=1;
+             return;
+          }
+        },
         passCommande(){
+          this.load=true;
                   let Info_User={
                       name:this.formdata.Nom,prenom:this.formdata.Prenom,
                       ville:this.formdata.Ville,pays:this.formdata.Pays,
@@ -366,6 +400,7 @@ export default{
                   };
                   this.code_Commande=Math.floor(Math.random() * 99999);// nom,prenom,adresse
           service_commande.AddCommande({user:Info_User,Product:this.store_products.Products,code_Commande:this.code_Commande}).then((res)=>{
+              this.load=false; 
               this.e1=3;
               this.store_products.ClearProducts();
               this.$confetti.start();
@@ -384,7 +419,67 @@ export default{
     },
     components:{
         InfoClient,FooterVue,SideBar
-    },
+    },     
+    computed:{
+            adresse_email_error(){
+            const errors=[];
+              if (!this.$v.formdata.adresse_email.$dirty) return errors;
+                !this.$v.formdata.adresse_email.required && errors.push('adresse Email obligatoire');
+                !this.$v.formdata.adresse_email.email && errors.push('email invalid');
+                return errors;
+            },
+            ville_error(){
+            const errors=[];
+              if (!this.$v.formdata.Ville.$dirty) return errors;
+                !this.$v.formdata.Ville.required && errors.push('Ville obligatoire');
+                return errors;
+            },
+            Adresse_error(){
+            const errors=[];
+              if (!this.$v.formdata.Adresse.$dirty) return errors;
+                !this.$v.formdata.Adresse.required && errors.push('Adresse obligatoire');
+                return errors;
+            },
+            pays_error() {
+              const errors = [];
+              if (!this.$v.formdata.Pays.$dirty) return errors;
+              !this.$v.formdata.Pays.required &&
+                errors.push("pays obligatoire ");
+             return errors;
+            },
+            Code_error(){
+              const errors=[];
+              if (!this.$v.formdata.Code.$dirty) return errors;
+                !this.$v.formdata.Code.required && errors.push('Code obligatoire');
+                !this.$v.formdata.Code.numeric && errors.push('Code doit étre numerique');
+                return errors;
+            },
+            prenom_error(){
+              const errors=[];
+              if (!this.$v.formdata.Prenom.$dirty) return errors;
+                !this.$v.formdata.Prenom.required && errors.push('Code obligatoire');
+                !this.$v.formdata.Prenom.max && errors.push('veuillez enter prenom avec maximum de 9 caractéres ');
+                !this.$v.formdata.Prenom.min && errors.push('veuillez enter prenom avec minimum de 4 caractéres ');
+                return errors;
+            },
+            Nom_error(){
+              const errors=[];
+              if (!this.$v.formdata.Nom.$dirty) return errors;
+                !this.$v.formdata.Nom.required && errors.push('Nom obligatoire');
+                !this.$v.formdata.Nom.max && errors.push('veuillez enter Nom avec maximum de 8 caractéres ');
+                !this.$v.formdata.Nom.min && errors.push('veuillez enter Nom avec minimum de 4 caractéres ');
+                return errors;
+            },
+            Numero_error(){
+              const errors=[];
+             if (!this.$v.formdata.Numero.$dirty) return errors;
+               !this.$v.formdata.Numero.required && errors.push('numero obligatoire');
+               !this.$v.formdata.Numero.maxLength && errors.push('Veuillez entrer numero avec un maximum de 8 number');
+               !this.$v.formdata.Numero.minLength && errors.push('Veuillez entrer numero avec un minimum de 8 number');
+               !this.$v.formdata.Numero.numeric && errors.push('numero tlf doit etre entier');
+             return errors;
+            },
+          }
   
 
 }

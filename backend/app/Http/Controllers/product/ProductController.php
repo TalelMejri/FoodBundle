@@ -127,9 +127,9 @@ class ProductController extends Controller
 
      public function addrate(Request $request){
         $rate=new Rate();
-        $rate->user_id=$request->user_id;
+        $rate->user_id=$request->iduser;
         $rate->product_id=$request->id;
-        $rate->rate=$request->nbr_rate;
+        $rate->rate=$request->nbr;
         $rate->save();
         return response()->json($rate,200);
      }

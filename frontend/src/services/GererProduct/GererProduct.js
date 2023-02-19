@@ -11,8 +11,8 @@ export default{
         return axios.post('product/UpdateProduct/'+id,Product);
     },
 
-    Add_Product(Product){
-        return axios.post('product/Add_Product',Product);   
+    Add_Product(product){
+        return axios.post('product/Add_Product',product);   
     },
 
     GetProductCategoryOption(idcategory,search,page){
@@ -43,8 +43,8 @@ export default{
         return axios.get(`product/GetProudctOptionSpecifiqueCategory?id=${id}&${search ? 'search='+search : ''}&prix=${prix}&${typeordered ? 'typeordered='+typeordered : ''}&page=${page}`);
     },
 
-    Addrate(inforate){
-        return axios.post('product/addrate',inforate);
+    Addrate(id){
+        return axios.post('product/addrate/',id);
     },
 
     getrate(){

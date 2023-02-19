@@ -23,13 +23,8 @@
                 </div>
         </div>
     </v-card>
-      <div class="content_menu text-center" v-if="loader=false">
-          <v-progress-circular
-              indeterminate
-              color="red"
-         ></v-progress-circular>
-      </div>
-      <div v-else>
+     
+      <div>
         <div class="content_menu">
             <div class="row">
                 <div  class="col-lg-2 text-center">
@@ -72,7 +67,8 @@
               </div>
             </v-card>
         </div>
-        <div class="col-lg-10 ">
+      
+        <div  class="col-lg-10 ">
                 <div class="row">
                   
                      <div class="col-lg-3 text-center">
@@ -98,8 +94,14 @@
                       </v-btn>
                      </div>
                 </div>
-                          <div class="row mt-4"   >
-                             <v-card style="padding:25px;" class="text-center" v-if="Products==''">
+                          <div class="row mt-4">
+                            <v-card style="padding:25px;" class="text-center col-lg-12" v-if="loader==false">
+                              <v-progress-circular
+                                  indeterminate
+                                  color="red"
+                             ></v-progress-circular>
+                           </v-card>
+                             <v-card style="padding:25px;" class="text-center" v-else-if="Products==''">
                               Aucun produit pour cette catégorie
                              </v-card>
                             <v-card v-else  v-for="product in Products" :key="product.id"
@@ -128,16 +130,14 @@
                                          :readonly="true"
                                          size="14"
                                       ></v-rating>
-                                      
                                        <div class="grey--text ms-4">
-                                       
                                        {{Nombre_rate_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_rate_for_products[Nombre_rate_for_products.findIndex((v)=>v.id==product.id)].Avg : 0}}
                                        </div>
                                       </v-col>
                                        <v-spacer></v-spacer>
                                      <div class="mb-4 mx-5 mt-2">
                                         <v-btn text  @click="AddFavorite(product.id)">
-                                            <v-icon>mdi-{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}</v-icon>
+                                            <v-icon  :color="All_Liked.find((v)=>v.id==product.id)==undefined ? '' : 'red'" >mdi-{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}</v-icon>
                                           </v-btn>
                                         {{ Nombre_liked_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_liked_for_products[Nombre_liked_for_products.findIndex((v)=>v.id==product.id)].nbr : 0 }} 
                                     </div>
@@ -176,7 +176,12 @@
                                 <v-list-item-content>
                                   <v-spacer></v-spacer>
                                   <div class="mb-4">
-                                        <v-icon @click="AddFavorite(product.id)">mdi-heart-outline</v-icon>
+                                    <div class="mb-4 mx-5 mt-2">
+                                      <v-btn text  @click="AddFavorite(product.id)">
+                                          <v-icon>mdi-{{ All_Liked.find((v)=>v.id==product.id)==undefined ? 'heart-outline' : 'heart' }}</v-icon>
+                                        </v-btn>
+                                      {{ Nombre_liked_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_liked_for_products[Nombre_liked_for_products.findIndex((v)=>v.id==product.id)].nbr : 0 }} 
+                                  </div>
                                   </div>
                                   <v-list-item-title class="text-h5 mb-1">
                                     {{product.nameProduct}}
@@ -186,14 +191,13 @@
                                       <h3>{{ index !=-1 ? All_Prix_With_Option_Array[index].prix : product.PrixProduct}} TND</h3>
                                     </div>
                                     <v-rating
-                                    :value="Nombre_rate_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_rate_for_products[Nombre_rate_for_products.findIndex((v)=>v.id==product.id)].Avg : 0"
-                                    color="amber"
-                                    dense
-                                    half-increments
-                                    readonly
-                                    size="14"
+                                        :value="Nombre_rate_for_products.findIndex((v)=>v.id==product.id)!=-1 ? Nombre_rate_for_products[Nombre_rate_for_products.findIndex((v)=>v.id==product.id)].Avg : 0"
+                                        color="amber"
+                                        dense
+                                        half-increments
+                                        readonly
+                                        size="14"
                                   ></v-rating>
-                                  
                                    <div class="grey--text ms-4">
                                     <v-tooltip bottom>
                                       <template v-slot:activator="{ on, attrs }">
@@ -370,6 +374,7 @@
                           <v-spacer></v-spacer>
                           <v-btn
                             color="black"
+                            :loading="load_rate"
                             style="color:#fff !important"
                             @click="addrate(productrate.id,rating)"
                           >
@@ -475,8 +480,7 @@ export default{
                 this.types.push({name:response.data[i].name,id:response.data[i].id});
             }
         });
-       this.checkrate();
-      
+        this.checkrate();
         if(this.store.isauth!=null){
           this.get_all_liked();
         };
@@ -488,6 +492,7 @@ export default{
         this.length_panier();
         this.changerpage(1);
         this.countRate();
+        //this.countLiked();
     },
     data(){
         return{ 
@@ -495,12 +500,14 @@ export default{
            OptionsAdded:[],
            prix: 0,
            dialog:false,
+           load_rate:false,
            check_rate_user:[],
            selected:[],
            search:'',
            Products_max:[],
            All_Liked:[],
            displaySnackBar:true,
+           loader_favorite:false,
            affichage:'card',
            Ordered: ['nameProduct','PrixProduct'],
            types:[],
@@ -549,8 +556,8 @@ export default{
           this.snackbar_authentificate=true;
         }
       },
-      changerpage(a){
-        this.pagination.current_page=a;
+      changerpage(num){
+        this.pagination.current_page=num;
         this.FetchData();
       },
       changreetat(a){
@@ -575,7 +582,7 @@ export default{
       },
       get_all_liked(){
         this.All_Liked=[];
-        service_user.GetAllLikedProduct(this.store.user['id']).then((response)=>{
+        service_user.GetAllLikedProduct().then((response)=>{
             for(let i=0;i<(response.data).length;i++){
                 this.All_Liked.push({id:response.data[i].product_id});
             }
@@ -606,14 +613,14 @@ export default{
 
        AddFavorite(id){
         if(this.store.isauth!=null){
-          service_user.checkLiked(id,this.store.user['id']).then((res)=>{
+          service_user.checkLiked(id).then((res)=>{
               if(res.data.data.length==0){
-                service_user.addLiked({idproduct:id,iduser:this.store.user['id']}).then((res)=>{
+                service_user.addLiked(id).then((res)=>{
                   this.CoutProduct();
                   this.get_all_liked();
                 })
               }else{
-                service_user.deleteFavorite(id,this.store.user['id']).then((res)=>{
+                service_user.deleteFavorite(id).then((res)=>{
                   this.get_all_liked();
                   this.CoutProduct();
                 })
@@ -702,7 +709,9 @@ export default{
         },
 
         addrate(id,nbr){
-          service_product.Addrate({id:id,nbr_rate:nbr,user_id:this.store.user['id']}).then((res)=>{
+          this.load_rate=true;
+          service_product.Addrate({id:id,nbr:nbr,iduser:this.store.user['id']}).then((res)=>{
+              this.load_rate=false; 
               this.checkrate();
               this.countRate();
               this.nbr_rate=0;

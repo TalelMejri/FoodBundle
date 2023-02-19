@@ -12,9 +12,9 @@
                   cols="auto"
                   class="mr-auto"
                 >
-                 <h2><span style="color:#E84C03;">Food</span>Bundle</h2>
+                 <h2 data-aos="fade-up" ><span style="color:#E84C03;">Food</span>Bundle</h2>
                 </v-col>
-                <v-col v-if="store.isauth==null" cols="auto">
+                <v-col  data-aos="fade-up" v-if="store.isauth==null" cols="auto">
                   <v-row
                   align="center"
                   justify="space-around"
@@ -31,7 +31,7 @@
                 </router-link> 
                 </v-row>
                 </v-col>
-                <v-col v-else cols="auto">
+                <v-col data-aos="fade-up"  v-else cols="auto">
                   <!-- Client Better -->
                     <InfoClient :nbr_panier="nbr_panier"></InfoClient>
                 </v-col>
@@ -40,7 +40,7 @@
                 <v-container class="mt-5 py-5" >
                   <div class="row mb-6 mt-5 gap-5"
                   >
-                    <div class="mt-5 py-5 col-lg-6">
+                    <div  data-aos="fade-up" class="mt-5 py-5 col-lg-6">
                          <p class="py-5 mt-5 paragh" >
                           Goûtez notre<br>
                               Nourriture délicieuse
@@ -51,7 +51,7 @@
                            magna aliqua. 
                          </p>
                         </div>
-                    <div
+                    <div data-aos="zoom-out"
                       class="col-lg-6 d-lg-block d-none text-center"
                     >
                         <img class="image" src="../assets/home-img.png" alt="">
@@ -72,11 +72,16 @@
           <div class="ma-5 pa-5" id="menu">
             <v-container >
                 <h2 class="text-center mb-5">Notre Menu</h2>
-                <div  class="row">
-
+                <div v-if="load==true" class="row">
+                   <div class="col-lg-12 text-center">
+                         <v-progress-circular
+                             indeterminate
+                             color="#E84C03"
+                         ></v-progress-circular>
+                   </div>
                 </div>
-               <div class="row">
-                <v-hover v-for="menu in All_Menu" :key="menu.id"  v-slot="{ hover }">
+               <div v-else class="row">
+                <v-hover v-for="(menu,index) in All_Menu" :key="menu.id"  v-slot="{ hover }" data-aos="fade-right" :data-aos-delay="index*20">
                 <div class="col-lg-4">
                   <v-card
                      class="mx-auto"
@@ -111,8 +116,23 @@
                 </v-hover>
               </div>
             </v-container>
+            <v-container>
+              <div class="map-container">
+                <h1 style="color:#fff !important" class="text-light">Location</h1>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  id="gmap_canvas"
+                  src="https://goo.gl/maps/SyTKfHup9udHcvm3A"
+                  frameborder="0"
+                  scrolling="no"
+                  marginheight="0"
+                  marginwidth="0"
+                ></iframe>
+              </div>
+            </v-container>
           </div>
-          <div class="ma-5 pa-5" id="contact">
+          <div data-aos="fade-right"  class="ma-5 pa-5" id="contact">
             <v-container>
               <v-card
                 elevation="19"
@@ -224,6 +244,7 @@
              this.snackbar_password=true;
       };
       service_category.getAllCategorie().then((res)=>{
+         this.load=false;
          this.All_Menu=res.data[0];
       })
       this.nbr_panier=this.Store_Product.Products==null ? 0 : this.Store_Product.Products.length;
@@ -233,6 +254,7 @@
           snackbar_edit:false,
           model:[],
           nbr_panier:0,
+          load:true,
           snackbar_password:false,
           All_Menu:[],
                 items:[
@@ -293,6 +315,24 @@
 </script>
 
 <style>
+
+
+.map-container {
+  height: 500px;
+  padding: 20px;
+  background-color: #E84C03;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #000;
+}
+.map-container iframe {
+  height: 100%;
+  border: 0;
+}
+
 .login{
   color: #fff !important;
   background: #E84C03 !important;

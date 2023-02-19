@@ -114,22 +114,22 @@ class UserController extends Controller
         return  response()->json(['data'=>$count],200);
     }
 
-    public function checkLiked(Request $request){
-        $verified=favorite::where('product_id','=',$request->idproduct)
-        ->where('user_id','=',$request->iduser)->get();
+    public function checkLiked($id,Request $request){
+        $verified=favorite::where('product_id','=',$id)
+        ->where('user_id','=',$request->user()->id)->get();
         return  response()->json(['data'=>$verified],200);
     }
 
-    public function deleteFavorite(Request $request){
-        $verified=favorite::where('product_id','=',$request->idproduct)
-        ->where('user_id','=',$request->iduser)->delete();
+    public function deleteFavorite($id,Request $request){
+        $verified=favorite::where('product_id','=',$id)
+        ->where('user_id','=',$request->user()->id)->delete();
         return response()->json(['message'=>$verified],200);
     }
 
-    public function AddLiked(Request $request){
+    public function AddLiked($id,Request $request){
             $favoriete=favorite::create([
-                'product_id'=>$request->idproduct,
-                'user_id'=>$request->iduser,
+                'product_id'=>$id,
+                'user_id'=>$request->user()->id,
             ]);
             return response()->json($favoriete,200);
     }

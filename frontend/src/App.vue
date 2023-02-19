@@ -9,13 +9,16 @@
 </template>
 
 <script>
-
+import AOS from "aos";
+import 'animate.css';
 export default {
   name: 'App',
     methods:{
       
     },
-  
+    mounted() {
+      AOS.init();
+    }
 };
 </script>
 

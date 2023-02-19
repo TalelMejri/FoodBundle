@@ -39,7 +39,7 @@
                     </th>
                   </tr>
                 </thead>
-                  <tbody v-if="loader"> 
+                  <tbody v-if="loader==true"> 
                       <tr class="text-center">
                         <td colspan="5">
                               <v-progress-circular
@@ -131,7 +131,7 @@ export default{
                 total:0,
                 per_page:0,
             },
-            loader:false,
+            loader:true,
             All_favorite:[],
             etatsidbar:true
         }
@@ -145,7 +145,8 @@ export default{
         this.fetchdata();
       },
       fetchdata(){
-        service_user.getAllProductLiekd(this.store.user['id'],this.pagination.curentpage).then((res)=>{
+        service_user.getAllProductLiekd(this.pagination.curentpage).then((res)=>{
+            this.loader=false;
             this.All_favorite=res.data.data;
             this.pagination.prevpage=res.data.prev_page_url?.split("=")[1];
             this.pagination.nextpage=res.data.next_page_url?.split("=")[1];

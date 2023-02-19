@@ -13,6 +13,8 @@ import ConfirmerCommandeView from "@/views/Menu/ConfirmerCommandeView.vue"
 import CommandeView from "@/views/ProfilAdmin/Commande/CommandeView.vue"
 import forgot_password from "@/views/Auth/ResetPassword/ForgotPasswordView.vue"
 import changer_password from "@/views/Auth/ResetPassword/ChangerPasswordView.vue"
+import { AuthStore } from "@/store/StoreAuth.js";
+
 
 Vue.use(VueRouter)
 const routes = [
@@ -64,22 +66,26 @@ const routes = [
   {
     path: '/allOrderedProduct',
     name: 'allOrderedProduct',
-    component: allOrderedProduct
+    component: allOrderedProduct,
+    //meta: { requiresClient: true },
   },
   {
     path: '/AllFavoriteProduct',
     name: 'AllFavoriteProduct',
-    component: AllFavoriteProduct
+    component: AllFavoriteProduct,
+    //meta: { requiresClient: true },
   },
   {
     path: '/editProfil',
     name: 'editProfil',
-    component: editProfil
+    component: editProfil,
+    //meta: { requiresAuth: true },
   },
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: dashboard
+    component: dashboard,
+    //meta: { requiresAdmin: true },
   },
 ]
 
@@ -88,5 +94,42 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+/*
+router.beforeEach(async(to, from, next) => {
+  const auth=AuthStore();
+  if (to.matched.some((record) => record.meta.requiresAdmin)) {
+    if (auth.getisadmin) {
+      next();
+      return;
+    }
+    next({
+      name: "login",
+    });
+  } else {
+    next();
+  }
+});
+*/
+
+// router.beforeEach((to, from) => {
+//    if(AuthStore.isauth){
+//       if(to.name==="login"){
+//         if(AuthStore.getisadmin==true){
+//           return { name: "dashboard" };
+//         }else{
+//           return { name: "home" };
+//         }
+//       }
+//    } 
+//    if (to.meta.requiresAuth) {
+//     if (!AuthStore.isAuth && to.name !== "login") {
+//       return { name: "login" };
+//     } else if (to.meta.requiresAdmin) {
+//       return { name: "login" };
+//     } else if (to.meta.requiresClient) {
+//       return { name: "login" };
+//     }
+//   }
+// })
 
 export default router

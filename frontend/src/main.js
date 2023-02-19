@@ -3,6 +3,7 @@ import './plugins/axios'
 import App from './App.vue'
 import router from './router'
 import store from './store/StoreAuth'
+import 'aos/dist/aos.css';
 import Vuelidate from "./plugins/Vuelidate";
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import {interceptors} from '../src/global/interceptors.js'
@@ -11,6 +12,7 @@ Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
 Vue.config.productionTip = false
 interceptors();
+
 new Vue({
   Vuelidate,
   router,

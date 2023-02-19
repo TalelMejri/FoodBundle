@@ -33,16 +33,16 @@ export default{
            return Axios.post('user/Updateuser',data,config);
      },
      
-     addLiked(user){
-          return Axios.post('user/AddLiked',user);
+     addLiked(id){
+          return Axios.post('user/AddLiked/'+id);
      },
 
-     deleteFavorite(idproduct,iduser){
-          return Axios.delete(`user/deleteFavorite?idproduct=${idproduct}&iduser=${iduser}`);
+     deleteFavorite(id){
+          return Axios.delete('user/deleteFavorite/'+id);
      },
 
-     checkLiked(idproduct,iduser){
-          return Axios.get(`user/checkLiked?idproduct=${idproduct}&iduser=${iduser}`);
+     checkLiked(id){
+          return Axios.get('user/checkLiked/'+id);
      },
 
      countLiked(id){
@@ -54,7 +54,7 @@ export default{
      },
 
      getAllProductLiekd(id,page){
-          return Axios.get(`user/getAllProductLiekd/${+id}&page=${page}`);
+          return Axios.get(`user/getAllProductLiekd/${id}&page=${page}`);
      },
 
      same_password(password){
