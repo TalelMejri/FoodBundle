@@ -94,7 +94,7 @@
                   </thead>
                    <tbody>
                     <tr v-for="i in commande_selected.ligencommandes" :key="i.id">
-                      <p style="display: none;"> {{index = All_product.find((v)=>v.id=i.product_id)}} </p>
+                      <p style="display: none;"> {{index = All_product.find((v)=>v.id==i.product_id)}} </p>
                       <td><img width="70px" height="60px" :src="index.PhotoProduct" alt=""></td>
                       <td>{{index.PrixProduct}}</td>
                       <td>{{i.Quantity}}</td>

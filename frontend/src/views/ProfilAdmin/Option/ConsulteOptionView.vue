@@ -352,13 +352,13 @@
           </template>
           </v-simple-table>
 
-          <div v-if="Options!=''" class="text-center">
-                <v-btn :disabled="pagination.prev_page==null"  @click="changer_page(pagination.current_page-1)" small>
+          <div v-if="Options!=''" >
+                <v-btn class="mx-1" :disabled="pagination.prev_page==null"  @click="changer_page(pagination.current_page-1)" small>
                   <v-icon>
                     mdi-chevron-left
                  </v-icon>
                 </v-btn>
-                <v-btn
+                <v-btn class="mx-1"
                     v-for="num in (Math.ceil(pagination.per_page ? (pagination.total/pagination.per_page) : 1))"
                      :key="num" 
                      @click="changer_page(num)" 

@@ -104,7 +104,7 @@
                         <div class="col-lg-6">
                             <v-text-field
                             v-model="formdata.Numero"
-                            :error-messages="numero_error"
+                            :error-messages="Numero_error"
                              type="text" label="Numero tlf">
                             </v-text-field>
                            
