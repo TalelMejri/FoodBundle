@@ -118,10 +118,10 @@
                                   <th  class="text-left ">
                                       Quantité
                                   </th>
-                                  <th  class="text-left ">
+                                  <th  class="text-left">
                                       Prix Total
                                   </th>
-                                  <th  class="text-left ">
+                                  <th  class="text-left">
                                       Option
                                   </th>
                                 </tr>
