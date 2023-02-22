@@ -147,12 +147,12 @@ class CommandeController extends Controller
     }
 
     public function rejeterCommande(Request $request){
-       $commade=Commande::find($request->idcommande);
+       $commade=Commande::find($request->id);
         if($commade){
             if(isset($request->iduser)){
                 $notification=new Notification();
                 $notification->user_id=$request->iduser;
-                $notification->commande_id=null;
+                $notification->commande_id=$request->id;
                 $notification->message="Commande Avec Code : ".$request->code. "a été Rejeter";
                 $notification->save();
             }

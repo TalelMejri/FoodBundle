@@ -215,7 +215,7 @@
                                 <img width="40px" :src="item.Product.PhotoProduct" alt="">
                             </div>
                             <div class="col-lg-4">
-                                Quantité:{{item.Quantity}}
+                                Qte:{{item.Quantity}}
                             </div>
                             <div class="col-lg-4">
                                 Prix:{{item.Quantity*item.prix}}

@@ -473,7 +473,7 @@
         <v-card-actions class="justify-end">
           <v-btn 
             text
-            @click="RejeterCommande(commande_selected_rejeter.id,commande_selected_rejeter.user_id,commande_selected_rejeter.Code_Commande)"
+            @click="RejeterCommande(commande_selected_rejeter.id,commande_selected_rejeter.user_id)"
           >Rejeter</v-btn>
           <v-btn
           text
@@ -603,8 +603,8 @@ export default{
             this.commande_selected_rejeter=item;
             this.dialog_rejeter=true;
         },
-        RejeterCommande(icommande,iduser,code){
-           service_commande.rejeterCommande(icommande,iduser,code).then((res)=>{
+        RejeterCommande(id,iduser){
+           service_commande.rejeterCommande(id,iduser).then((res)=>{
                 this.commande_selected_rejeter=[];
                 this.dialog_rejeter=false;
                 this.fetchAllcommandeDemaander();
