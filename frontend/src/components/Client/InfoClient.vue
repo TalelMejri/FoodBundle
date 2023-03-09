@@ -27,7 +27,7 @@
             <v-toolbar-title class="row gap-5" style="font-size:15px">
                     <div class="col-lg-6">
                       <v-btn :disabled="All_notif_yet.length==0" text>
-                          View Read ({{  All_notif_yet.length }} ) 
+                          View Read    ({{  All_notif_yet.length }} ) 
                       </v-btn>
                     </div>
                     <v-spacer></v-spacer>
