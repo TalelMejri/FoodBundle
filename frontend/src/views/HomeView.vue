@@ -103,7 +103,7 @@
                               <div>
                               <router-link style="text-decoration:none !important" :to="'/ConsulteMenuView/'+menu.id">
                                 <v-btn class="mb-2" color="error">
-                                   Check
+                                     Commander
                                 </v-btn>
                               </router-link>
                             </div>
