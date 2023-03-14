@@ -105,18 +105,18 @@ class ProductController extends Controller
 
     public function GetProudctOptionSpecifiqueCategory(Request $request){
          if(!isset($request->search) && !isset($request->typeordered)){
-            $product=Product::with('optionspecifiques')->Where('id_category','=',$request->id)
+            $product=Product::with('optionspecifiques')->where('id_category','=',$request->id)
                                                        ->where('PrixProduct','>=',$request->prix)->paginate(5);
          }else if(isset($request->search) &&  !isset($request->typeordered)){
-            $product=Product::with('optionspecifiques')->Where('id_category','=',$request->id)
+            $product=Product::with('optionspecifiques')->where('id_category','=',$request->id)
                                                        ->where('PrixProduct','>=',$request->prix)
                                                        ->where('nameProduct','like','%'.$request->search.'%')->paginate(5);
             }else if(!isset($request->search) &&  isset($request->typeordered)){
-                $product=Product::with('optionspecifiques')->Where('id_category','=',$request->id)
+                $product=Product::with('optionspecifiques')->where('id_category','=',$request->id)
                                                            ->where('PrixProduct','>=',$request->prix)->orderby($request->typeordered)
                                                           ->paginate(5);
             }else if(isset($request->search) &&  isset($request->typeordered)){
-                $product=Product::with('optionspecifiques')->Where('id_category','=',$request->id)
+                $product=Product::with('optionspecifiques')->where('id_category','=',$request->id)
                                                            ->where('nameProduct','like','%'.$request->search.'%')
                                                            ->where('PrixProduct','>=',$request->prix)
                                                            ->orderby($request->typeordered)->paginate(5);

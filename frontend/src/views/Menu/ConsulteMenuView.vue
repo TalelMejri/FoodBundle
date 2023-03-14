@@ -587,7 +587,7 @@ export default{
                 this.All_Liked.push({id:response.data[i].product_id});
             }
         });
-        this.CoutProduct();
+        //this.CoutProduct();
       },
       AddPanier(){
           let Option_for_product=[];
@@ -676,10 +676,10 @@ export default{
               this.pagination.prev_page=response.data.data.prev_page_url?.split('=')[1];
               this.pagination.per_page=response.data.data.per_page;
               this.loader=true;
-              this.Total_prix();
+              /*this.Total_prix();
               this.CoutProduct();
               this.length_panier();
-              this.countRate();
+              this.countRate();*/
           })
         },
 
