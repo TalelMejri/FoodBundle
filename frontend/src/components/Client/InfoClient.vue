@@ -19,7 +19,7 @@
             </v-icon>
            </v-btn>
         </template>
-        <span>Notification</span>
+        <span>Notifications</span>
       </v-tooltip>
       </v-badge>
     </template>
