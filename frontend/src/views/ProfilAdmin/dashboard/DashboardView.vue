@@ -192,7 +192,7 @@
 <script>
 /**
  *  test better comment
- *  !sqdsqsqdq
+ *  !sdsdsdds
  *  ? dsdsdsd
  *  TODO:dsdsdsd
  */
@@ -210,6 +210,7 @@ export default {
   name: "dashboard",
   mounted() {
     window.Echo.channel("public").listen("notif", (e) => {
+      console.log(e);
       this.getNotif();
       this.getNotifNotyet();
     });

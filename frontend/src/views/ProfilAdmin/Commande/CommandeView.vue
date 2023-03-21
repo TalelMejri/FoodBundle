@@ -604,6 +604,16 @@ import service_option from "@/services/GererOption/option";
 import service_commande from "@/services/GererCommande/Commande";
 export default {
   name: "commande",
+  mounted() {
+    window.Echo.channel("public").listen("notif", (e) => {
+      if (this.commande_current == "accepter") {
+        this.fetchAllcommandeAccepter();
+      } else {
+        this.fetchAllCommandeRejeter();
+      }
+      this.fetchAllcommandeDemaander();
+    });
+  },
   created() {
     this.changerPage(1);
     this.changerPagee(1);
