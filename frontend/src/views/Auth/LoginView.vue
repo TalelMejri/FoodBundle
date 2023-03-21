@@ -280,7 +280,6 @@ import { required, email,minLength } from 'vuelidate/lib/validators'
         },
         methods:{
           updatedEmail(){
-           
             let email=localStorage.getItem('email_changed');
             axios.put('email/updated',{email:this.$route.query.email,email_new:email}).then((res)=>{
                this.snackbar_modifier_email=true;

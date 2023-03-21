@@ -380,7 +380,7 @@ export default{
                 return;
               }
               this.load=true;
-              axios.get("email/sendmailChanger/"+this.email).then((res)=>{
+                  axios.get("email/sendmailChanger/"+this.email).then((res)=>{
                   localStorage.setItem('email_changed',this.email_new);
                   this.load=false;
                   this.snackbar=true;

@@ -164,7 +164,12 @@ import service_notif from "@/services/Notification/notif.js"
 import {AuthStore} from "@/store/StoreAuth"
 import { ProductStore } from "@/store/StoreProducts";
 export default{
-
+      mounted(){
+        window.Echo.channel('public').listen('notif',(e)=>{
+            this.getnotif();
+            this.getNotifNotyet();
+          })
+      },
   created(){
             this.getnotif();
             this.getNotifNotyet();
@@ -190,7 +195,7 @@ export default{
         }
     },
     methods:{
-      getNotifNotyet(){
+          getNotifNotyet(){
               service_notif.getNotification(this.store.user['id']).then((res)=>{
                  this.All_notif_yet=res.data;
               })
@@ -209,6 +214,7 @@ export default{
                   this.getNotifNotyet();
               })
           },
+          
           getnotif(){
               service_notif.getAllNotification(this.store.user['id']).then((res)=>{
                  this.All_notif=res.data;
