@@ -1,7 +1,7 @@
 <template>
   <v-app id="app">
     <router-view v-slot="{ Component }">
-      <transition name="fade"  mode="out-in">
+      <transition name="fade" mode="out-in">
         <component :is="Component" />
       </transition>
     </router-view>
@@ -10,33 +10,34 @@
 
 <script>
 import AOS from "aos";
-import 'animate.css';
+import "animate.css";
 export default {
-  name: 'App',
-    methods:{
-      
-    },
-    mounted() {
-      AOS.init();
-    }
+  name: "App",
+  methods: {},
+  mounted() {
+    window.Echo.channel("public").listen("notif", (e) => {
+      console.log(e);
+    });
+    AOS.init();
+  },
 };
 </script>
 
 
 <style scoped>
-
-#app{
-  background: #FFF9EB;
+#app {
+  background: #fff9eb;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-.fade-enter,.fade-leave-to{
-  opacity: 0; 
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
   transform: translateX(2em);
 }
-.fade-enter-active,.fade-leave-active{
-  transition: all .3s ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
 }
-
 </style>
