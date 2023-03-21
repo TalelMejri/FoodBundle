@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\notif;
+use App\Events\PrivateTest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get("/broadcast",function(){
+     notif::dispatch();
+     return "sent";
+});
+
+Route::get("/broadcast-private",function(){
+    $user=App\Models\User::find(1);
+    PrivateTest::dispatch($user);
+    return 'sent'.$user->name;
 });
