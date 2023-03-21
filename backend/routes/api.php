@@ -13,6 +13,8 @@ use App\Http\Controllers\product\ProductController;
 use App\Http\Controllers\test;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +27,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+//Broadcast::routes(['middleware' => ['auth:sanctum']]);
+//Broadcast::routes(['predix' => 'api', 'middleware' => ['auth:api']]);
+// Route::post('/broadcasting/auth', function () {
+//     return Auth::user();
+//  });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
