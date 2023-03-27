@@ -14,7 +14,7 @@ class VerificationEmail extends Controller
         $user = User::where('email',$email)->First();
         if (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
-               return response()->json(['data'=>"Email verifé avec succès"],200);
+                return  response()->json(['data'=>"Email verifé avec succès"],200);
         } else {
                 return response()->json(['data'=>"Email est déja verifé"],200);
         }
